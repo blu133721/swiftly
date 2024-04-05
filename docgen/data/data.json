@@ -5182,6 +5182,21 @@
 						},
 						"additional": {}
 					},
+					"setpin": {
+						"title": "SetPin",
+						"template": "function-syntax",
+						"language": "both",
+						"description": "Sets player pin.",
+						"variable": {
+							"cpp": "player->SetPin",
+							"lua": "player:SetPin"
+						},
+						"return": "void",
+						"params": {
+							"index": "int"
+						},
+						"additional": {}
+					},
 					"setmusickit": {
 						"title": "SetMusicKit",
 						"template": "function-syntax",
