@@ -8,6 +8,7 @@
 #include <luacpp/func_utils.h>
 
 #include <rapidjson/document.h>
+#include "sdk/entity/CBaseEntity.h"
 
 class LuaPlayerClass
 {
@@ -270,6 +271,8 @@ void SetupLuaPlayer(luacpp::LuaState *state, Plugin *plugin)
                    { return scripting_Player_GetIPAddress(base->playerSlot); })
         .DefMember("IsFirstSpawn", [](LuaPlayerClass *base) -> bool
                    { return scripting_Player_IsFirstSpawn(base->playerSlot); })
+        .DefMember("IsAlive", [](LuaPlayerClass *base) -> bool
+                   { return scripting_Player_IsAlive(base->playerSlot); })
         .DefMember("ShowMenu", [](LuaPlayerClass *base, const char *menuid) -> void
                    { scripting_Player_ShowMenu(base->playerSlot, menuid); })
         .DefMember("GetChatTag", [](LuaPlayerClass *base) -> const char *
@@ -278,6 +281,8 @@ void SetupLuaPlayer(luacpp::LuaState *state, Plugin *plugin)
                    { scripting_Player_SetChatTag(base->playerSlot, tag); })
         .DefMember("SetCompetitiveRanking", [](LuaPlayerClass *base, int ranking) -> void
                    { scripting_Player_SetCompetitiveRanking(base->playerSlot, ranking); })
+        .DefMember("SetCompetitiveWins", [](LuaPlayerClass *base, int wins) -> void
+                   { scripting_Player_SetCompetitiveWins(base->playerSlot, wins); })
         .DefMember("SetCompetitiveRankType", [](LuaPlayerClass *base, int type) -> void
                    { scripting_Player_SetCompetitiveRankType(base->playerSlot, type); })
         .DefMember("SetChatTagColor", [](LuaPlayerClass *base, const char *color) -> void
@@ -306,10 +311,18 @@ void SetupLuaPlayer(luacpp::LuaState *state, Plugin *plugin)
                    { scripting_Player_Kill(base->playerSlot); })
         .DefMember("Drop", [](LuaPlayerClass *base, int reason) -> void
                    { scripting_Player_Drop(base->playerSlot, reason); })
+        .DefMember("SetMoveType", [](LuaPlayerClass *base, int movetype) -> void
+                   { scripting_Player_SetMoveType(base->playerSlot, (MoveType_t)movetype); })
+        .DefMember("SetActualMoveType", [](LuaPlayerClass *base, int actualmovetype) -> void
+                   { scripting_Player_SetActualMoveType(base->playerSlot, (MoveType_t)actualmovetype); })
         .DefMember("IsFakeClient", [](LuaPlayerClass *base) -> bool
                    { return scripting_Player_IsFakeClient(base->playerSlot); })
         .DefMember("GetLatency", [](LuaPlayerClass *base) -> int
                    { return scripting_Player_GetLatency(base->playerSlot); })
+        .DefMember("GetMoveType", [](LuaPlayerClass *base) -> int
+                   { return (int)scripting_Player_GetMoveType(base->playerSlot); })
+        .DefMember("GetActualMoveType", [](LuaPlayerClass *base) -> int
+                   { return (int)scripting_Player_GetActualMoveType(base->playerSlot); })
         .DefMember("GetSlot", [](LuaPlayerClass *base) -> int
                    { return base->playerSlot; })
         .DefMember("ExecuteCommand", [](LuaPlayerClass *base, const char *command) -> void

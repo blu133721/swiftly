@@ -129,6 +129,7 @@ public:
     SCHEMA_FIELD_OFFSET(int, m_iMaxHealth, 0)
     SCHEMA_FIELD_OFFSET(int, m_iTeamNum, 0)
     SCHEMA_FIELD_OFFSET(MoveType_t, m_MoveType, 0)
+    SCHEMA_FIELD_OFFSET(MoveType_t, m_nActualMoveType, 0)
     SCHEMA_FIELD_OFFSET(uint32, m_spawnflags, 0)
     SCHEMA_FIELD_OFFSET(uint32, m_fFlags, 0)
     SCHEMA_FIELD_OFFSET(LifeState_t, m_lifeState, 0)
@@ -140,6 +141,7 @@ public:
     SCHEMA_FIELD_OFFSET(float, m_flGravityScale, 0)
 
     int EntityIndex() { return this->m_pEntity->GetRefEHandle().GetEntryIndex(); }
+    bool IsAlive() { return m_lifeState == LifeState_t::LIFE_ALIVE; }
 
     void Teleport(Vector *position, QAngle *angles, Vector *velocity)
     {

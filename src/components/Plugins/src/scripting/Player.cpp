@@ -215,7 +215,7 @@ SMM_API int scripting_Player_GetArmor(uint32 playerId)
     if (!player)
         return 0;
 
-    CCSPlayerPawnBase *pPlayerPawn = player->GetPlayerBasePawn();
+    CCSPlayerPawn *pPlayerPawn = player->GetPlayerPawn();
     if (!pPlayerPawn)
         return 0;
 
@@ -228,7 +228,7 @@ SMM_API void scripting_Player_SetArmor(uint32 playerId, int armor)
     if (!player)
         return;
 
-    CCSPlayerPawnBase *pPlayerPawn = player->GetPlayerBasePawn();
+    CCSPlayerPawn *pPlayerPawn = player->GetPlayerPawn();
     if (!pPlayerPawn)
         return;
 
@@ -241,7 +241,7 @@ SMM_API void scripting_Player_TakeArmor(uint32 playerId, int armor)
     if (!player)
         return;
 
-    CCSPlayerPawnBase *pPlayerPawn = player->GetPlayerBasePawn();
+    CCSPlayerPawn *pPlayerPawn = player->GetPlayerPawn();
     if (!pPlayerPawn)
         return;
 
@@ -1272,6 +1272,32 @@ SMM_API float scripting_Player_GetGravity(uint32 playerId)
     return pawn->m_flGravityScale();
 }
 
+SMM_API MoveType_t scripting_Player_GetMoveType(uint32 playerId)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return MOVETYPE_NONE;
+
+    CBasePlayerPawn *bPawn = player->GetPawn();
+    if (!bPawn)
+        return MOVETYPE_NONE;
+
+    return bPawn->m_MoveType();
+}
+
+SMM_API MoveType_t scripting_Player_GetActualMoveType(uint32 playerId)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return MOVETYPE_NONE;
+
+    CBasePlayerPawn *bPawn = player->GetPawn();
+    if (!bPawn)
+        return MOVETYPE_NONE;
+
+    return bPawn->m_nActualMoveType();
+}
+
 SMM_API void scripting_Player_SetGravity(uint32 playerId, float gravity)
 {
     Player *player = g_playerManager->GetPlayer(playerId);
@@ -1500,6 +1526,46 @@ SMM_API bool scripting_Player_IsFirstSpawn(uint32 playerId)
     return player->IsFirstSpawn();
 }
 
+SMM_API bool scripting_Player_IsAlive(uint32 playerId)
+{
+
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return false;
+
+    CCSPlayerPawn *pPawn = player->GetPlayerPawn();
+    if (!pPawn)
+        return false;
+
+    return pPawn->IsAlive();
+}
+
+SMM_API void scripting_Player_SetMoveType(uint32 playerId, MoveType_t movetype)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return;
+
+    CBasePlayerPawn *bPawn = player->GetPawn();
+    if (!bPawn)
+        return;
+
+    bPawn->m_MoveType = movetype;
+}
+
+SMM_API void scripting_Player_SetActualMoveType(uint32 playerId, MoveType_t actualmovetype)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return;
+
+    CBasePlayerPawn *bPawn = player->GetPawn();
+    if (!bPawn)
+        return;
+
+    bPawn->m_nActualMoveType = actualmovetype;
+}
+
 SMM_API bool scripting_Player_IsFakeClient(uint32 playerId)
 {
     Player *player = g_playerManager->GetPlayer(playerId);
@@ -1520,6 +1586,19 @@ SMM_API void scripting_Player_SetCompetitiveRanking(uint32 playerId, int ranking
         return;
 
     controller->m_iCompetitiveRanking = ranking;
+}
+
+SMM_API void scripting_Player_SetCompetitiveWins(uint32 playerId, int wins)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return;
+
+    CCSPlayerController *controller = player->GetPlayerController();
+    if (!controller)
+        return;
+
+    controller->m_iCompetitiveWins = wins;
 }
 
 SMM_API void scripting_Player_SetCompetitiveRankType(uint32 playerId, int type)
