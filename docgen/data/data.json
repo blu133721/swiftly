@@ -48,7 +48,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Commands system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/commands.h>\n\nCommands *commands = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    commands = new Commands(pluginName);\n    ...\n}\n```"
@@ -100,12 +99,13 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Configuration system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/configuration.h>\n\nConfiguration *config = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    config = new Configuration();\n    ...\n}\n```"
 				},
-				"additional": "# Configuration Files\n\nTo use Swiftly Configuration system you need to create a `JSON` file in `addons/swiftly/configs/plugins` folder with the following schema:\n\n#### File Name\n\n```\nMAIN_CONFIG_KEY.json\n```"
+				"additional": {
+					"cpp": "# Configuration Files\n\nTo use Swiftly Configuration system you need to create a `JSON` file in `addons/swiftly/configs/plugins` folder with the following schema:\n\n#### File Name\n\n```\nMAIN_CONFIG_KEY.json\n```"
+				}
 			},
 			"reload": {
 				"title": "Reload",
@@ -136,8 +136,8 @@
 					"key": "const char*"
 				},
 				"additional": {
-					"cpp": ":::note\n If the key is invalid or the key is not an array key, it returns 0.\n:::",
-					"lua": ":::note\n If the key is invalid or the key is not an array key, it returns 0.\n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n If the key is invalid or the key is not an array key, it returns 0.\n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n If the key is invalid or the key is not an array key, it returns 0.\n</Callout>"
 				}
 			},
 			"fetch": {
@@ -154,8 +154,8 @@
 					"key": "const char*"
 				},
 				"additional": {
-					"cpp": ":::note\n If the key is invalid or the key is not an array key, it returns 0.\n:::",
-					"lua": ":::note\n If the key is invalid or the key is not an array key, it returns 0.\n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n If the key is invalid or the key is not an array key, it returns 0.\n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n If the key is invalid or the key is not an array key, it returns 0.\n</Callout>"
 				}
 			},
 			"exists": {
@@ -235,12 +235,11 @@
 			"getting-started": {
 				"title": "Getting Started",
 				"language": "both",
-				"position": 1,
 				"template": "getting-started",
 				"description": "To use the Swiftly Database system you need the following code in your plugin.",
 				"content": {
-					"cpp": "```cpp\n#include <swiftly/database.h>\n\nDatabase *db = nullptr;\n\nvoid OnPluginStart()\n{\n    ...\n    db = new Database(\"CONNECTION_NAME\");\n    ...\n}```",
-					"lua": "```lua\nevents:on(\"OnPluginStart\", function()\n    db = Database(\"CONNECTION_NAME\")\nend)```"
+					"cpp": "```cpp\n#include <swiftly/database.h>\n\nDatabase *db = nullptr;\n\nvoid OnPluginStart()\n{\n    ...\n    db = new Database(\"CONNECTION_NAME\");\n    ...\n}\n```",
+					"lua": "```lua\nevents:on(\"OnPluginStart\", function()\n    db = Database(\"CONNECTION_NAME\")\nend)\n```"
 				}
 			},
 			"escapestring": {
@@ -257,8 +256,8 @@
 					"value": "const char*"
 				},
 				"additional": {
-					"cpp": ":::note\n If database is not connected it will return the same value \n:::",
-					"lua": ":::note\n If database is not connected it will return the same value \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n If database is not connected it will return the same value \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n If database is not connected it will return the same value \n</Callout>"
 				}
 			},
 			"isconnected": {
@@ -288,8 +287,8 @@
 					"query": "const char*"
 				},
 				"additional": {
-					"cpp": ":::note\n If database is not connected it will return an empty value. \n:::",
-					"lua": ":::note\n If database is not connected it will return an empty value. \n:::\n### Parsing table\nTo parse the table you need to create a for iteration for parsing each row.\n```lua\nevents:on(\"OnClientConnect\", function(playerid)\n    local player = GetPlayer(playerid)\n    if not player then return false end\n\n    local result = db:Query(string.format(\"select * from users where steamid = '%.0f'\", player:GetSteamID()))\n    for i=1,#result do\n        print(json.encode(result[i])) -- prints the row with index i\n    end\n    return true\nend)\n```"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n If database is not connected it will return an empty value. \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n If database is not connected it will return an empty value. \n</Callout>\n### Parsing table\nTo parse the table you need to create a for iteration for parsing each row.\n```lua\nevents:on(\"OnClientConnect\", function(playerid)\n    local player = GetPlayer(playerid)\n    if not player then return false end\n\n    local result = db:Query(string.format(\"select * from users where steamid = '%.0f'\", player:GetSteamID()))\n    for i=1,#result do\n        print(json.encode(result[i])) -- prints the row with index i\n    end\n    return true\nend)\n```"
 				}
 			},
 			"fetchfields": {
@@ -334,7 +333,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Entity system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/entities.h>\n\nEntities *entities = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    entities = new Entities();\n    ...\n}\n```"
@@ -410,8 +408,8 @@
 					"classname": "const char*"
 				},
 				"additional": {
-					"lua": ":::note\nA list of the entity class names can be found here: [https://cs2.poggu.me/dumped-data/entity-list](https://cs2.poggu.me/dumped-data/entity-list).\nAs a class name it can also be used the following class name format to select a player: \"player:PLAYERID\", where PLAYERID is the player id.\n:::",
-					"cpp": ":::note\nA list of the entity class names can be found here: [https://cs2.poggu.me/dumped-data/entity-list](https://cs2.poggu.me/dumped-data/entity-list).\nAs a class name it can also be used the following class name format to select a player: \"player:PLAYERID\", where PLAYERID is the player id.\n:::"
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\nA list of the entity class names can be found here: [https://cs2.poggu.me/dumped-data/entity-list](https://cs2.poggu.me/dumped-data/entity-list).\nAs a class name it can also be used the following class name format to select a player: \"player:PLAYERID\", where PLAYERID is the player id.\n</Callout>",
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\nA list of the entity class names can be found here: [https://cs2.poggu.me/dumped-data/entity-list](https://cs2.poggu.me/dumped-data/entity-list).\nAs a class name it can also be used the following class name format to select a player: \"player:PLAYERID\", where PLAYERID is the player id.\n</Callout>"
 				}
 			},
 			"entity": {
@@ -463,8 +461,8 @@
 							"value": "double*"
 						},
 						"additional": {
-							"cpp": ":::note\nThe activator and caller needs to be an entity or a player.\nTo specify a player you need to use \"player:ID\", where the ID is the player id.\nTo specify an entity you need to use \"entity:ID\", where the ID is the entity id.\n:::",
-							"lua": ":::note\nThe activator and caller needs to be an entity or a player.\nTo specify a player you need to use \"player:ID\", where the ID is the player id.\nTo specify an entity you need to use \"entity:ID\", where the ID is the entity id.\n:::"
+							"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\nThe activator and caller needs to be an entity or a player.\nTo specify a player you need to use \"player:ID\", where the ID is the player id.\nTo specify an entity you need to use \"entity:ID\", where the ID is the entity id.\n</Callout>",
+							"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\nThe activator and caller needs to be an entity or a player.\nTo specify a player you need to use \"player:ID\", where the ID is the player id.\nTo specify an entity you need to use \"entity:ID\", where the ID is the entity id.\n</Callout>"
 						}
 					},
 					"setmodel": {
@@ -495,6 +493,19 @@
 						"params": {
 							"collision": "CollisionGroup"
 						},
+						"additional": {}
+					},
+					"getcollisiongroup": {
+						"title": "GetCollisionGroup",
+						"template": "function-syntax",
+						"description": "Gets the collision group for the entity.",
+						"language": "both",
+						"variable": {
+							"cpp": "entity->GetCollisionGroup",
+							"lua": "entity:GetCollisionGroup"
+						},
+						"return": "CollisionGroup",
+						"params": {},
 						"additional": {}
 					},
 					"getentityid": {
@@ -632,7 +643,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Exports system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/exports.h>\n\nExports *exports = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    exports = new Exports(pluginName);\n    ...\n}\n```"
@@ -696,7 +706,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Files system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/files.h>\n\nFiles *files = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    files = new Files();\n    ...\n}\n```"
@@ -868,19 +877,18 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Game Events system you need the following code in your plugin.",
 				"content": {
-					"cpp": "```cpp\n#include <swiftly/gameevents.h>\n```"
+					"gameevents": "```cpp\n#include <swiftly/gameevents.h>\n```"
 				},
 				"additional": {
-					"cpp": ":::warning\n This include needs to exist only in one source code file. \n:::"
+					"gameevents": "<Callout type=\"warning\" emoji=\"⚠️\">\n This include needs to exist only in one source code file. \n</Callout>"
 				}
 			},
 			"onbombabortdefuse": {
 				"title": "BombAbortDefuse",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb is not being defused anymore.",
 				"return": "void",
 				"params": {
@@ -888,14 +896,14 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onbombabortplant": {
 				"title": "BombAbortPlant",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb is not being planted anymore.",
 				"return": "void",
 				"params": {
@@ -903,14 +911,14 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onbombbeginplant": {
 				"title": "BombBeginPlant",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb is being planted.",
 				"return": "void",
 				"params": {
@@ -918,14 +926,14 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onbombbegindefuse": {
 				"title": "BombBeginDefuse",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb is being defused.",
 				"return": "void",
 				"params": {
@@ -933,14 +941,14 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onbombdefused": {
 				"title": "BombDefused",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb has been defused.",
 				"return": "void",
 				"params": {
@@ -948,14 +956,14 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onbombdropped": {
 				"title": "BombDropped",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb was dropped.",
 				"return": "void",
 				"params": {
@@ -966,7 +974,7 @@
 			"onbombpickup": {
 				"title": "BombPickup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb was picked up.",
 				"return": "void",
 				"params": {
@@ -977,7 +985,7 @@
 			"onbombexploded": {
 				"title": "BombExploded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb exploded.",
 				"return": "void",
 				"params": {
@@ -985,14 +993,14 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onbombplanted": {
 				"title": "BombPlanted",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a bomb has been planted.",
 				"return": "void",
 				"params": {
@@ -1000,28 +1008,28 @@
 					"site": "unsigned short"
 				},
 				"additional": {
-					"cpp": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::",
-					"lua": ":::note\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n site can take 3 values: SITE_A, SITE_B or SITE_UNKNOWN \n</Callout>"
 				}
 			},
 			"onclientconnect": {
 				"title": "OnClientConnect",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event triggers when a player is connecting to server.",
 				"return": "bool",
 				"params": {
 					"player": "player"
 				},
 				"additional": {
-					"cpp": ":::info This game event is not triggered on fake clients (bots). \n:::\n:::note\n @return true => Allows the connection\n@return false => Blocks the connection \n:::",
-					"lua": ":::info This game event is not triggered on fake clients (bots). \n:::\n:::note\n @return true => Allows the connection\n@return false => Blocks the connection \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\nThis game event is not triggered on fake clients (bots). \n</Callout>\n<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the connection\n@return false => Blocks the connection \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\nThis game event is not triggered on fake clients (bots). \n</Callout>\n<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the connection\n@return false => Blocks the connection \n</Callout>"
 				}
 			},
 			"onclientdisconnect": {
 				"title": "OnClientDisconnect",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event triggers when a player was disconnected.",
 				"return": "void",
 				"params": {
@@ -1032,7 +1040,7 @@
 			"onclientgamemessage": {
 				"title": "OnClientGameMessage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event triggers when a game message is sent.",
 				"return": "bool",
 				"params": {
@@ -1041,14 +1049,14 @@
 					"message": "const char*"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Allows the message\n@return false => Blocks the message \n:::",
-					"lua": ":::note\n @return true => Allows the message\n@return false => Blocks the message \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the message\n@return false => Blocks the message \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the message\n@return false => Blocks the message \n</Callout>"
 				}
 			},
 			"onclientkeystatechange": {
 				"title": "OnClientKeyStateChange",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a client pressed or releases a specific button.",
 				"return": "void",
 				"params": {
@@ -1061,7 +1069,7 @@
 			"onservercvarchange": {
 				"title": "OnServerCvarChange",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a server convar is changed.",
 				"return": "void",
 				"params": {
@@ -1073,7 +1081,7 @@
 			"ongametick": {
 				"title": "OnGameTick",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called at every server tick.",
 				"return": "void",
 				"params": {
@@ -1086,7 +1094,7 @@
 			"onmapload": {
 				"title": "OnMapLoad",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a map is loaded.",
 				"return": "void",
 				"params": {
@@ -1097,7 +1105,7 @@
 			"onmapunload": {
 				"title": "OnMapUnload",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a map is unloaded.",
 				"return": "void",
 				"params": {
@@ -1108,7 +1116,7 @@
 			"serverpreshutdown": {
 				"title": "OnServerPreshutdown",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when server_pre_shutdown is triggered.",
 				"return": "void",
 				"params": {
@@ -1119,7 +1127,7 @@
 			"servershutdown": {
 				"title": "OnServerShutdown",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when server_shutdown is triggered.",
 				"return": "void",
 				"params": {
@@ -1130,7 +1138,7 @@
 			"servermessage": {
 				"title": "OnServerMesssage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when server_message is triggered.",
 				"return": "void",
 				"params": {
@@ -1141,7 +1149,7 @@
 			"playeractivate": {
 				"title": "OnPlayerActivate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_activate is triggered.",
 				"return": "void",
 				"params": {
@@ -1152,7 +1160,7 @@
 			"localplayerteam": {
 				"title": "OnLocalPlayerTeam",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when local_player_team is triggered.",
 				"return": "void",
 				"params": {},
@@ -1161,7 +1169,7 @@
 			"localplayercontrollerteam": {
 				"title": "OnLocalPlayerControllerTeam",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when local_player_controller_team is triggered.",
 				"return": "void",
 				"params": {},
@@ -1170,7 +1178,7 @@
 			"localplayerpawnchanged": {
 				"title": "OnLocalPlayerPawnChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when local_player_pawn_changed is triggered.",
 				"return": "void",
 				"params": {},
@@ -1179,7 +1187,7 @@
 			"teamplaybroadcastaudio": {
 				"title": "OnTeamplayBroadcastAudio",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when teamplay_broadcast_audio is triggered.",
 				"return": "void",
 				"params": {
@@ -1191,7 +1199,7 @@
 			"finalestart": {
 				"title": "OnFinaleStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when finale_start is triggered.",
 				"return": "void",
 				"params": {
@@ -1202,7 +1210,7 @@
 			"playerstatsupdated": {
 				"title": "OnPlayerStatsUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_stats_updated is triggered.",
 				"return": "void",
 				"params": {
@@ -1213,7 +1221,7 @@
 			"userdatadownloaded": {
 				"title": "OnUserDataDownloaded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when user_data_downloaded is triggered.",
 				"return": "void",
 				"params": {},
@@ -1222,7 +1230,7 @@
 			"ragdolldissolved": {
 				"title": "OnRagdollDissolved",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ragdoll_dissolved is triggered.",
 				"return": "void",
 				"params": {
@@ -1233,7 +1241,7 @@
 			"teaminfo": {
 				"title": "OnTeamInfo",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when team_info is triggered.",
 				"return": "void",
 				"params": {
@@ -1245,7 +1253,7 @@
 			"teamscore": {
 				"title": "OnTeamScore",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when team_score is triggered.",
 				"return": "void",
 				"params": {
@@ -1257,7 +1265,7 @@
 			"hltvcameraman": {
 				"title": "OnHLTVCameraman",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_cameraman is triggered.",
 				"return": "void",
 				"params": {
@@ -1268,7 +1276,7 @@
 			"hltvchase": {
 				"title": "OnHLTVChase",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_chase is triggered.",
 				"return": "void",
 				"params": {
@@ -1285,7 +1293,7 @@
 			"hltvrankcamera": {
 				"title": "OnHLTVRankCamera",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_rank_camera is triggered.",
 				"return": "void",
 				"params": {
@@ -1298,7 +1306,7 @@
 			"hltvrankentity": {
 				"title": "OnHLTVRankEntity",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_rank_entity is triggered.",
 				"return": "void",
 				"params": {
@@ -1311,7 +1319,7 @@
 			"hltvfixed": {
 				"title": "OnHLTVFixed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_fixed is triggered.",
 				"return": "void",
 				"params": {
@@ -1329,7 +1337,7 @@
 			"hltvmessage": {
 				"title": "OnHLTVMessage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_message is triggered.",
 				"return": "void",
 				"params": {
@@ -1340,7 +1348,7 @@
 			"hltvstatus": {
 				"title": "OnHLTVStatus",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_status is triggered.",
 				"return": "void",
 				"params": {
@@ -1354,7 +1362,7 @@
 			"hltvtitle": {
 				"title": "OnHLTVTitle",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_title is triggered.",
 				"return": "void",
 				"params": {
@@ -1365,7 +1373,7 @@
 			"hltvchat": {
 				"title": "OnHLTVChat",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_chat is triggered.",
 				"return": "void",
 				"params": {
@@ -1377,7 +1385,7 @@
 			"hltvversioninfo": {
 				"title": "OnHLTVVersioninfo",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_versioninfo is triggered.",
 				"return": "void",
 				"params": {
@@ -1388,7 +1396,7 @@
 			"hltvreplay": {
 				"title": "OnHLTVReplay",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_replay is triggered.",
 				"return": "void",
 				"params": {
@@ -1400,7 +1408,7 @@
 			"mapshutdown": {
 				"title": "OnMapShutdown",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when map_shutdown is triggered.",
 				"return": "void",
 				"params": {},
@@ -1409,7 +1417,7 @@
 			"maptransition": {
 				"title": "OnMapTransition",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when map_transition is triggered.",
 				"return": "void",
 				"params": {},
@@ -1418,7 +1426,7 @@
 			"hostnamechanged": {
 				"title": "OnHostnameChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostname_changed is triggered.",
 				"return": "void",
 				"params": {
@@ -1429,7 +1437,7 @@
 			"difficultychanged": {
 				"title": "OnDifficultyChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when difficulty_changed is triggered.",
 				"return": "void",
 				"params": {
@@ -1442,7 +1450,7 @@
 			"gamemessage": {
 				"title": "OnGameMessage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when game_message is triggered.",
 				"return": "void",
 				"params": {
@@ -1454,7 +1462,7 @@
 			"gamenewmap": {
 				"title": "OnGameNewmap",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when game_newmap is triggered.",
 				"return": "void",
 				"params": {
@@ -1465,7 +1473,7 @@
 			"roundstartpreentity": {
 				"title": "OnRoundStartPreEntity",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_start_pre_entity is triggered.",
 				"return": "void",
 				"params": {},
@@ -1474,7 +1482,7 @@
 			"roundstartpostnav": {
 				"title": "OnRoundStartPostNav",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_start_post_nav is triggered.",
 				"return": "void",
 				"params": {},
@@ -1483,7 +1491,7 @@
 			"roundfreezeend": {
 				"title": "OnRoundFreezeEnd",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_freeze_end is triggered.",
 				"return": "void",
 				"params": {},
@@ -1492,7 +1500,7 @@
 			"teamplayroundstart": {
 				"title": "OnTeamplayRoundStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when teamplay_round_start is triggered.",
 				"return": "void",
 				"params": {
@@ -1503,7 +1511,7 @@
 			"playerfootstep": {
 				"title": "OnPlayerFootstep",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_footstep is triggered.",
 				"return": "void",
 				"params": {
@@ -1514,7 +1522,7 @@
 			"playerhintmessage": {
 				"title": "OnPlayerHintmessage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_hintmessage is triggered.",
 				"return": "void",
 				"params": {
@@ -1525,7 +1533,7 @@
 			"breakbreakable": {
 				"title": "OnBreakBreakable",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when break_breakable is triggered.",
 				"return": "void",
 				"params": {
@@ -1538,7 +1546,7 @@
 			"breakprop": {
 				"title": "OnBreakProp",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when break_prop is triggered.",
 				"return": "void",
 				"params": {
@@ -1550,7 +1558,7 @@
 			"entitykilled": {
 				"title": "OnEntityKilled",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when entity_killed is triggered.",
 				"return": "void",
 				"params": {
@@ -1564,7 +1572,7 @@
 			"doorclose": {
 				"title": "OnDoorClose",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when door_close is triggered.",
 				"return": "void",
 				"params": {
@@ -1576,7 +1584,7 @@
 			"votestarted": {
 				"title": "OnVoteStarted",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_started is triggered.",
 				"return": "void",
 				"params": {
@@ -1590,7 +1598,7 @@
 			"votefailed": {
 				"title": "OnVoteFailed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_failed is triggered.",
 				"return": "void",
 				"params": {
@@ -1601,7 +1609,7 @@
 			"votepassed": {
 				"title": "OnVotePassed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_passed is triggered.",
 				"return": "void",
 				"params": {
@@ -1614,7 +1622,7 @@
 			"votechanged": {
 				"title": "OnVoteChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_changed is triggered.",
 				"return": "void",
 				"params": {
@@ -1630,7 +1638,7 @@
 			"votecastyes": {
 				"title": "OnVoteCastYes",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_cast_yes is triggered.",
 				"return": "void",
 				"params": {
@@ -1642,7 +1650,7 @@
 			"votecastno": {
 				"title": "OnVoteCastNo",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_cast_no is triggered.",
 				"return": "void",
 				"params": {
@@ -1654,7 +1662,7 @@
 			"achievementevent": {
 				"title": "OnAchievementEvent",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when achievement_event is triggered.",
 				"return": "void",
 				"params": {
@@ -1667,7 +1675,7 @@
 			"achievementearned": {
 				"title": "OnAchievementEarned",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when achievement_earned is triggered.",
 				"return": "void",
 				"params": {
@@ -1679,7 +1687,7 @@
 			"achievementwritefailed": {
 				"title": "OnAchievementWriteFailed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when achievement_write_failed is triggered.",
 				"return": "void",
 				"params": {},
@@ -1688,7 +1696,7 @@
 			"bonusupdated": {
 				"title": "OnBonusUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when bonus_updated is triggered.",
 				"return": "void",
 				"params": {
@@ -1702,7 +1710,7 @@
 			"spectargetupdated": {
 				"title": "OnSpecTargetUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when spec_target_updated is triggered.",
 				"return": "void",
 				"params": {
@@ -1714,7 +1722,7 @@
 			"specmodeupdated": {
 				"title": "OnSpecModeUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when spec_mode_updated is triggered.",
 				"return": "void",
 				"params": {
@@ -1725,7 +1733,7 @@
 			"entityvisible": {
 				"title": "OnEntityVisible",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when entity_visible is triggered.",
 				"return": "void",
 				"params": {
@@ -1739,7 +1747,7 @@
 			"gameinstructordraw": {
 				"title": "OnGameInstructorDraw",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when gameinstructor_draw is triggered.",
 				"return": "void",
 				"params": {},
@@ -1748,7 +1756,7 @@
 			"gameinstructornodraw": {
 				"title": "OnGameInstructorNodraw",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when gameinstructor_nodraw is triggered.",
 				"return": "void",
 				"params": {},
@@ -1757,7 +1765,7 @@
 			"flareignitenpc": {
 				"title": "OnFlareIgniteNCP",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when flare_ignite_npc is triggered.",
 				"return": "void",
 				"params": {
@@ -1768,7 +1776,7 @@
 			"helicoptergrenadepuntmiss": {
 				"title": "OnHelicoptedGrenadePuntMiss",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when helicopter_grenade_punt_miss is triggered.",
 				"return": "void",
 				"params": {},
@@ -1777,7 +1785,7 @@
 			"physgunpickup": {
 				"title": "OnPhysgunPickup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when physgun_pickup is triggered.",
 				"return": "void",
 				"params": {
@@ -1788,7 +1796,7 @@
 			"inventoryupdated": {
 				"title": "OnInventoryUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when inventory_updated is triggered.",
 				"return": "void",
 				"params": {},
@@ -1797,7 +1805,7 @@
 			"cartupdated": {
 				"title": "OnCarUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cart_updated is triggered.",
 				"return": "void",
 				"params": {},
@@ -1806,7 +1814,7 @@
 			"storepricesheetupdated": {
 				"title": "OnStorePricesheetUpdated",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when store_pricesheet_updated is triggered.",
 				"return": "void",
 				"params": {},
@@ -1815,7 +1823,7 @@
 			"itemschemainitialized": {
 				"title": "OnItemSchemaInitialized",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when item_schema_initialized is triggered.",
 				"return": "void",
 				"params": {},
@@ -1824,7 +1832,7 @@
 			"dropratemodified": {
 				"title": "OnDropRateModified",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when drop_rate_modified is triggered.",
 				"return": "void",
 				"params": {},
@@ -1833,7 +1841,7 @@
 			"eventticketmodified": {
 				"title": "OnEventTicketModified",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when event_ticket_modified is triggered.",
 				"return": "void",
 				"params": {},
@@ -1842,7 +1850,7 @@
 			"gcconnected": {
 				"title": "OnGCConnected",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when gc_connected is triggered.",
 				"return": "void",
 				"params": {},
@@ -1851,7 +1859,7 @@
 			"instructorstartlesson": {
 				"title": "OnInstructorStartLesson",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when instructor_start_lesson is triggered.",
 				"return": "void",
 				"params": {
@@ -1867,7 +1875,7 @@
 			"instructorcloselesson": {
 				"title": "OnInstructorCloseLesson",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when instructor_close_lesson is triggered.",
 				"return": "void",
 				"params": {
@@ -1879,7 +1887,7 @@
 			"instructorserverhintcreate": {
 				"title": "OnInstructorServerHintCreate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when instructor_server_hint_create is triggered.",
 				"return": "void",
 				"params": {
@@ -1909,7 +1917,7 @@
 			"clientsidelessonclosed": {
 				"title": "OnClinetsideLessonClosed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when clientside_lesson_closed is triggered.",
 				"return": "void",
 				"params": {
@@ -1920,7 +1928,7 @@
 			"dynamicshadowlightchanged": {
 				"title": "OnDynamicShadowLightChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when dynamic_shadow_light_changed is triggered.",
 				"return": "void",
 				"params": {},
@@ -1929,7 +1937,7 @@
 			"gameuihidden": {
 				"title": "OnGameuiHidden",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when gameui_hidden is triggered.",
 				"return": "void",
 				"params": {},
@@ -1938,7 +1946,7 @@
 			"itemsgifted": {
 				"title": "OnItemsGifted",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when items_gifted is triggered.",
 				"return": "void",
 				"params": {
@@ -1953,7 +1961,7 @@
 			"playerscore": {
 				"title": "OnPlayerScore",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_score is triggered.",
 				"return": "void",
 				"params": {
@@ -1967,7 +1975,7 @@
 			"playershoot": {
 				"title": "OnPlayerShoot",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_shoot is triggered.",
 				"return": "void",
 				"params": {
@@ -1980,7 +1988,7 @@
 			"gameinit": {
 				"title": "OnGameInit",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when game_init is triggered.",
 				"return": "void",
 				"params": {},
@@ -1989,7 +1997,7 @@
 			"gamestart": {
 				"title": "OnGameStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when game_start is triggered.",
 				"return": "void",
 				"params": {
@@ -2003,7 +2011,7 @@
 			"gameend": {
 				"title": "OnGameEnd",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when game_end is triggered.",
 				"return": "void",
 				"params": {
@@ -2014,7 +2022,7 @@
 			"roundannouncematchpoint": {
 				"title": "OnRoundAnnounceMatchPoint",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_announce_match_point is triggered.",
 				"return": "void",
 				"params": {},
@@ -2023,7 +2031,7 @@
 			"roundannouncefinal": {
 				"title": "OnRoundAnnounceFinal",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_announce_final is triggered.",
 				"return": "void",
 				"params": {},
@@ -2032,7 +2040,7 @@
 			"roundannouncelastroundhalf": {
 				"title": "OnRoundAnnounceLastRoundHalf",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_announce_last_round_half is triggered.",
 				"return": "void",
 				"params": {},
@@ -2041,7 +2049,7 @@
 			"roundannouncematchstart": {
 				"title": "OnRoundAnnouceMatchStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_announce_match_start is triggered.",
 				"return": "void",
 				"params": {},
@@ -2050,7 +2058,7 @@
 			"roundannouncewarmup": {
 				"title": "OnRoundAnnounceWarmup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_announce_warmup is triggered.",
 				"return": "void",
 				"params": {},
@@ -2059,7 +2067,7 @@
 			"roundenduploadstats": {
 				"title": "OnRoundEndUploadStats",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_end_upload_stats is triggered.",
 				"return": "void",
 				"params": {},
@@ -2068,7 +2076,7 @@
 			"roundofficiallyended": {
 				"title": "OnRoundOfficiallyEnded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_officially_ended is triggered.",
 				"return": "void",
 				"params": {},
@@ -2077,7 +2085,7 @@
 			"roundtimewarning": {
 				"title": "OnRoundTimeWarning",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when round_time_warning is triggered.",
 				"return": "void",
 				"params": {},
@@ -2086,7 +2094,7 @@
 			"ugcmapinforeceived": {
 				"title": "OnUGCMapInfoReceived",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ugc_map_info_received is triggered.",
 				"return": "void",
 				"params": {
@@ -2097,7 +2105,7 @@
 			"ugcmapunsubscribed": {
 				"title": "OnUGCMapUnsubscribed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ugc_map_unsubscribed is triggered.",
 				"return": "void",
 				"params": {
@@ -2108,7 +2116,7 @@
 			"ugcmapdownloaderror": {
 				"title": "OnUGCMapDownloadError",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ugc_map_download_error is triggered.",
 				"return": "void",
 				"params": {
@@ -2120,7 +2128,7 @@
 			"ugcfiledownloadfinished": {
 				"title": "OnUGCFileDownloadFinished",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ugc_file_download_finished is triggered.",
 				"return": "void",
 				"params": {
@@ -2131,7 +2139,7 @@
 			"ugcfiledownloadstart": {
 				"title": "OnUGCFileDownloadStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ugc_file_download_start is triggered.",
 				"return": "void",
 				"params": {
@@ -2143,7 +2151,7 @@
 			"beginnewmatch": {
 				"title": "OnBeginNewMatch",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when begin_new_match is triggered.",
 				"return": "void",
 				"params": {},
@@ -2152,7 +2160,7 @@
 			"dmbonusweaponstart": {
 				"title": "OnDMBonusWeaponStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when dm_bonus_weapon_start is triggered.",
 				"return": "void",
 				"params": {
@@ -2164,7 +2172,7 @@
 			"survivalannouncephase": {
 				"title": "OnSurvivalAnnouncePhase",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when survival_announce_phase is triggered.",
 				"return": "void",
 				"params": {
@@ -2175,7 +2183,7 @@
 			"brokenbreakable": {
 				"title": "OnBrokenBreakable",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when broken_breakable is triggered.",
 				"return": "void",
 				"params": {
@@ -2188,7 +2196,7 @@
 			"playerdecal": {
 				"title": "OnPlayerDecal",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_decal is triggered.",
 				"return": "void",
 				"params": {
@@ -2199,7 +2207,7 @@
 			"setinstructorgroupenabled": {
 				"title": "OnSetInstructorGroupEnabled",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when set_instructor_group_enabled is triggered.",
 				"return": "void",
 				"params": {
@@ -2211,7 +2219,7 @@
 			"instructorserverhintstop": {
 				"title": "OnInstructorServerHintStop",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when instructor_server_hint_stop is triggered.",
 				"return": "void",
 				"params": {
@@ -2222,7 +2230,7 @@
 			"readgametitledata": {
 				"title": "OnReadGameTitledata",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when read_game_titledata is triggered.",
 				"return": "void",
 				"params": {
@@ -2233,7 +2241,7 @@
 			"writegametitledata": {
 				"title": "OnWriteGameTitledata",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when write_game_titledata is triggered.",
 				"return": "void",
 				"params": {
@@ -2244,7 +2252,7 @@
 			"resetgametitledata": {
 				"title": "OnResetGameTitledata",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when reset_game_titledata is triggered.",
 				"return": "void",
 				"params": {
@@ -2255,7 +2263,7 @@
 			"weaponhudselection": {
 				"title": "OnWeaponhudSelection",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weaponhud_selection is triggered.",
 				"return": "void",
 				"params": {
@@ -2268,7 +2276,7 @@
 			"voteended": {
 				"title": "OnVoteEnded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_ended is triggered.",
 				"return": "void",
 				"params": {},
@@ -2277,7 +2285,7 @@
 			"votecast": {
 				"title": "OnVoteCast",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_cast is triggered.",
 				"return": "void",
 				"params": {
@@ -2290,7 +2298,7 @@
 			"voteoptions": {
 				"title": "OnVoteOptions",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vote_options is triggered.",
 				"return": "void",
 				"params": {
@@ -2306,7 +2314,7 @@
 			"endmatchmapvoteselectingmap": {
 				"title": "OnEndmatchMapvoteSelectingMap",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when endmatch_mapvote_selecting_map is triggered.",
 				"return": "void",
 				"params": {
@@ -2327,7 +2335,7 @@
 			"endmatchcmmstartrevealitems": {
 				"title": "OnEndmatchCMMStartRevealItems",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when endmatch_cmm_start_reveal_items is triggered.",
 				"return": "void",
 				"params": {},
@@ -2336,7 +2344,7 @@
 			"clientloadoutchanged": {
 				"title": "OnClientLoadoutChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when client_loadout_changed is triggered.",
 				"return": "void",
 				"params": {},
@@ -2345,7 +2353,7 @@
 			"addplayersonaricon": {
 				"title": "OnAddPlayerSonarIcon",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when add_player_sonar_icon is triggered.",
 				"return": "void",
 				"params": {
@@ -2359,7 +2367,7 @@
 			"addbullethitmarker": {
 				"title": "OnAddBulletHitMarker",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when add_bullet_hit_marker is triggered.",
 				"return": "void",
 				"params": {
@@ -2381,7 +2389,7 @@
 			"otherdeath": {
 				"title": "OnOtherDeath",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when other_death is triggered.",
 				"return": "void",
 				"params": {
@@ -2403,7 +2411,7 @@
 			"itempurchase": {
 				"title": "OnItemPurchase",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when item_purchase is triggered.",
 				"return": "void",
 				"params": {
@@ -2417,7 +2425,7 @@
 			"defuserdropped": {
 				"title": "OnDefuserDropped",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when defuser_dropped is triggered.",
 				"return": "void",
 				"params": {
@@ -2428,7 +2436,7 @@
 			"defuserpickup": {
 				"title": "OnDefuserPickup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when defuser_pickup is triggered.",
 				"return": "void",
 				"params": {
@@ -2440,7 +2448,7 @@
 			"announcephaseend": {
 				"title": "OnAnnouncePhaseEnd",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when announce_phase_end is triggered.",
 				"return": "void",
 				"params": {},
@@ -2449,7 +2457,7 @@
 			"csintermission": {
 				"title": "OnCSIntermission",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_intermission is triggered.",
 				"return": "void",
 				"params": {},
@@ -2458,7 +2466,7 @@
 			"hostagefollows": {
 				"title": "OnHostageFollows",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_follows is triggered.",
 				"return": "void",
 				"params": {
@@ -2470,7 +2478,7 @@
 			"hostagehurt": {
 				"title": "OnHostageHurt",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_hurt is triggered.",
 				"return": "void",
 				"params": {
@@ -2482,7 +2490,7 @@
 			"hostagekilled": {
 				"title": "OnHostageKilled",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_killed is triggered.",
 				"return": "void",
 				"params": {
@@ -2494,7 +2502,7 @@
 			"hostagerescued": {
 				"title": "OnHostageRescued",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_rescued is triggered.",
 				"return": "void",
 				"params": {
@@ -2507,7 +2515,7 @@
 			"hostagestopsfollowing": {
 				"title": "OnHostageStopsFollowing",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_stops_following is triggered.",
 				"return": "void",
 				"params": {
@@ -2519,7 +2527,7 @@
 			"hostagerescuedall": {
 				"title": "OnHostageRescuedAll",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_rescued_all is triggered.",
 				"return": "void",
 				"params": {},
@@ -2528,7 +2536,7 @@
 			"hostagecallforhelp": {
 				"title": "OnHostageCallForHelp",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hostage_call_for_help is triggered.",
 				"return": "void",
 				"params": {
@@ -2539,7 +2547,7 @@
 			"vipescaped": {
 				"title": "OnVIPEscaped",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vip_escaped is triggered.",
 				"return": "void",
 				"params": {
@@ -2550,7 +2558,7 @@
 			"vipkilled": {
 				"title": "OnVIPKilled",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when vip_killed is triggered.",
 				"return": "void",
 				"params": {
@@ -2562,7 +2570,7 @@
 			"playerradio": {
 				"title": "OnPlayerRadio",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_radio is triggered.",
 				"return": "void",
 				"params": {
@@ -2574,7 +2582,7 @@
 			"bombbeep": {
 				"title": "OnBombBeep",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when bomb_beep is triggered.",
 				"return": "void",
 				"params": {
@@ -2585,7 +2593,7 @@
 			"weaponfire": {
 				"title": "OnWeaponFire",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weapon_fire is triggered.",
 				"return": "void",
 				"params": {
@@ -2598,7 +2606,7 @@
 			"weaponfireonempty": {
 				"title": "OnWeaponFireOnEmpty",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weapon_fire_on_empty is triggered.",
 				"return": "void",
 				"params": {
@@ -2610,7 +2618,7 @@
 			"grenadethrown": {
 				"title": "OnGrenadeThrown",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when grenade_thrown is triggered.",
 				"return": "void",
 				"params": {
@@ -2622,7 +2630,7 @@
 			"weaponoutofammo": {
 				"title": "OnWeaponOutOfAmmo",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weapon_outofammo is triggered.",
 				"return": "void",
 				"params": {
@@ -2633,7 +2641,7 @@
 			"weaponreload": {
 				"title": "OnWeaponReload",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weapon_reload is triggered.",
 				"return": "void",
 				"params": {
@@ -2644,7 +2652,7 @@
 			"weaponzoom": {
 				"title": "OnWeaponZoom",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weapon_zoom is triggered.",
 				"return": "void",
 				"params": {
@@ -2655,7 +2663,7 @@
 			"silencerdetach": {
 				"title": "OnSilencerDetach",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when silencer_detach is triggered.",
 				"return": "void",
 				"params": {
@@ -2666,7 +2674,7 @@
 			"inspectweapon": {
 				"title": "OnInspectWeapon",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when inspect_weapon is triggered.",
 				"return": "void",
 				"params": {
@@ -2677,7 +2685,7 @@
 			"weaponzoomrifle": {
 				"title": "OnWeaponZoomRifle",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when weapon_zoom_rifle is triggered.",
 				"return": "void",
 				"params": {
@@ -2688,7 +2696,7 @@
 			"playerspawned": {
 				"title": "OnPlayerSpawned",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_spawned is triggered.",
 				"return": "void",
 				"params": {
@@ -2700,7 +2708,7 @@
 			"playerpostthink": {
 				"title": "OnPlayerPostThink",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player post think finished to execute.",
 				"return": "void",
 				"params": {
@@ -2711,21 +2719,21 @@
 			"playerprepostthink": {
 				"title": "OnPlayerPrePostThink",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player post think started to execute to execute.",
 				"return": "bool",
 				"params": {
 					"player": "player"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Allows the PostThink to execute\n@return false => Blocks the PostThink to execute \n:::",
-					"lua": ":::note\n @return true => Allows the PostThink to execute\n@return false => Blocks the PostThink to execute \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the PostThink to execute\n@return false => Blocks the PostThink to execute \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the PostThink to execute\n@return false => Blocks the PostThink to execute \n</Callout>"
 				}
 			},
 			"itempickupslerp": {
 				"title": "OnItemPickupSlerp",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when item_pickup_slerp is triggered.",
 				"return": "void",
 				"params": {
@@ -2738,7 +2746,7 @@
 			"itempickupfailed": {
 				"title": "OnItemPickupFailed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when item_pickup_failed is triggered.",
 				"return": "void",
 				"params": {
@@ -2752,7 +2760,7 @@
 			"itemremove": {
 				"title": "OnItemRemove",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when item_remove is triggered.",
 				"return": "void",
 				"params": {
@@ -2765,7 +2773,7 @@
 			"ammopickup": {
 				"title": "OnAmmoPickup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ammo_pickup is triggered.",
 				"return": "void",
 				"params": {
@@ -2778,7 +2786,7 @@
 			"itemequip": {
 				"title": "OnItemEquip",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when item_equip is triggered.",
 				"return": "void",
 				"params": {
@@ -2797,7 +2805,7 @@
 			"buytimeended": {
 				"title": "OnBuytimeEnded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when buytime_ended is triggered.",
 				"return": "void",
 				"params": {},
@@ -2806,7 +2814,7 @@
 			"enterrescuezone": {
 				"title": "OnEnterRescueZone",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when enter_rescue_zone is triggered.",
 				"return": "void",
 				"params": {
@@ -2817,7 +2825,7 @@
 			"exitrescuezone": {
 				"title": "OnExitRescueZone",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when exit_rescue_zone is triggered.",
 				"return": "void",
 				"params": {
@@ -2828,7 +2836,7 @@
 			"silenceroff": {
 				"title": "OnSilencerOff",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when silencer_off is triggered.",
 				"return": "void",
 				"params": {
@@ -2839,7 +2847,7 @@
 			"silenceron": {
 				"title": "OnSilencerOn",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when silencer_on is triggered.",
 				"return": "void",
 				"params": {
@@ -2850,7 +2858,7 @@
 			"buymenuopen": {
 				"title": "OnBuyMenuOpen",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when buymenu_open is triggered.",
 				"return": "void",
 				"params": {
@@ -2861,7 +2869,7 @@
 			"buymenuclose": {
 				"title": "OnBuyMenuClose",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when buymenu_close is triggered.",
 				"return": "void",
 				"params": {
@@ -2872,7 +2880,7 @@
 			"grenadebounce": {
 				"title": "OnGrenadeBounce",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when grenade_bounce is triggered.",
 				"return": "void",
 				"params": {
@@ -2883,7 +2891,7 @@
 			"hegrenadedetonate": {
 				"title": "OnHEGrenadeDetonate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hegrenade_detonate is triggered.",
 				"return": "void",
 				"params": {
@@ -2898,7 +2906,7 @@
 			"flashbangdetonate": {
 				"title": "OnFlashbangDetonate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when flashbang_detonate is triggered.",
 				"return": "void",
 				"params": {
@@ -2913,7 +2921,7 @@
 			"smokegrenadedetonate": {
 				"title": "OnSmokeGrenadeDetonate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when smokegrenade_detonate is triggered.",
 				"return": "void",
 				"params": {
@@ -2928,7 +2936,7 @@
 			"smokegrenadeexpired": {
 				"title": "OnSmokeGrenadeExpired",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when smokegrenade_expired is triggered.",
 				"return": "void",
 				"params": {
@@ -2943,7 +2951,7 @@
 			"molotovdetonate": {
 				"title": "OnMolotovDetonate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when molotov_detonate is triggered.",
 				"return": "void",
 				"params": {
@@ -2957,7 +2965,7 @@
 			"decoydetonate": {
 				"title": "OnDecoyDetonate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when decoy_detonate is triggered.",
 				"return": "void",
 				"params": {
@@ -2972,7 +2980,7 @@
 			"decoystarted": {
 				"title": "OnDecoyStarted",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when decoy_started is triggered.",
 				"return": "void",
 				"params": {
@@ -2987,7 +2995,7 @@
 			"tagrenadedetonate": {
 				"title": "OnTagrenadeDetonate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tagrenade_detonate is triggered.",
 				"return": "void",
 				"params": {
@@ -3002,7 +3010,7 @@
 			"infernostartburn": {
 				"title": "OnInfernoStartBurn",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when inferno_startburn is triggered.",
 				"return": "void",
 				"params": {
@@ -3016,7 +3024,7 @@
 			"infernoexpire": {
 				"title": "OnInfernoExpire",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when inferno_expire is triggered.",
 				"return": "void",
 				"params": {
@@ -3030,7 +3038,7 @@
 			"infernoextinguish": {
 				"title": "OnInfernoExtinguish",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when inferno_extinguish is triggered.",
 				"return": "void",
 				"params": {
@@ -3044,7 +3052,7 @@
 			"decoyfiring": {
 				"title": "OnDecoyFiring",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when decoy_firing is triggered.",
 				"return": "void",
 				"params": {
@@ -3059,7 +3067,7 @@
 			"bulletimpact": {
 				"title": "OnBulletImpact",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when bullet_impact is triggered.",
 				"return": "void",
 				"params": {
@@ -3073,7 +3081,7 @@
 			"doormoving": {
 				"title": "OnDoorMoving",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when door_moving is triggered.",
 				"return": "void",
 				"params": {
@@ -3085,7 +3093,7 @@
 			"mbinputlocksuccess": {
 				"title": "OnMBInputLockSuccess",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when mb_input_lock_success is triggered.",
 				"return": "void",
 				"params": {},
@@ -3094,7 +3102,7 @@
 			"mbinputlockcancel": {
 				"title": "OnMBInputLockCancel",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when mb_input_lock_cancel is triggered.",
 				"return": "void",
 				"params": {},
@@ -3103,7 +3111,7 @@
 			"navblocked": {
 				"title": "OnNavBlocked",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when nav_blocked is triggered.",
 				"return": "void",
 				"params": {
@@ -3115,7 +3123,7 @@
 			"navgenerate": {
 				"title": "OnNavGenerate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when nav_generate is triggered.",
 				"return": "void",
 				"params": {},
@@ -3124,7 +3132,7 @@
 			"achievementinfoloaded": {
 				"title": "OnAchievementInfoLoaded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when achievement_info_loaded is triggered.",
 				"return": "void",
 				"params": {},
@@ -3133,7 +3141,7 @@
 			"hltvchangedmode": {
 				"title": "OnHLTVChangedMode",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_changed_mode is triggered.",
 				"return": "void",
 				"params": {
@@ -3146,7 +3154,7 @@
 			"csgamedisconnected": {
 				"title": "OnCSGameDisconnected",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_game_disconnected is triggered.",
 				"return": "void",
 				"params": {},
@@ -3155,7 +3163,7 @@
 			"csroundfinalbeep": {
 				"title": "OnCSRoundFinalBeep",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_round_final_beep is triggered.",
 				"return": "void",
 				"params": {},
@@ -3164,7 +3172,7 @@
 			"csroundstartbeep": {
 				"title": "OnCSRoundStartBeep",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_round_start_beep is triggered.",
 				"return": "void",
 				"params": {},
@@ -3173,7 +3181,7 @@
 			"cswinpanelround": {
 				"title": "OnCSWinPanelRound",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_win_panel_round is triggered.",
 				"return": "void",
 				"params": {
@@ -3192,7 +3200,7 @@
 			"cswinpanelmatch": {
 				"title": "OnCSWinPanelMatch",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_win_panel_match is triggered.",
 				"return": "void",
 				"params": {},
@@ -3201,7 +3209,7 @@
 			"csmatchendrestart": {
 				"title": "OnCSMatchEndRestart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_match_end_restart is triggered.",
 				"return": "void",
 				"params": {},
@@ -3210,7 +3218,7 @@
 			"csprerestart": {
 				"title": "OnCSPreRestart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_pre_restart is triggered.",
 				"return": "void",
 				"params": {},
@@ -3219,7 +3227,7 @@
 			"showdeathpanel": {
 				"title": "OnShowDeathpanel",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when show_deathpanel is triggered.",
 				"return": "void",
 				"params": {
@@ -3236,7 +3244,7 @@
 			"hidedeathpanel": {
 				"title": "OnHideDeathpanel",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hide_deathpanel is triggered.",
 				"return": "void",
 				"params": {},
@@ -3245,7 +3253,7 @@
 			"achievementearnedlocal": {
 				"title": "OnAchievementEarnedLocal",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when achievement_earned_local is triggered.",
 				"return": "void",
 				"params": {
@@ -3257,7 +3265,7 @@
 			"repostxboxachievements": {
 				"title": "OnRepostXboxAchievements",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when repost_xbox_achievements is triggered.",
 				"return": "void",
 				"params": {
@@ -3268,7 +3276,7 @@
 			"matchendconditions": {
 				"title": "OnMatchEndConditions",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when match_end_conditions is triggered.",
 				"return": "void",
 				"params": {
@@ -3282,7 +3290,7 @@
 			"showsurvivalrespawnstatus": {
 				"title": "OnShowSurvivalRespawnStatus",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when show_survival_respawn_status is triggered.",
 				"return": "void",
 				"params": {
@@ -3295,7 +3303,7 @@
 			"ggkilledenemy": {
 				"title": "OnGGKilledEnemy",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when gg_killed_enemy is triggered.",
 				"return": "void",
 				"params": {
@@ -3310,7 +3318,7 @@
 			"switchteam": {
 				"title": "OnSwitchTeam",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when switch_team is triggered.",
 				"return": "void",
 				"params": {
@@ -3325,7 +3333,7 @@
 			"writeprofiledata": {
 				"title": "OnWriteProfileData",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when write_profile_data is triggered.",
 				"return": "void",
 				"params": {},
@@ -3334,7 +3342,7 @@
 			"trialtimeexpired": {
 				"title": "OnTrialTimeExpired",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when trial_time_expired is triggered.",
 				"return": "void",
 				"params": {
@@ -3345,7 +3353,7 @@
 			"updatematchmakingstats": {
 				"title": "OnUpdateMatchmakingStats",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when update_matchmaking_stats is triggered.",
 				"return": "void",
 				"params": {},
@@ -3354,7 +3362,7 @@
 			"playerresetvote": {
 				"title": "OnPlayerResetVote",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_reset_vote is triggered.",
 				"return": "void",
 				"params": {
@@ -3366,7 +3374,7 @@
 			"enablerestartvoting": {
 				"title": "OnEnableRestartVoting",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when enable_restart_voting is triggered.",
 				"return": "void",
 				"params": {
@@ -3377,7 +3385,7 @@
 			"sfuievent": {
 				"title": "OnSfuievent",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when sfuievent is triggered.",
 				"return": "void",
 				"params": {
@@ -3390,7 +3398,7 @@
 			"startvote": {
 				"title": "OnStartVote",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when start_vote is triggered.",
 				"return": "void",
 				"params": {
@@ -3403,7 +3411,7 @@
 			"playergivenc4": {
 				"title": "OnPlayerGivenBomb",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_given_c4 is triggered.",
 				"return": "void",
 				"params": {
@@ -3414,7 +3422,7 @@
 			"trplayerflashbanged": {
 				"title": "OnTRPlayerFlashbanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tr_player_flashbanged is triggered.",
 				"return": "void",
 				"params": {
@@ -3425,7 +3433,7 @@
 			"trmarkcomplete": {
 				"title": "OnTRMarkComplete",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tr_mark_complete is triggered.",
 				"return": "void",
 				"params": {
@@ -3436,7 +3444,7 @@
 			"trmarkbesttime": {
 				"title": "OnTRMarkBestTime",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tr_mark_best_time is triggered.",
 				"return": "void",
 				"params": {
@@ -3447,7 +3455,7 @@
 			"trexithinttrigger": {
 				"title": "OnTRExitHintTrigger",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tr_exit_hint_trigger is triggered.",
 				"return": "void",
 				"params": {},
@@ -3456,7 +3464,7 @@
 			"bottakeover": {
 				"title": "OnBotTakeover",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when bot_takeover is triggered.",
 				"return": "void",
 				"params": {
@@ -3468,7 +3476,7 @@
 			"trshowfinishmsgbox": {
 				"title": "OnTRShowFinishMsgbox",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tr_show_finish_msgbox is triggered.",
 				"return": "void",
 				"params": {},
@@ -3477,7 +3485,7 @@
 			"trshowexitmsgbox": {
 				"title": "OnTRShowExitMsgbox",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tr_show_exit_msgbox is triggered.",
 				"return": "void",
 				"params": {},
@@ -3486,7 +3494,7 @@
 			"jointeamfailed": {
 				"title": "OnJoinTeamFailed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when jointeam_failed is triggered.",
 				"return": "void",
 				"params": {
@@ -3498,7 +3506,7 @@
 			"teamchangepending": {
 				"title": "OnTeamChangePending",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when teamchange_pending is triggered.",
 				"return": "void",
 				"params": {
@@ -3510,7 +3518,7 @@
 			"materialdefaultcomplete": {
 				"title": "OnMaterialDefaultComplete",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when material_default_complete is triggered.",
 				"return": "void",
 				"params": {},
@@ -3519,7 +3527,7 @@
 			"csprevnextspectator": {
 				"title": "OnCSPrevNextSpectator",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when cs_prev_next_spectator is triggered.",
 				"return": "void",
 				"params": {
@@ -3530,7 +3538,7 @@
 			"nextlevelchanged": {
 				"title": "OnNextLevelChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when nextlevel_changed is triggered.",
 				"return": "void",
 				"params": {
@@ -3543,7 +3551,7 @@
 			"seasoncoinlevelup": {
 				"title": "OnSeasoncoinLevelup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when seasoncoin_levelup is triggered.",
 				"return": "void",
 				"params": {
@@ -3556,7 +3564,7 @@
 			"tournamentreward": {
 				"title": "OnTournamentReward",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when tournament_reward is triggered.",
 				"return": "void",
 				"params": {
@@ -3569,7 +3577,7 @@
 			"starthalftime": {
 				"title": "OnStartHalftime",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when start_halftime is triggered.",
 				"return": "void",
 				"params": {},
@@ -3578,7 +3586,7 @@
 			"ammorefill": {
 				"title": "OnAmmoRefill",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when ammo_refill is triggered.",
 				"return": "void",
 				"params": {
@@ -3590,7 +3598,7 @@
 			"parachutepickup": {
 				"title": "OnParachutePickup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when parachute_pickup is triggered.",
 				"return": "void",
 				"params": {
@@ -3601,7 +3609,7 @@
 			"parachutedeploy": {
 				"title": "OnParachuteDeploy",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when parachute_deploy is triggered.",
 				"return": "void",
 				"params": {
@@ -3612,7 +3620,7 @@
 			"dronegunattack": {
 				"title": "OnDronegunAttack",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when dronegun_attack is triggered.",
 				"return": "void",
 				"params": {
@@ -3623,7 +3631,7 @@
 			"dronedispatched": {
 				"title": "OnDroneDispatched",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when drone_dispatched is triggered.",
 				"return": "void",
 				"params": {
@@ -3636,7 +3644,7 @@
 			"lootcratevisible": {
 				"title": "OnLootCrateVisible",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when loot_crate_visible is triggered.",
 				"return": "void",
 				"params": {
@@ -3649,7 +3657,7 @@
 			"lootcrateopened": {
 				"title": "OnLootCrateOpened",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when loot_crate_opened is triggered.",
 				"return": "void",
 				"params": {
@@ -3661,7 +3669,7 @@
 			"opencrateinstr": {
 				"title": "OnOpenCrateInstructions",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when open_crate_instr is triggered.",
 				"return": "void",
 				"params": {
@@ -3674,7 +3682,7 @@
 			"smokebeaconparadrop": {
 				"title": "OnSmokeBeaconParadrop",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when smoke_beacon_paradrop is triggered.",
 				"return": "void",
 				"params": {
@@ -3686,7 +3694,7 @@
 			"survivalparadropspawn": {
 				"title": "OnSurvivalParadropSpawn",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when survival_paradrop_spawn is triggered.",
 				"return": "void",
 				"params": {
@@ -3697,7 +3705,7 @@
 			"survivalparadropbreak": {
 				"title": "OnSurvivalParadropBreak",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when survival_paradrop_break is triggered.",
 				"return": "void",
 				"params": {
@@ -3708,7 +3716,7 @@
 			"dronecargodetached": {
 				"title": "OnDroneCargoDetached",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when drone_cargo_detached is triggered.",
 				"return": "void",
 				"params": {
@@ -3721,7 +3729,7 @@
 			"droneaboveroof": {
 				"title": "OnDroneAboveRoof",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when drone_above_roof is triggered.",
 				"return": "void",
 				"params": {
@@ -3733,7 +3741,7 @@
 			"choppersincomingwarning": {
 				"title": "OnChoppersIncomingWarning",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when choppers_incoming_warning is triggered.",
 				"return": "void",
 				"params": {
@@ -3744,7 +3752,7 @@
 			"firstbombsincomingwarning": {
 				"title": "OnFirstbombsIncomingWarning",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when firstbombs_incoming_warning is triggered.",
 				"return": "void",
 				"params": {
@@ -3755,7 +3763,7 @@
 			"dziteminteraction": {
 				"title": "OnDZItemInteraction",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when dz_item_interaction is triggered.",
 				"return": "void",
 				"params": {
@@ -3768,7 +3776,7 @@
 			"survivalteammaterespawn": {
 				"title": "OnSurvivalTeammateRespawn",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when survival_teammate_respawn is triggered.",
 				"return": "void",
 				"params": {
@@ -3779,7 +3787,7 @@
 			"survivalnorespawnswarning": {
 				"title": "OnSurvivalNoRespawnsWarning",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when survival_no_respawns_warning is triggered.",
 				"return": "void",
 				"params": {
@@ -3790,7 +3798,7 @@
 			"survivalnorespawnsfinal": {
 				"title": "OnSurvivalNoRespawnsFinal",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when survival_no_respawns_final is triggered.",
 				"return": "void",
 				"params": {
@@ -3801,7 +3809,7 @@
 			"playerping": {
 				"title": "OnPlayerPing",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_ping is triggered.",
 				"return": "void",
 				"params": {
@@ -3817,7 +3825,7 @@
 			"playerpingstop": {
 				"title": "OnPlayerPingStop",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_ping_stop is triggered.",
 				"return": "void",
 				"params": {
@@ -3828,7 +3836,7 @@
 			"playersound": {
 				"title": "OnPlayerSound",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when player_sound is triggered.",
 				"return": "void",
 				"params": {
@@ -3842,7 +3850,7 @@
 			"guardianwaverestart": {
 				"title": "OnGuardianWaveRestart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when guardian_wave_restart is triggered.",
 				"return": "void",
 				"params": {},
@@ -3851,7 +3859,7 @@
 			"teamintrostart": {
 				"title": "OnTeamIntroStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when team_intro_start is triggered.",
 				"return": "void",
 				"params": {},
@@ -3860,7 +3868,7 @@
 			"teamintroend": {
 				"title": "OnTeamIntroEnd",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when team_intro_end is triggered.",
 				"return": "void",
 				"params": {},
@@ -3869,7 +3877,7 @@
 			"bulletflightresolution": {
 				"title": "OnBulletFlightResolution",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when bullet_flight_resolution is triggered.",
 				"return": "void",
 				"params": {
@@ -3889,7 +3897,7 @@
 			"doorbreak": {
 				"title": "OnDoorBreak",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when door_break is triggered.",
 				"return": "void",
 				"params": {
@@ -3901,7 +3909,7 @@
 			"doorclosed": {
 				"title": "OnDoorClosed",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when door_closed is triggered.",
 				"return": "void",
 				"params": {
@@ -3913,7 +3921,7 @@
 			"dooropen": {
 				"title": "OnDoorOpen",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when door_open is triggered.",
 				"return": "void",
 				"params": {
@@ -3925,7 +3933,7 @@
 			"gamephasechanged": {
 				"title": "OnGamePhaseChanged",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when game_phase_changed is triggered.",
 				"return": "void",
 				"params": {
@@ -3936,7 +3944,7 @@
 			"hltvreplaystatus": {
 				"title": "OnHLTVReplayStatus",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when hltv_replay_status is triggered.",
 				"return": "void",
 				"params": {
@@ -3947,7 +3955,7 @@
 			"onplayerblind": {
 				"title": "OnPlayerBlind",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player gets blinded by a flashbang.",
 				"return": "void",
 				"params": {
@@ -3961,7 +3969,7 @@
 			"onplayerchat": {
 				"title": "OnPlayerChat",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is triggered at every message that a player sends.",
 				"return": "bool",
 				"params": {
@@ -3970,14 +3978,14 @@
 					"teamonly": "bool"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Allows the message\n@return false => Blocks the message \n:::",
-					"lua": ":::note\n @return true => Allows the message\n@return false => Blocks the message \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the message\n@return false => Blocks the message \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the message\n@return false => Blocks the message \n</Callout>"
 				}
 			},
 			"onclientcommand": {
 				"title": "OnClientCommand",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is triggered a client wants to execute a command.",
 				"return": "bool",
 				"params": {
@@ -3985,14 +3993,14 @@
 					"command": "const char*"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Allows the command\n@return false => Blocks the command \n:::",
-					"lua": ":::note\n @return true => Allows the command\n@return false => Blocks the command \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the command\n@return false => Blocks the command \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Allows the command\n@return false => Blocks the command \n</Callout>"
 				}
 			},
 			"onplayerdeath": {
 				"title": "OnPlayerDeath",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is triggered a player dies.",
 				"return": "void",
 				"params": {
@@ -4016,14 +4024,14 @@
 					"hitgroup": "short"
 				},
 				"additional": {
-					"cpp": ":::warning\n `attacker` and `assister` can be invalid players \n:::",
-					"lua": ":::warning\n `attackerid` and `assisterid` can be invalid player ids \n:::"
+					"cpp": "<Callout type=\"warning\" emoji=\"⚠️\">\n `attacker` and `assister` can be invalid players \n</Callout>",
+					"lua": "<Callout type=\"warning\" emoji=\"⚠️\">\n `attackerid` and `assisterid` can be invalid player ids \n</Callout>"
 				}
 			},
 			"onplayerhurt": {
 				"title": "OnPlayerHurt",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player is hurt.",
 				"return": "void",
 				"params": {
@@ -4039,7 +4047,7 @@
 			"onplayerspawn": {
 				"title": "OnPlayerSpawn",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player spawns on server.",
 				"return": "void",
 				"params": {
@@ -4050,21 +4058,21 @@
 			"onplayerprejump": {
 				"title": "OnPlayerPreJump",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called before a player jumps.",
 				"return": "bool",
 				"params": {
 					"player": "player"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Player can jump\n@return false => Player can't jump \n:::",
-					"lua": ":::note\n @return true => Player can jump\n@return false => Player can't jump \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Player can jump\n@return false => Player can't jump \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Player can jump\n@return false => Player can't jump \n</Callout>"
 				}
 			},
 			"onplayerpostjump": {
 				"title": "OnPlayerPostJump",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called after a player jumps.",
 				"return": "void",
 				"params": {
@@ -4075,7 +4083,7 @@
 			"onplayerjump": {
 				"title": "OnPlayerJump",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player jumps.",
 				"return": "void",
 				"params": {
@@ -4086,7 +4094,7 @@
 			"onroundmvp": {
 				"title": "OnRoundMVP",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when MVP is triggered.",
 				"return": "void",
 				"params": {
@@ -4102,7 +4110,7 @@
 			"onplayerinfo": {
 				"title": "OnPlayerInfo",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player changes it's info.",
 				"return": "void",
 				"params": {
@@ -4116,7 +4124,7 @@
 			"onplayerteam": {
 				"title": "OnPlayerTeam",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player changes it's team.",
 				"return": "void",
 				"params": {
@@ -4132,7 +4140,7 @@
 			"onplayerchangename": {
 				"title": "OnPlayerChangeName",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a player changes it's name.",
 				"return": "void",
 				"params": {
@@ -4145,7 +4153,7 @@
 			"onpluginstart": {
 				"title": "OnPluginStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event triggers when plugin starts.",
 				"return": "void",
 				"params": {},
@@ -4154,7 +4162,7 @@
 			"allpluginsloaded": {
 				"title": "AllPluginsLoaded",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event triggers when all plugins have been loaded.",
 				"return": "void",
 				"params": {},
@@ -4163,7 +4171,7 @@
 			"onpluginstop": {
 				"title": "OnPluginStop",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event triggers when plugin stops.",
 				"return": "void",
 				"params": {},
@@ -4172,7 +4180,7 @@
 			"onroundend": {
 				"title": "OnRoundEnd",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a round ends.",
 				"return": "void",
 				"params": {
@@ -4188,7 +4196,7 @@
 			"onroundprestart": {
 				"title": "OnRoundPrestart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called before the player spawns for a new round.",
 				"return": "void",
 				"params": {},
@@ -4197,7 +4205,7 @@
 			"onroundstart": {
 				"title": "OnRoundStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a new round starts.",
 				"return": "void",
 				"params": {
@@ -4210,7 +4218,7 @@
 			"onweaponspawned": {
 				"title": "OnWeaponSpawned",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called when a weapon is spawned on world by a player.",
 				"return": "void",
 				"params": {
@@ -4222,21 +4230,21 @@
 			"shouldhearvoice": {
 				"title": "ShouldHearVoice",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player needs to be checked if he needs to hear a voice or not.",
 				"return": "bool",
 				"params": {
 					"player": "player"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Player can talk\n@return false => Player can't talk \n:::",
-					"lua": ":::note\n @return true => Player can talk\n@return false => Player can't talk \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Player can talk\n@return false => Player can't talk \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Player can talk\n@return false => Player can't talk \n</Callout>"
 				}
 			},
 			"onplayerfalldamage": {
 				"title": "OnPlayerFallDamage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player receives fall damage. (Temporary Removed)",
 				"return": "void",
 				"params": {
@@ -4248,44 +4256,44 @@
 			"onplayerdamage": {
 				"title": "OnPlayerDamage",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player receives damage. (Temporary Removed)",
 				"return": "bool",
 				"params": {
 					"player": "player",
 					"damage": "float",
-					"damagetype": "DamageTypes",
+					"damagetype": "DamageTypes_t",
 					"bullettype": "uint8_t",
-					"damageflags": "DamageFlags"
+					"damageflags": "TakeDamageFlags_t"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Damage allowed\n@return false => Damage cancelled \n:::",
-					"lua": ":::note\n @return true => Damage allowed\n@return false => Damage cancelled \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Damage allowed\n@return false => Damage cancelled \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Damage allowed\n@return false => Damage cancelled \n</Callout>"
 				}
 			},
 			"onplayerdamageplayer": {
 				"title": "OnPlayerDamagePlayer",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player receives damage from another player. (Temporary Removed)",
 				"return": "bool",
 				"params": {
 					"player": "player",
 					"attacker": "player",
 					"damage": "float",
-					"damagetype": "DamageTypes",
+					"damagetype": "DamageTypes_t",
 					"bullettype": "uint8_t",
-					"damageflags": "DamageFlags"
+					"damageflags": "TakeDamageFlags_t"
 				},
 				"additional": {
-					"cpp": ":::note\n @return true => Damage allowed\n@return false => Damage cancelled \n:::",
-					"lua": ":::note\n @return true => Damage allowed\n@return false => Damage cancelled \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Damage allowed\n@return false => Damage cancelled \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n @return true => Damage allowed\n@return false => Damage cancelled \n</Callout>"
 				}
 			},
 			"onclientfullconnect": {
 				"title": "OnClientFullConnected",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player fully connects to server.",
 				"return": "void",
 				"params": {
@@ -4296,7 +4304,7 @@
 			"onplayerfullupdate": {
 				"title": "OnPlayerFullUpdate",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player fully updates.",
 				"return": "void",
 				"params": {
@@ -4308,7 +4316,7 @@
 			"onitempickup": {
 				"title": "OnItemPickup",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player picks up an item.",
 				"return": "void",
 				"params": {
@@ -4322,7 +4330,7 @@
 			"onenterbuyzone": {
 				"title": "OnEnterBuyzone",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player enters in a buyzone.",
 				"return": "void",
 				"params": {
@@ -4334,7 +4342,7 @@
 			"onclientexecutecommand": {
 				"title": "OnClientExecuteCommand",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player executes a command.",
 				"return": "void",
 				"params": {
@@ -4346,7 +4354,7 @@
 			"onexitbuyzone": {
 				"title": "OnExitBuyzone",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player leaves a buyzone.",
 				"return": "void",
 				"params": {
@@ -4358,7 +4366,7 @@
 			"onenterbombzone": {
 				"title": "OnEnterBombzone",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player enters in a bombzone.",
 				"return": "void",
 				"params": {
@@ -4371,7 +4379,7 @@
 			"onexitbombzone": {
 				"title": "OnExitBombzone",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game events is triggered when a player leaves a bombzone.",
 				"return": "void",
 				"params": {
@@ -4384,7 +4392,7 @@
 			"onroundpoststart": {
 				"title": "OnRoundPostStart",
 				"template": "event-syntax",
-				"language": "both",
+				"language": "gameevents",
 				"description": "This game event is called after OnRoundStart.",
 				"return": "void",
 				"params": {},
@@ -4402,7 +4410,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Logging system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/logger.h>\n\nLogger *logger = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    logger = new Logger(mainFilePath, pluginName);\n    ...\n}\n```"
@@ -4437,7 +4444,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Menu system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/menus.h>\n\nMenus *menus = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    menus = new Menus(pluginName);\n    ...\n}\n```"
@@ -4460,15 +4466,15 @@
 					"options": "std::vector<std::pair<std::string, std::string>>"
 				},
 				"additional": {
-					"cpp": ":::note\n The color needs to be a hex string by the model RRGGBB.\n\nExample: 344CEB \n:::\n\n:::warning\n The options needs to be a pair of strings\n```cpp\n{\n    { \"option 1\", \"value 1\"},\n    {\"option 2\", \"value 2\"},\n    // ...\n}\n```\nThe value can be replaced with a command from Swiftly and it's arguments, or it can be replaced with a menu id to open another menu.\n\nThe value can be also a blank string to not execute anything when it's selected. \n:::",
-					"lua": ":::note\n The color needs to be a hex string by the model RRGGBB.\n\nExample: 344CEB \n:::\n\n:::warning\n The options needs to be a pair of strings\n```lua\n{\n    { \"option 1\", \"value 1\"},\n    {\"option 2\", \"value 2\"},\n    -- ...\n}\n```\nThe value can be replaced with a command from Swiftly and it's arguments, or it can be replaced with a menu id to open another menu.\n\nThe value can be also a blank string to not execute anything when it's selected. \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n The color needs to be a hex string by the model RRGGBB.\n\nExample: 344CEB \n</Callout>\n\n<Callout type=\"warning\" emoji=\"⚠️\">\n The options needs to be a pair of strings\n```cpp\n{\n    { \"option 1\", \"value 1\" },\n    { \"option 2\", \"value 2\" },\n    // ...\n}\n```\nThe value can be replaced with a command from Swiftly and it's arguments, or it can be replaced with a menu id to open another menu.\n\nThe value can be also a blank string to not execute anything when it's selected. \n</Callout>",
+					"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n The color needs to be a hex string by the model RRGGBB.\n\nExample: 344CEB \n</Callout>\n\n<Callout type=\"warning\" emoji=\"⚠️\">\n The options needs to be a pair of strings\n```lua\n{\n    { \"option 1\", \"value 1\" },\n    { \"option 2\", \"value 2\" },\n    -- ...\n}\n```\nThe value can be replaced with a command from Swiftly and it's arguments, or it can be replaced with a menu id to open another menu.\n\nThe value can be also a blank string to not execute anything when it's selected. \n</Callout>"
 				}
 			},
 			"unregister": {
 				"title": "UnregisterMenu",
 				"template": "function-syntax",
 				"language": "both",
-				"description": "Unregistered a menu by the specified id.\n:::note\n It can unregister only the menus which were created from the inside of the plugin. \n:::",
+				"description": "Unregistered a menu by the specified id.\n<Callout type=\"info\" emoji=\"ℹ️\">\n It can unregister only the menus which were created from the inside of the plugin. \n</Callout>",
 				"variable": {
 					"cpp": "menus->UnregisterMenu",
 					"lua": "menus:Unregister"
@@ -4491,7 +4497,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly HTTP system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/http.h>\n\nHTTP *http = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    http = new HTTP();\n    ...\n}\n```"
@@ -4847,8 +4852,8 @@
 							"ranktype": "int32_t"
 						},
 						"additional": {
-							"cpp": ":::note\nThe rank type can get the following values:\n`7` - Wingman\n`11` - Premier\n`12` - Competitive\n:::",
-							"lua": ":::note\nThe rank type can get the following values:\n`7` - Wingman\n`11` - Premier\n`12` - Competitive\n:::"
+							"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\nThe rank type can get the following values:\n`7` - Wingman\n`11` - Premier\n`12` - Competitive\n</Callout>",
+							"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\nThe rank type can get the following values:\n`7` - Wingman\n`11` - Premier\n`12` - Competitive\n</Callout>"
 						}
 					},
 					"getchattag": {
@@ -5037,8 +5042,8 @@
 							"expiretime": "float"
 						},
 						"additional": {
-							"lua": ":::note\n The expiretime needs to be the form of server:GetCurrentTime() + Duration. \n:::",
-							"cpp": ":::note\n The expiretime needs to be the form of server->GetCurrentTime() + Duration. \n:::"
+							"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n The expiretime needs to be the form of server:GetCurrentTime() + Duration. \n</Callout>",
+							"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n The expiretime needs to be the form of server->GetCurrentTime() + Duration. \n</Callout>"
 						}
 					},
 					"getconnectedtime": {
@@ -5272,8 +5277,8 @@
 							"cpp/...": ""
 						},
 						"additional": {
-							"cpp": ":::note\n HUD_PRINTCENTER as destination supports HTML elements. \n:::\n\n### Colors\nBelow there are listed all the supported colors by Swiftly in chat:\n```\n{DEFAULT}\n{WHITE}\n{DARKRED}\n{LIGHTPURPLE}\n{GREEN}\n{OLIVE}\n{LIME}\n{RED}\n{GRAY}\n{GREY}\n{LIGHTYELLOW}\n{YELLOW}\n{SILVER}\n{BLUEGREY}\n{LIGHTBLUE}\n{BLUE}\n{DARKBLUE}\n{PURPLE}\n{MAGENTA}\n{LIGHTRED}\n{GOLD}\n{ORANGE}\n{TEAMCOLOR}\n```",
-							"lua": ":::note\n HUD_PRINTCENTER as destination supports HTML elements. \n:::\n\n### Colors\nBelow there are listed all the supported colors by Swiftly in chat:\n```\n{DEFAULT}\n{WHITE}\n{DARKRED}\n{LIGHTPURPLE}\n{GREEN}\n{OLIVE}\n{LIME}\n{RED}\n{GRAY}\n{GREY}\n{LIGHTYELLOW}\n{YELLOW}\n{SILVER}\n{BLUEGREY}\n{LIGHTBLUE}\n{BLUE}\n{DARKBLUE}\n{PURPLE}\n{MAGENTA}\n{LIGHTRED}\n{GOLD}\n{ORANGE}\n{TEAMCOLOR}\n```"
+							"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n HUD_PRINTCENTER as destination supports HTML elements. \n</Callout>\n\n### Colors\nBelow there are listed all the supported colors by Swiftly in chat:\n```\n{DEFAULT}\n{WHITE}\n{DARKRED}\n{LIGHTPURPLE}\n{GREEN}\n{OLIVE}\n{LIME}\n{RED}\n{GRAY}\n{GREY}\n{LIGHTYELLOW}\n{YELLOW}\n{SILVER}\n{BLUEGREY}\n{LIGHTBLUE}\n{BLUE}\n{DARKBLUE}\n{PURPLE}\n{MAGENTA}\n{LIGHTRED}\n{GOLD}\n{ORANGE}\n{TEAMCOLOR}\n```",
+							"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n HUD_PRINTCENTER as destination supports HTML elements. \n</Callout>\n\n### Colors\nBelow there are listed all the supported colors by Swiftly in chat:\n```\n{DEFAULT}\n{WHITE}\n{DARKRED}\n{LIGHTPURPLE}\n{GREEN}\n{OLIVE}\n{LIME}\n{RED}\n{GRAY}\n{GREY}\n{LIGHTYELLOW}\n{YELLOW}\n{SILVER}\n{BLUEGREY}\n{LIGHTBLUE}\n{BLUE}\n{DARKBLUE}\n{PURPLE}\n{MAGENTA}\n{LIGHTRED}\n{GOLD}\n{ORANGE}\n{TEAMCOLOR}\n```"
 						}
 					},
 					"setmodel": {
@@ -7412,8 +7417,8 @@
 						"return": "int",
 						"params": {},
 						"additional": {
-							"cpp": ":::note\n The values which it can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n:::",
-							"lua": ":::note\n The values which it can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n:::"
+							"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n The values which it can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n</Callout>",
+							"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n The values which it can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n</Callout>"
 						}
 					},
 					"set": {
@@ -7430,8 +7435,8 @@
 							"team": "int"
 						},
 						"additional": {
-							"cpp": ":::note\n The values which team can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n:::",
-							"lua": ":::note\n The values which team can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n:::"
+							"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n The values which team can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n</Callout>",
+							"lua": "<Callout type=\"info\" emoji=\"ℹ️\">\n The values which team can get are: `TEAM_NONE`, `TEAM_SPECTATOR`, `TEAM_T` and `TEAM_CT`. \n</Callout>"
 						}
 					}
 				}
@@ -7468,6 +7473,87 @@
 						"params": {
 							"gravity": "float"
 						},
+						"additional": {}
+					}
+				}
+			},
+			"helmet": {
+				"title": "Helmet",
+				"description": "A list of function to manipulate a players helmet.",
+				"iscategory": true,
+				"language": "both",
+				"data": {
+					"has": {
+						"title": "Has",
+						"template": "function-syntax",
+						"language": "both",
+						"description": "Returns the helmet of a player.",
+						"variable": {
+							"cpp": "player->helmet->Has",
+							"lua": "player:helmet():Has"
+						},
+						"return": "bool",
+						"params": {},
+						"additional": {}
+					},
+					"give": {
+						"title": "Give",
+						"template": "function-syntax",
+						"language": "both",
+						"description": "Sets the helmet of a player.",
+						"variable": {
+							"cpp": "player->helmet->Give",
+							"lua": "player:helmet():Give"
+						},
+						"return": "void",
+						"params": {},
+						"additional": {}
+					},
+					"remove": {
+						"title": "Remove",
+						"template": "function-syntax",
+						"language": "both",
+						"description": "Removes the helmet of a player.",
+						"variable": {
+							"cpp": "player->helmet->Remove",
+							"lua": "player:helmet():Remove"
+						},
+						"return": "void",
+						"params": {},
+						"additional": {}
+					}
+				}
+			},
+			"playerflags": {
+				"title": "Player Flags",
+				"description": "A list of function to manipulate a players flags.",
+				"iscategory": true,
+				"language": "both",
+				"data": {
+					"get": {
+						"title": "Get",
+						"template": "function-syntax",
+						"language": "both",
+						"description": "Returns the flag of a player.",
+						"variable": {
+							"cpp": "player->flags->Get",
+							"lua": "player:flags():Get"
+						},
+						"return": "uint32_t",
+						"params": {},
+						"additional": {}
+					},
+					"Set": {
+						"title": "Set",
+						"template": "function-syntax",
+						"language": "both",
+						"description": "Sets the flag of a player.",
+						"variable": {
+							"cpp": "player->flags->Set",
+							"lua": "player:flags():Set"
+						},
+						"return": "void",
+						"params": {},
 						"additional": {}
 					}
 				}
@@ -13108,7 +13194,7 @@
 							"name": "const char*"
 						},
 						"additional": {
-							"cpp": ":::warning\n If the data type is not correct, the value returned will be 0. \n:::"
+							"cpp": "<Callout type=\"warning\" emoji=\"⚠️\">\n If the data type is not correct, the value returned will be 0. \n</Callout>"
 						}
 					},
 					"set": {
@@ -13126,8 +13212,8 @@
 							"value": "DataType"
 						},
 						"additional": {
-							"cpp": ":::warning\n If the data type is not supported, it will not be set. \n:::",
-							"lua": ":::warning\n If the data type is not supported, it will not be set. \n:::"
+							"cpp": "<Callout type=\"warning\" emoji=\"⚠️\">\n If the data type is not supported, it will not be set. \n</Callout>",
+							"lua": "<Callout type=\"warning\" emoji=\"⚠️\">\n If the data type is not supported, it will not be set. \n</Callout>"
 						}
 					}
 				}
@@ -13211,7 +13297,7 @@
 									"cpp": "weapon->GetSilencerType",
 									"lua": "weapon:GetSilencerType"
 								},
-								"return": "WeaponSilencerType",
+								"return": "CSWeaponSilencerType",
 								"params": {},
 								"additional": {}
 							},
@@ -13429,7 +13515,7 @@
 									"cpp": "weapon->GetType",
 									"lua": "weapon:GetType"
 								},
-								"return": "WeaponSlot",
+								"return": "gear_slot_t",
 								"params": {},
 								"additional": {}
 							},
@@ -13521,7 +13607,7 @@
 								"title": "SetSticker",
 								"template": "function-syntax",
 								"language": "both",
-								"description": "Sets the sticker to a weapon. \n:::note\n This needs to be called on NextTick.:::\n",
+								"description": "Sets the sticker to a weapon. \n<Callout type=\"info\" emoji=\"ℹ️\">\n This needs to be called on NextTick.\n</Callout>\n",
 								"variable": {
 									"cpp": "weapon->SetSticker",
 									"lua": "weapon:SetSticker"
@@ -13574,7 +13660,7 @@
 						},
 						"return": "void",
 						"params": {
-							"slot": "WeaponSlot"
+							"slot": "gear_slot_t"
 						},
 						"additional": {}
 					},
@@ -13604,7 +13690,7 @@
 						},
 						"return": "Weapon*",
 						"params": {
-							"slot": "WeaponSlot"
+							"slot": "gear_slot_t"
 						},
 						"additional": {}
 					},
@@ -13650,12 +13736,13 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "You need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/swiftly.h>\n\nPlayerManager *g_playerManager = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    g_playerManager = new PlayerManager();\n    ...\n}\n```"
 				},
-				"additional": ":::warning\n This is mandatory code in every plugin main entry file. \n:::"
+				"additional": {
+					"cpp": "<Callout type=\"warning\" emoji=\"⚠️\">\n This is mandatory code in every plugin main entry file. \n</Callout>"
+				}
 			},
 			"getplayer": {
 				"title": "GetPlayer",
@@ -13717,7 +13804,7 @@
 		}
 	},
 	"precacher": {
-		"title": "Precacher",
+		"title": "Precacher (Lua)",
 		"description": "A list of API functions for precaching files.",
 		"iscategory": true,
 		"language": "lua",
@@ -13762,7 +13849,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Server system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/server.h>\n\nServer *server = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    server = new Server();\n    ...\n}\n```"
@@ -13860,6 +13946,32 @@
 				"variable": {
 					"cpp": "server->IsPistolRound",
 					"lua": "server:IsPistolRound"
+				},
+				"return": "bool",
+				"params": {},
+				"additional": {}
+			},
+			"iswarmup": {
+				"title": "IsWarmup",
+				"template": "function-syntax",
+				"language": "both",
+				"description": "Checks if warmup is active.",
+				"variable": {
+					"cpp": "server->IsWarmup",
+					"lua": "server:IsWarmup"
+				},
+				"return": "bool",
+				"params": {},
+				"additional": {}
+			},
+			"isfreeztime": {
+				"title": "IsFreezeTime",
+				"template": "function-syntax",
+				"language": "both",
+				"description": "Checks if Freeze time is active.",
+				"variable": {
+					"cpp": "server->IsFreezeTime",
+					"lua": "server:IsFreezeTime"
 				},
 				"return": "bool",
 				"params": {},
@@ -14088,7 +14200,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "cpp",
-				"position": 1,
 				"description": "To use the Swiftly Timers system you need the following code in your plugin.",
 				"content": {
 					"cpp": "```cpp\n#include <swiftly/timers.h>\n\nTimers *timers = nullptr;\n\nvoid OnProgramLoad(const char *pluginName, const char *mainFilePath)\n{\n    ...\n    timers = new Timers();\n    ...\n}\n```"
@@ -14109,7 +14220,7 @@
 					"fn": "std::function<void()>"
 				},
 				"additional": {
-					"cpp": ":::note\n The function argument also supports lambda function ( \\[]\\{ ... } ). \n:::"
+					"cpp": "<Callout type=\"info\" emoji=\"ℹ️\">\n The function argument also supports lambda function ( \\[]\\{ ... } ). \n</Callout>"
 				}
 			},
 			"delete": {
@@ -14139,7 +14250,6 @@
 				"title": "Getting Started",
 				"template": "getting-started",
 				"language": "both",
-				"position": 1,
 				"description": "To use Swiftly Translation system you need to create a `JSON` file in `translations` folder with the following schema:",
 				"content": {
 					"cpp": "#### File Name\n```\ntranslation.MAIN_TRANSLATION_KEY.json\n```\n\n#### File Content\n```json\n{\n    \"key1.key2\": {\n        \"en\": \"English Translation\",\n        \"ro\": \"Traducere Română\"\n    },\n    ...\n}\n```",
@@ -14150,7 +14260,7 @@
 				"title": "Fetch",
 				"template": "function-syntax",
 				"language": "both",
-				"description": "Returns the translation for the specified key.\n:::warning\n If the translation key is non-existent for the specified language in core.json, it returns the the translation key. :::\n:::note\n\n Key Format: MAIN_TRANSLATION_KEY.TRANSLATION_KEY\n\nExample: test_plugin.core.started :::",
+				"description": "Returns the translation for the specified key.\n<Callout type=\"warning\" emoji=\"⚠️\">\n If the translation key is non-existent for the specified language in core.json, it returns the the translation key.\n</Callout>\n<Callout type=\"info\" emoji=\"ℹ️\">\n\n Key Format: MAIN_TRANSLATION_KEY.TRANSLATION_KEY\n\nExample: test_plugin.core.started\n</Callout>",
 				"variable": {
 					"cpp": "FetchTranslation",
 					"lua": "FetchTranslation"
@@ -14162,5 +14272,1781 @@
 				"additional": {}
 			}
 		}
+	},
+	"types": {
+		"title": "Types",
+		"description": "All the types existent in Swiftly API.",
+		"iscategory": true,
+		"language": "both",
+		"data": {
+			"propdoorrotatingopendirection_e": {
+				"title": "PropDoorRotatingOpenDirection_e",
+				"template": "types-syntax",
+				"values": {
+					"DOOR_ROTATING_OPEN_BOTH_WAYS": "0x0",
+					"DOOR_ROTATING_OPEN_FORWARD": "0x1",
+					"DOOR_ROTATING_OPEN_BACKWARD": "0x2"
+				}
+			},
+			"sceneonplayerdeath_t": {
+				"title": "SceneOnPlayerDeath_t",
+				"template": "types-syntax",
+				"values": {
+					"SCENE_ONPLAYERDEATH_DO_NOTHING": "0x0",
+					"SCENE_ONPLAYERDEATH_CANCEL": "0x1"
+				}
+			},
+			"lessonpanellayoutfiletypes_t": {
+				"title": "LessonPanelLayoutFileTypes_t",
+				"template": "types-syntax",
+				"values": {
+					"LAYOUT_HAND_DEFAULT": "0x0",
+					"LAYOUT_WORLD_DEFAULT": "0x1",
+					"LAYOUT_CUSTOM": "0x2"
+				}
+			},
+			"timelinecompression_t": {
+				"title": "TimelineCompression_t",
+				"template": "types-syntax",
+				"values": {
+					"TIMELINE_COMPRESSION_SUM": "0x0",
+					"TIMELINE_COMPRESSION_COUNT_PER_INTERVAL": "0x1",
+					"TIMELINE_COMPRESSION_AVERAGE": "0x2",
+					"TIMELINE_COMPRESSION_AVERAGE_BLEND": "0x3",
+					"TIMELINE_COMPRESSION_TOTAL": "0x4"
+				}
+			},
+			"subclassvdatachangetype_t": {
+				"title": "SubclassVDataChangeType_t",
+				"template": "types-syntax",
+				"values": {
+					"SUBCLASS_VDATA_CREATED": "0x0",
+					"SUBCLASS_VDATA_SUBCLASS_CHANGED": "0x1",
+					"SUBCLASS_VDATA_RELOADED": "0x2"
+				}
+			},
+			"c4lighteffect_t": {
+				"title": "C4LightEffect_t",
+				"template": "types-syntax",
+				"values": {
+					"eLightEffectNone": "0x0",
+					"eLightEffectDropped": "0x1",
+					"eLightEffectThirdPersonHeld": "0x2"
+				}
+			},
+			"stancetype_t": {
+				"title": "StanceType_t",
+				"template": "types-syntax",
+				"values": {
+					"STANCE_CURRENT": "0xffffffffffffffff",
+					"STANCE_DEFAULT": "0x0",
+					"STANCE_CROUCHING": "0x1",
+					"STANCE_PRONE": "0x2",
+					"NUM_STANCES": "0x3"
+				}
+			},
+			"explosions": {
+				"title": "Explosions",
+				"template": "types-syntax",
+				"values": {
+					"expRandom": "0x0",
+					"expDirected": "0x1",
+					"expUsePrecise": "0x2"
+				}
+			},
+			"previewcharactermode": {
+				"title": "PreviewCharacterMode",
+				"template": "types-syntax",
+				"values": {
+					"DIORAMA": "0x0",
+					"MAIN_MENU": "0x1",
+					"BUY_MENU": "0x2",
+					"TEAM_SELECT": "0x3",
+					"END_OF_MATCH": "0x4",
+					"INVENTORY_INSPECT": "0x5",
+					"WALKING": "0x6",
+					"TEAM_INTRO": "0x7",
+					"WINGMAN_INTRO": "0x8"
+				}
+			},
+			"observerinterpstate_t": {
+				"title": "ObserverInterpState_t",
+				"template": "types-syntax",
+				"values": {
+					"OBSERVER_INTERP_NONE": "0x0",
+					"OBSERVER_INTERP_TRAVELING": "0x1",
+					"OBSERVER_INTERP_SETTLING": "0x2"
+				}
+			},
+			"worldtextpanelorientation_t": {
+				"title": "WorldTextPanelOrientation_t",
+				"template": "types-syntax",
+				"values": {
+					"WORLDTEXT_ORIENTATION_DEFAULT": "0x0",
+					"WORLDTEXT_ORIENTATION_FACEUSER": "0x1",
+					"WORLDTEXT_ORIENTATION_FACEUSER_UPRIGHT": "0x2"
+				}
+			},
+			"worldtextpanelhorizontalalign_t": {
+				"title": "WorldTextPanelHorizontalAlign_t",
+				"template": "types-syntax",
+				"values": {
+					"WORLDTEXT_HORIZONTAL_ALIGN_LEFT": "0x0",
+					"WORLDTEXT_HORIZONTAL_ALIGN_CENTER": "0x1",
+					"WORLDTEXT_HORIZONTAL_ALIGN_RIGHT": "0x2"
+				}
+			},
+			"sequencefinishnotifystate_t": {
+				"title": "SequenceFinishNotifyState_t",
+				"template": "types-syntax",
+				"values": {
+					"eDoNotNotify": "0x0",
+					"eNotifyWhenFinished": "0x1",
+					"eNotifyTriggered": "0x2"
+				}
+			},
+			"soundeventstarttype_t": {
+				"title": "SoundEventStartType_t",
+				"template": "types-syntax",
+				"values": {
+					"SOUNDEVENT_START_PLAYER": "0x0",
+					"SOUNDEVENT_START_WORLD": "0x1",
+					"SOUNDEVENT_START_ENTITY": "0x2"
+				}
+			},
+			"trainorientationtype_t": {
+				"title": "TrainOrientationType_t",
+				"template": "types-syntax",
+				"values": {
+					"TrainOrientation_Fixed": "0x0",
+					"TrainOrientation_AtPathTracks": "0x1",
+					"TrainOrientation_LinearBlend": "0x2",
+					"TrainOrientation_EaseInEaseOut": "0x3"
+				}
+			},
+			"csweaponcategory": {
+				"title": "CSWeaponCategory",
+				"template": "types-syntax",
+				"values": {
+					"WEAPONCATEGORY_OTHER": "0x0",
+					"WEAPONCATEGORY_MELEE": "0x1",
+					"WEAPONCATEGORY_SECONDARY": "0x2",
+					"WEAPONCATEGORY_SMG": "0x3",
+					"WEAPONCATEGORY_RIFLE": "0x4",
+					"WEAPONCATEGORY_HEAVY": "0x5",
+					"WEAPONCATEGORY_COUNT": "0x6"
+				}
+			},
+			"begindeathlifestatetransition_t": {
+				"title": "BeginDeathLifeStateTransition_t",
+				"template": "types-syntax",
+				"values": {
+					"NO_CHANGE_IN_LIFESTATE": "0x0",
+					"TRANSITION_TO_LIFESTATE_DYING": "0x1",
+					"TRANSITION_TO_LIFESTATE_DEAD": "0x2"
+				}
+			},
+			"playeranimevent_t": {
+				"title": "PlayerAnimEvent_t",
+				"template": "types-syntax",
+				"values": {
+					"PLAYERANIMEVENT_FIRE_GUN_PRIMARY": "0x0",
+					"PLAYERANIMEVENT_FIRE_GUN_SECONDARY": "0x1",
+					"PLAYERANIMEVENT_GRENADE_PULL_PIN": "0x2",
+					"PLAYERANIMEVENT_THROW_GRENADE": "0x3",
+					"PLAYERANIMEVENT_JUMP": "0x4",
+					"PLAYERANIMEVENT_RELOAD": "0x5",
+					"PLAYERANIMEVENT_CLEAR_FIRING": "0x6",
+					"PLAYERANIMEVENT_DEPLOY": "0x7",
+					"PLAYERANIMEVENT_SILENCER_STATE": "0x8",
+					"PLAYERANIMEVENT_SILENCER_TOGGLE": "0x9",
+					"PLAYERANIMEVENT_THROW_GRENADE_UNDERHAND": "0xa",
+					"PLAYERANIMEVENT_CATCH_WEAPON": "0xb",
+					"PLAYERANIMEVENT_LOOKATWEAPON_REQUEST": "0xc",
+					"PLAYERANIMEVENT_RELOAD_CANCEL_LOOKATWEAPON": "0xd",
+					"PLAYERANIMEVENT_HAULBACK": "0xe",
+					"PLAYERANIMEVENT_IDLE": "0xf",
+					"PLAYERANIMEVENT_STRIKE_HIT": "0x10",
+					"PLAYERANIMEVENT_STRIKE_MISS": "0x11",
+					"PLAYERANIMEVENT_BACKSTAB": "0x12",
+					"PLAYERANIMEVENT_DRYFIRE": "0x13",
+					"PLAYERANIMEVENT_FIDGET": "0x14",
+					"PLAYERANIMEVENT_RELEASE": "0x15",
+					"PLAYERANIMEVENT_TAUNT": "0x16",
+					"PLAYERANIMEVENT_COUNT": "0x17"
+				}
+			},
+			"itemflagtypes_t": {
+				"title": "ItemFlagTypes_t",
+				"template": "types-syntax",
+				"values": {
+					"ITEM_FLAG_NONE": "0x0",
+					"ITEM_FLAG_CAN_SELECT_WITHOUT_AMMO": "0x1",
+					"ITEM_FLAG_NOAUTORELOAD": "0x2",
+					"ITEM_FLAG_NOAUTOSWITCHEMPTY": "0x4",
+					"ITEM_FLAG_LIMITINWORLD": "0x8",
+					"ITEM_FLAG_EXHAUSTIBLE": "0x10",
+					"ITEM_FLAG_DOHITLOCATIONDMG": "0x20",
+					"ITEM_FLAG_NOAMMOPICKUPS": "0x40",
+					"ITEM_FLAG_NOITEMPICKUP": "0x80"
+				}
+			},
+			"shatterpanelmode": {
+				"title": "ShatterPanelMode",
+				"template": "types-syntax",
+				"values": {
+					"SHATTER_GLASS": "0x0",
+					"SHATTER_DRYWALL": "0x1"
+				}
+			},
+			"surroundingboundstype_t": {
+				"title": "SurroundingBoundsType_t",
+				"template": "types-syntax",
+				"values": {
+					"USE_OBB_COLLISION_BOUNDS": "0x0",
+					"USE_BEST_COLLISION_BOUNDS": "0x1",
+					"USE_HITBOXES": "0x2",
+					"USE_SPECIFIED_BOUNDS": "0x3",
+					"USE_GAME_CODE": "0x4",
+					"USE_ROTATION_EXPANDED_BOUNDS": "0x5",
+					"USE_ROTATION_EXPANDED_ORIENTED_BOUNDS": "0x6",
+					"USE_COLLISION_BOUNDS_NEVER_VPHYSICS": "0x7",
+					"USE_ROTATION_EXPANDED_SEQUENCE_BOUNDS": "0x8",
+					"SURROUNDING_TYPE_BIT_COUNT": "0x3"
+				}
+			},
+			"lifestate_t": {
+				"title": "LifeState_t",
+				"template": "types-syntax",
+				"values": {
+					"LIFE_ALIVE": "0x0",
+					"LIFE_DYING": "0x1",
+					"LIFE_DEAD": "0x2",
+					"LIFE_RESPAWNABLE": "0x3",
+					"LIFE_RESPAWNING": "0x4"
+				}
+			},
+			"npcfollowformation_t": {
+				"title": "NPCFollowFormation_t",
+				"template": "types-syntax",
+				"values": {
+					"Default": "0xffffffffffffffff",
+					"CloseCircle": "0x0",
+					"WideCircle": "0x1",
+					"MediumCircle": "0x5",
+					"Sidekick": "0x6"
+				}
+			},
+			"csweaponmode": {
+				"title": "CSWeaponMode",
+				"template": "types-syntax",
+				"values": {
+					"Primary_Mode": "0x0",
+					"Secondary_Mode": "0x1",
+					"WeaponMode_MAX": "0x2"
+				}
+			},
+			"onframe": {
+				"title": "OnFrame",
+				"template": "types-syntax",
+				"values": {
+					"ONFRAME_UNKNOWN": "0x0",
+					"ONFRAME_TRUE": "0x1",
+					"ONFRAME_FALSE": "0x2"
+				}
+			},
+			"materials": {
+				"title": "Materials",
+				"template": "types-syntax",
+				"values": {
+					"matGlass": "0x0",
+					"matWood": "0x1",
+					"matMetal": "0x2",
+					"matFlesh": "0x3",
+					"matCinderBlock": "0x4",
+					"matCeilingTile": "0x5",
+					"matComputer": "0x6",
+					"matUnbreakableGlass": "0x7",
+					"matRocks": "0x8",
+					"matWeb": "0x9",
+					"matNone": "0xa",
+					"matLastMaterial": "0xb"
+				}
+			},
+			"scriptedmoveto_t": {
+				"title": "ScriptedMoveTo_t",
+				"template": "types-syntax",
+				"values": {
+					"CINE_MOVETO_WAIT": "0x0",
+					"CINE_MOVETO_WALK": "0x1",
+					"CINE_MOVETO_RUN": "0x2",
+					"CINE_MOVETO_CUSTOM": "0x3",
+					"CINE_MOVETO_TELEPORT": "0x4",
+					"CINE_MOVETO_WAIT_FACING": "0x5"
+				}
+			},
+			"animloopmode_t": {
+				"title": "AnimLoopMode_t",
+				"template": "types-syntax",
+				"values": {
+					"ANIM_LOOP_MODE_INVALID": "0xffffffffffffffff",
+					"ANIM_LOOP_MODE_NOT_LOOPING": "0x0",
+					"ANIM_LOOP_MODE_LOOPING": "0x1",
+					"ANIM_LOOP_MODE_USE_SEQUENCE_SETTINGS": "0x2",
+					"ANIM_LOOP_MODE_COUNT": "0x3"
+				}
+			},
+			"soundflags_t": {
+				"title": "SoundFlags_t",
+				"template": "types-syntax",
+				"values": {
+					"SOUND_NONE": "0x0",
+					"SOUND_COMBAT": "0x1",
+					"SOUND_WORLD": "0x2",
+					"SOUND_PLAYER": "0x4",
+					"SOUND_DANGER": "0x8",
+					"SOUND_BULLET_IMPACT": "0x10",
+					"SOUND_THUMPER": "0x20",
+					"SOUND_PHYSICS_DANGER": "0x40",
+					"SOUND_MOVE_AWAY": "0x80",
+					"SOUND_PLAYER_VEHICLE": "0x100",
+					"SOUND_GLASS_BREAK": "0x200",
+					"SOUND_PHYSICS_OBJECT": "0x400",
+					"SOUND_CONTEXT_GUNFIRE": "0x100000",
+					"SOUND_CONTEXT_COMBINE_ONLY": "0x200000",
+					"SOUND_CONTEXT_REACT_TO_SOURCE": "0x400000",
+					"SOUND_CONTEXT_EXPLOSION": "0x800000",
+					"SOUND_CONTEXT_EXCLUDE_COMBINE": "0x1000000",
+					"SOUND_CONTEXT_DANGER_APPROACH": "0x2000000",
+					"SOUND_CONTEXT_ALLIES_ONLY": "0x4000000",
+					"SOUND_CONTEXT_PANIC_NPCS": "0x8000000",
+					"ALL_CONTEXTS": "0xfffffffffff00000",
+					"ALL_SCENTS": "0x0",
+					"ALL_SOUNDS": "0xfffff"
+				}
+			},
+			"class_t": {
+				"title": "Class_T",
+				"template": "types-syntax",
+				"values": {
+					"CLASS_NONE": "0x0",
+					"CLASS_PLAYER": "0x1",
+					"CLASS_PLAYER_ALLY": "0x2",
+					"CLASS_BOMB": "0x3",
+					"CLASS_FOOT_CONTACT_SHADOW": "0x4",
+					"CLASS_WEAPON": "0x5",
+					"CLASS_WATER_SPLASHER": "0x6",
+					"CLASS_WEAPON_VIEWMODEL": "0x7",
+					"CLASS_DOOR": "0x8",
+					"NUM_CLASSIFY_CLASSES": "0x9"
+				}
+			},
+			"filter_t": {
+				"title": "filter_t",
+				"template": "types-syntax",
+				"values": {
+					"FILTER_AND": "0x0",
+					"FILTER_OR": "0x1"
+				}
+			},
+			"csweaponsilencertype": {
+				"title": "CSWeaponSilencerType",
+				"template": "types-syntax",
+				"values": {
+					"WEAPONSILENCER_NONE": "0x0",
+					"WEAPONSILENCER_DETACHABLE": "0x1",
+					"WEAPONSILENCER_INTEGRATED": "0x2"
+				}
+			},
+			"baseexplosiontypes_t": {
+				"title": "BaseExplosionTypes_t",
+				"template": "types-syntax",
+				"values": {
+					"EXPLOSION_TYPE_DEFAULT": "0x0",
+					"EXPLOSION_TYPE_GRENADE": "0x1",
+					"EXPLOSION_TYPE_MOLOTOV": "0x2",
+					"EXPLOSION_TYPE_FIREWORKS": "0x3",
+					"EXPLOSION_TYPE_GASCAN": "0x4",
+					"EXPLOSION_TYPE_GASCYLINDER": "0x5",
+					"EXPLOSION_TYPE_EXPLOSIVEBARREL": "0x6",
+					"EXPLOSION_TYPE_ELECTRICAL": "0x7",
+					"EXPLOSION_TYPE_EMP": "0x8",
+					"EXPLOSION_TYPE_SHRAPNEL": "0x9",
+					"EXPLOSION_TYPE_SMOKEGRENADE": "0xa",
+					"EXPLOSION_TYPE_FLASHBANG": "0xb",
+					"EXPLOSION_TYPE_TRIPMINE": "0xc",
+					"EXPLOSION_TYPE_ICE": "0xd",
+					"EXPLOSION_TYPE_NONE": "0xe",
+					"EXPLOSION_TYPE_CUSTOM": "0xf",
+					"EXPLOSION_TYPE_COUNT": "0x10"
+				}
+			},
+			"gameanimeventindex_t": {
+				"title": "GameAnimEventIndex_t",
+				"template": "types-syntax",
+				"values": {
+					"AE_EMPTY": "0x0",
+					"AE_CL_PLAYSOUND": "0x1",
+					"AE_CL_PLAYSOUND_ATTACHMENT": "0x2",
+					"AE_CL_PLAYSOUND_POSITION": "0x3",
+					"AE_SV_PLAYSOUND": "0x4",
+					"AE_CL_STOPSOUND": "0x5",
+					"AE_CL_PLAYSOUND_LOOPING": "0x6",
+					"AE_CL_CREATE_PARTICLE_EFFECT": "0x7",
+					"AE_CL_STOP_PARTICLE_EFFECT": "0x8",
+					"AE_CL_CREATE_PARTICLE_EFFECT_CFG": "0x9",
+					"AE_SV_CREATE_PARTICLE_EFFECT_CFG": "0xa",
+					"AE_SV_STOP_PARTICLE_EFFECT": "0xb",
+					"AE_FOOTSTEP": "0xc",
+					"AE_RAGDOLL": "0xd",
+					"AE_CL_STOP_RAGDOLL_CONTROL": "0xe",
+					"AE_CL_ENABLE_BODYGROUP": "0xf",
+					"AE_CL_DISABLE_BODYGROUP": "0x10",
+					"AE_BODYGROUP_SET_VALUE": "0x11",
+					"AE_CL_BODYGROUP_SET_VALUE_CMODEL_WPN": "0x12",
+					"AE_WEAPON_PERFORM_ATTACK": "0x13",
+					"AE_FIRE_INPUT": "0x14",
+					"AE_CL_CLOTH_ATTR": "0x15",
+					"AE_CL_CLOTH_GROUND_OFFSET": "0x16",
+					"AE_CL_CLOTH_STIFFEN": "0x17",
+					"AE_CL_CLOTH_EFFECT": "0x18",
+					"AE_CL_CREATE_ANIM_SCOPE_PROP": "0x19",
+					"AE_PULSE_GRAPH": "0x1a",
+					"AE_PULSE_GRAPH_LOOKAT": "0x1b",
+					"AE_PULSE_GRAPH_AIMAT": "0x1c",
+					"AE_PULSE_GRAPH_IKLOCKLEFTARM": "0x1d",
+					"AE_PULSE_GRAPH_IKLOCKRIGHTARM": "0x1e",
+					"AE_CL_WEAPON_TRANSITION_INTO_HAND": "0x1f",
+					"AE_CL_BODYGROUP_SET_TO_CLIP": "0x20",
+					"AE_CL_BODYGROUP_SET_TO_NEXTCLIP": "0x21",
+					"AE_SV_SHOW_SILENCER": "0x22",
+					"AE_SV_ATTACH_SILENCER_COMPLETE": "0x23",
+					"AE_SV_HIDE_SILENCER": "0x24",
+					"AE_SV_DETACH_SILENCER_COMPLETE": "0x25",
+					"AE_CL_EJECT_MAG": "0x26",
+					"AE_WPN_COMPLETE_RELOAD": "0x27",
+					"AE_WPN_HEALTHSHOT_INJECT": "0x28",
+					"AE_CL_C4_SCREEN_TEXT": "0x29",
+					"AE_GRENADE_THROW_COMPLETE": "0x2a"
+				}
+			},
+			"fixangleset_t": {
+				"title": "FixAngleSet_t",
+				"template": "types-syntax",
+				"values": {
+					"None": "0x0",
+					"Absolute": "0x1",
+					"Relative": "0x2"
+				}
+			},
+			"ichoreoservices__scriptstate_t": {
+				"title": "IChoreoServices__ScriptState_t",
+				"template": "types-syntax",
+				"values": {
+					"SCRIPT_PLAYING": "0x0",
+					"SCRIPT_WAIT": "0x1",
+					"SCRIPT_POST_IDLE": "0x2",
+					"SCRIPT_CLEANUP": "0x3",
+					"SCRIPT_WALK_TO_MARK": "0x4",
+					"SCRIPT_RUN_TO_MARK": "0x5",
+					"SCRIPT_CUSTOM_MOVE_TO_MARK": "0x6"
+				}
+			},
+			"commandentityspectype_t": {
+				"title": "CommandEntitySpecType_t",
+				"template": "types-syntax",
+				"values": {
+					"SPEC_SEARCH": "0x0",
+					"SPEC_TYPES_COUNT": "0x1"
+				}
+			},
+			"touch_t": {
+				"title": "Touch_t",
+				"template": "types-syntax",
+				"values": {
+					"touch_none": "0x0",
+					"touch_player_only": "0x1",
+					"touch_npc_only": "0x2",
+					"touch_player_or_npc": "0x3",
+					"touch_player_or_npc_or_physicsprop": "0x4"
+				}
+			},
+			"trainvelocitytype_t": {
+				"title": "TrainVelocityType_t",
+				"template": "types-syntax",
+				"values": {
+					"TrainVelocity_Instantaneous": "0x0",
+					"TrainVelocity_LinearBlend": "0x1",
+					"TrainVelocity_EaseInEaseOut": "0x2"
+				}
+			},
+			"csweapontype": {
+				"title": "CSWeaponType",
+				"template": "types-syntax",
+				"values": {
+					"WEAPONTYPE_KNIFE": "0x0",
+					"WEAPONTYPE_PISTOL": "0x1",
+					"WEAPONTYPE_SUBMACHINEGUN": "0x2",
+					"WEAPONTYPE_RIFLE": "0x3",
+					"WEAPONTYPE_SHOTGUN": "0x4",
+					"WEAPONTYPE_SNIPER_RIFLE": "0x5",
+					"WEAPONTYPE_MACHINEGUN": "0x6",
+					"WEAPONTYPE_C4": "0x7",
+					"WEAPONTYPE_TASER": "0x8",
+					"WEAPONTYPE_GRENADE": "0x9",
+					"WEAPONTYPE_EQUIPMENT": "0xa",
+					"WEAPONTYPE_STACKABLEITEM": "0xb",
+					"WEAPONTYPE_FISTS": "0xc",
+					"WEAPONTYPE_BREACHCHARGE": "0xd",
+					"WEAPONTYPE_BUMPMINE": "0xe",
+					"WEAPONTYPE_TABLET": "0xf",
+					"WEAPONTYPE_MELEE": "0x10",
+					"WEAPONTYPE_SHIELD": "0x11",
+					"WEAPONTYPE_ZONE_REPULSOR": "0x12",
+					"WEAPONTYPE_UNKNOWN": "0x13"
+				}
+			},
+			"entfindermethod_t": {
+				"title": "EntFinderMethod_t",
+				"template": "types-syntax",
+				"values": {
+					"ENT_FIND_METHOD_NEAREST": "0x0",
+					"ENT_FIND_METHOD_FARTHEST": "0x1",
+					"ENT_FIND_METHOD_RANDOM": "0x2"
+				}
+			},
+			"propdoorrotatingspawnpos_t": {
+				"title": "PropDoorRotatingSpawnPos_t",
+				"template": "types-syntax",
+				"values": {
+					"DOOR_SPAWN_CLOSED": "0x0",
+					"DOOR_SPAWN_OPEN_FORWARD": "0x1",
+					"DOOR_SPAWN_OPEN_BACK": "0x2",
+					"DOOR_SPAWN_AJAR": "0x3"
+				}
+			},
+			"shardsolid_t": {
+				"title": "ShardSolid_t",
+				"template": "types-syntax",
+				"values": {
+					"SHARD_SOLID": "0x0",
+					"SHARD_DEBRIS": "0x1"
+				}
+			},
+			"rendermode_t": {
+				"title": "RenderMode_t",
+				"template": "types-syntax",
+				"values": {
+					"kRenderNormal": "0x0",
+					"kRenderTransColor": "0x1",
+					"kRenderTransTexture": "0x2",
+					"kRenderGlow": "0x3",
+					"kRenderTransAlpha": "0x4",
+					"kRenderTransAdd": "0x5",
+					"kRenderEnvironmental": "0x6",
+					"kRenderTransAddFrameBlend": "0x7",
+					"kRenderTransAlphaAdd": "0x8",
+					"kRenderWorldGlow": "0x9",
+					"kRenderNone": "0xa",
+					"kRenderDevVisualizer": "0xb",
+					"kRenderModeCount": "0xc"
+				}
+			},
+			"forcedcrouchstate_t": {
+				"title": "ForcedCrouchState_t",
+				"template": "types-syntax",
+				"values": {
+					"FORCEDCROUCH_NONE": "0x0",
+					"FORCEDCROUCH_CROUCHED": "0x1",
+					"FORCEDCROUCH_UNCROUCHED": "0x2"
+				}
+			},
+			"performancemode_t": {
+				"title": "PerformanceMode_t",
+				"template": "types-syntax",
+				"values": {
+					"PM_NORMAL": "0x0",
+					"PM_NO_GIBS": "0x1",
+					"PM_FULL_GIBS": "0x2",
+					"PM_REDUCED_GIBS": "0x3"
+				}
+			},
+			"toggle_state": {
+				"title": "TOGGLE_STATE",
+				"template": "types-syntax",
+				"values": {
+					"TS_AT_TOP": "0x0",
+					"TS_AT_BOTTOM": "0x1",
+					"TS_GOING_UP": "0x2",
+					"TS_GOING_DOWN": "0x3",
+					"DOOR_OPEN": "0x0",
+					"DOOR_CLOSED": "0x1",
+					"DOOR_OPENING": "0x2",
+					"DOOR_CLOSING": "0x3"
+				}
+			},
+			"loadout_slot_t": {
+				"title": "loadout_slot_t",
+				"template": "types-syntax",
+				"values": {
+					"LOADOUT_SLOT_PROMOTED": "0xfffffffffffffffe",
+					"LOADOUT_SLOT_INVALID": "0xffffffffffffffff",
+					"LOADOUT_SLOT_MELEE": "0x0",
+					"LOADOUT_SLOT_C4": "0x1",
+					"LOADOUT_SLOT_FIRST_AUTO_BUY_WEAPON": "0x0",
+					"LOADOUT_SLOT_LAST_AUTO_BUY_WEAPON": "0x1",
+					"LOADOUT_SLOT_SECONDARY0": "0x2",
+					"LOADOUT_SLOT_SECONDARY1": "0x3",
+					"LOADOUT_SLOT_SECONDARY2": "0x4",
+					"LOADOUT_SLOT_SECONDARY3": "0x5",
+					"LOADOUT_SLOT_SECONDARY4": "0x6",
+					"LOADOUT_SLOT_SECONDARY5": "0x7",
+					"LOADOUT_SLOT_SMG0": "0x8",
+					"LOADOUT_SLOT_SMG1": "0x9",
+					"LOADOUT_SLOT_SMG2": "0xa",
+					"LOADOUT_SLOT_SMG3": "0xb",
+					"LOADOUT_SLOT_SMG4": "0xc",
+					"LOADOUT_SLOT_SMG5": "0xd",
+					"LOADOUT_SLOT_RIFLE0": "0xe",
+					"LOADOUT_SLOT_RIFLE1": "0xf",
+					"LOADOUT_SLOT_RIFLE2": "0x10",
+					"LOADOUT_SLOT_RIFLE3": "0x11",
+					"LOADOUT_SLOT_RIFLE4": "0x12",
+					"LOADOUT_SLOT_RIFLE5": "0x13",
+					"LOADOUT_SLOT_HEAVY0": "0x14",
+					"LOADOUT_SLOT_HEAVY1": "0x15",
+					"LOADOUT_SLOT_HEAVY2": "0x16",
+					"LOADOUT_SLOT_HEAVY3": "0x17",
+					"LOADOUT_SLOT_HEAVY4": "0x18",
+					"LOADOUT_SLOT_HEAVY5": "0x19",
+					"LOADOUT_SLOT_FIRST_WHEEL_WEAPON": "0x2",
+					"LOADOUT_SLOT_LAST_WHEEL_WEAPON": "0x19",
+					"LOADOUT_SLOT_FIRST_PRIMARY_WEAPON": "0x8",
+					"LOADOUT_SLOT_LAST_PRIMARY_WEAPON": "0x19",
+					"LOADOUT_SLOT_FIRST_WHEEL_GRENADE": "0x1a",
+					"LOADOUT_SLOT_GRENADE0": "0x1a",
+					"LOADOUT_SLOT_GRENADE1": "0x1b",
+					"LOADOUT_SLOT_GRENADE2": "0x1c",
+					"LOADOUT_SLOT_GRENADE3": "0x1d",
+					"LOADOUT_SLOT_GRENADE4": "0x1e",
+					"LOADOUT_SLOT_GRENADE5": "0x1f",
+					"LOADOUT_SLOT_LAST_WHEEL_GRENADE": "0x1f",
+					"LOADOUT_SLOT_EQUIPMENT0": "0x20",
+					"LOADOUT_SLOT_EQUIPMENT1": "0x21",
+					"LOADOUT_SLOT_EQUIPMENT2": "0x22",
+					"LOADOUT_SLOT_EQUIPMENT3": "0x23",
+					"LOADOUT_SLOT_EQUIPMENT4": "0x24",
+					"LOADOUT_SLOT_EQUIPMENT5": "0x25",
+					"LOADOUT_SLOT_FIRST_WHEEL_EQUIPMENT": "0x20",
+					"LOADOUT_SLOT_LAST_WHEEL_EQUIPMENT": "0x25",
+					"LOADOUT_SLOT_CLOTHING_CUSTOMPLAYER": "0x26",
+					"LOADOUT_SLOT_PET": "0x27",
+					"LOADOUT_SLOT_CLOTHING_FACEMASK": "0x28",
+					"LOADOUT_SLOT_CLOTHING_HANDS": "0x29",
+					"LOADOUT_SLOT_FIRST_COSMETIC": "0x29",
+					"LOADOUT_SLOT_LAST_COSMETIC": "0x29",
+					"LOADOUT_SLOT_CLOTHING_EYEWEAR": "0x2a",
+					"LOADOUT_SLOT_CLOTHING_HAT": "0x2b",
+					"LOADOUT_SLOT_CLOTHING_LOWERBODY": "0x2c",
+					"LOADOUT_SLOT_CLOTHING_TORSO": "0x2d",
+					"LOADOUT_SLOT_CLOTHING_APPEARANCE": "0x2e",
+					"LOADOUT_SLOT_MISC0": "0x2f",
+					"LOADOUT_SLOT_MISC1": "0x30",
+					"LOADOUT_SLOT_MISC2": "0x31",
+					"LOADOUT_SLOT_MISC3": "0x32",
+					"LOADOUT_SLOT_MISC4": "0x33",
+					"LOADOUT_SLOT_MISC5": "0x34",
+					"LOADOUT_SLOT_MISC6": "0x35",
+					"LOADOUT_SLOT_MUSICKIT": "0x36",
+					"LOADOUT_SLOT_FLAIR0": "0x37",
+					"LOADOUT_SLOT_SPRAY0": "0x38",
+					"LOADOUT_SLOT_FIRST_ALL_CHARACTER": "0x36",
+					"LOADOUT_SLOT_LAST_ALL_CHARACTER": "0x38",
+					"LOADOUT_SLOT_COUNT": "0x39"
+				}
+			},
+			"navattributeenum": {
+				"title": "NavAttributeEnum",
+				"template": "types-syntax",
+				"values": {
+					"NAV_MESH_AVOID": "0x80",
+					"NAV_MESH_STAIRS": "0x1000",
+					"NAV_MESH_NON_ZUP": "0x8000",
+					"NAV_MESH_SHORT_HEIGHT": "0x10000",
+					"NAV_MESH_CROUCH": "0x10000",
+					"NAV_MESH_JUMP": "0x2",
+					"NAV_MESH_PRECISE": "0x4",
+					"NAV_MESH_NO_JUMP": "0x8",
+					"NAV_MESH_STOP": "0x10",
+					"NAV_MESH_RUN": "0x20",
+					"NAV_MESH_WALK": "0x40",
+					"NAV_MESH_TRANSIENT": "0x100",
+					"NAV_MESH_DONT_HIDE": "0x200",
+					"NAV_MESH_STAND": "0x400",
+					"NAV_MESH_NO_HOSTAGES": "0x800",
+					"NAV_MESH_NO_MERGE": "0x2000",
+					"NAV_MESH_OBSTACLE_TOP": "0x4000",
+					"NAV_ATTR_FIRST_GAME_INDEX": "0x13",
+					"NAV_ATTR_LAST_INDEX": "0x1f"
+				}
+			},
+			"movelinearauthoredpos_t": {
+				"title": "MoveLinearAuthoredPos_t",
+				"template": "types-syntax",
+				"values": {
+					"MOVELINEAR_AUTHORED_AT_START_POSITION": "0x0",
+					"MOVELINEAR_AUTHORED_AT_OPEN_POSITION": "0x1",
+					"MOVELINEAR_AUTHORED_AT_CLOSED_POSITION": "0x2"
+				}
+			},
+			"valueremappermomentumtype_t": {
+				"title": "ValueRemapperMomentumType_t",
+				"template": "types-syntax",
+				"values": {
+					"MomentumType_None": "0x0",
+					"MomentumType_Friction": "0x1",
+					"MomentumType_SpringTowardSnapValue": "0x2",
+					"MomentumType_SpringAwayFromSnapValue": "0x3"
+				}
+			},
+			"hull_t": {
+				"title": "Hull_t",
+				"template": "types-syntax",
+				"values": {
+					"HULL_HUMAN": "0x0",
+					"HULL_SMALL_CENTERED": "0x1",
+					"HULL_WIDE_HUMAN": "0x2",
+					"HULL_TINY": "0x3",
+					"HULL_MEDIUM": "0x4",
+					"HULL_TINY_CENTERED": "0x5",
+					"HULL_LARGE": "0x6",
+					"HULL_LARGE_CENTERED": "0x7",
+					"HULL_MEDIUM_TALL": "0x8",
+					"HULL_SMALL": "0x9",
+					"NUM_HULLS": "0xa",
+					"HULL_NONE": "0xb"
+				}
+			},
+			"previewweaponstate": {
+				"title": "PreviewWeaponState",
+				"template": "types-syntax",
+				"values": {
+					"DROPPED": "0x0",
+					"HOLSTERED": "0x1",
+					"DEPLOYED": "0x2",
+					"PLANTED": "0x3",
+					"INSPECT": "0x4",
+					"ICON": "0x5"
+				}
+			},
+			"einbuttonstate": {
+				"title": "EInButtonState",
+				"template": "types-syntax",
+				"values": {
+					"IN_BUTTON_UP": "0x0",
+					"IN_BUTTON_DOWN": "0x1",
+					"IN_BUTTON_DOWN_UP": "0x2",
+					"IN_BUTTON_UP_DOWN": "0x3",
+					"IN_BUTTON_UP_DOWN_UP": "0x4",
+					"IN_BUTTON_DOWN_UP_DOWN": "0x5",
+					"IN_BUTTON_DOWN_UP_DOWN_UP": "0x6",
+					"IN_BUTTON_UP_DOWN_UP_DOWN": "0x7",
+					"IN_BUTTON_STATE_COUNT": "0x8"
+				}
+			},
+			"beamclipstyle_t": {
+				"title": "BeamClipStyle_t",
+				"template": "types-syntax",
+				"values": {
+					"kNOCLIP": "0x0",
+					"kGEOCLIP": "0x1",
+					"kMODELCLIP": "0x2",
+					"kBEAMCLIPSTYLE_NUMBITS": "0x2"
+				}
+			},
+			"weaponattacktype_t": {
+				"title": "WeaponAttackType_t",
+				"template": "types-syntax",
+				"values": {
+					"eInvalid": "0xffffffffffffffff",
+					"ePrimary": "0x0",
+					"eSecondary": "0x1",
+					"eCount": "0x2"
+				}
+			},
+			"csplayerblockinguseaction_t": {
+				"title": "CSPlayerBlockingUseAction_t",
+				"template": "types-syntax",
+				"values": {
+					"k_CSPlayerBlockingUseAction_None": "0x0",
+					"k_CSPlayerBlockingUseAction_DefusingDefault": "0x1",
+					"k_CSPlayerBlockingUseAction_DefusingWithKit": "0x2",
+					"k_CSPlayerBlockingUseAction_HostageGrabbing": "0x3",
+					"k_CSPlayerBlockingUseAction_HostageDropping": "0x4",
+					"k_CSPlayerBlockingUseAction_OpeningSafe": "0x5",
+					"k_CSPlayerBlockingUseAction_EquippingParachute": "0x6",
+					"k_CSPlayerBlockingUseAction_EquippingHeavyArmor": "0x7",
+					"k_CSPlayerBlockingUseAction_EquippingContract": "0x8",
+					"k_CSPlayerBlockingUseAction_EquippingTabletUpgrade": "0x9",
+					"k_CSPlayerBlockingUseAction_TakingOffHeavyArmor": "0xa",
+					"k_CSPlayerBlockingUseAction_PayingToOpenDoor": "0xb",
+					"k_CSPlayerBlockingUseAction_CancelingSpawnRappelling": "0xc",
+					"k_CSPlayerBlockingUseAction_EquippingExoJump": "0xd",
+					"k_CSPlayerBlockingUseAction_PickingUpBumpMine": "0xe",
+					"k_CSPlayerBlockingUseAction_MapLongUseEntity_Pickup": "0xf",
+					"k_CSPlayerBlockingUseAction_MapLongUseEntity_Place": "0x10",
+					"k_CSPlayerBlockingUseAction_MaxCount": "0x11"
+				}
+			},
+			"csweaponstate_t": {
+				"title": "CSWeaponState_t",
+				"template": "types-syntax",
+				"values": {
+					"WEAPON_NOT_CARRIED": "0x0",
+					"WEAPON_IS_CARRIED_BY_PLAYER": "0x1",
+					"WEAPON_IS_ACTIVE": "0x2"
+				}
+			},
+			"commandexecmode_t": {
+				"title": "CommandExecMode_t",
+				"template": "types-syntax",
+				"values": {
+					"EXEC_MANUAL": "0x0",
+					"EXEC_LEVELSTART": "0x1",
+					"EXEC_PERIODIC": "0x2",
+					"EXEC_MODES_COUNT": "0x3"
+				}
+			},
+			"shatterdamagecause": {
+				"title": "ShatterDamageCause",
+				"template": "types-syntax",
+				"values": {
+					"SHATTERDAMAGE_BULLET": "0x0",
+					"SHATTERDAMAGE_MELEE": "0x1",
+					"SHATTERDAMAGE_THROWN": "0x2",
+					"SHATTERDAMAGE_SCRIPT": "0x3",
+					"SHATTERDAMAGE_EXPLOSIVE": "0x4"
+				}
+			},
+			"scriptedondeath_t": {
+				"title": "ScriptedOnDeath_t",
+				"template": "types-syntax",
+				"values": {
+					"SS_ONDEATH_NOT_APPLICABLE": "0xffffffffffffffff",
+					"SS_ONDEATH_UNDEFINED": "0x0",
+					"SS_ONDEATH_RAGDOLL": "0x1",
+					"SS_ONDEATH_ANIMATED_DEATH": "0x2"
+				}
+			},
+			"scriptedmovetype_t": {
+				"title": "ScriptedMoveType_t",
+				"template": "types-syntax",
+				"values": {
+					"SCRIPTED_MOVETYPE_NONE": "0x0",
+					"SCRIPTED_MOVETYPE_TO_WITH_DURATION": "0x1",
+					"SCRIPTED_MOVETYPE_TO_WITH_MOVESPEED": "0x2",
+					"SCRIPTED_MOVETYPE_SWEEP_TO_AT_MOVEMENT_SPEED": "0x3"
+				}
+			},
+			"npclooktype_t": {
+				"title": "NPCLookType_t",
+				"template": "types-syntax",
+				"values": {
+					"Chest": "0x0",
+					"Head": "0x1",
+					"Eyes": "0x2"
+				}
+			},
+			"gear_slot_t": {
+				"title": "gear_slot_t",
+				"template": "types-syntax",
+				"values": {
+					"GEAR_SLOT_INVALID": "0xffffffffffffffff",
+					"GEAR_SLOT_RIFLE": "0x0",
+					"GEAR_SLOT_PISTOL": "0x1",
+					"GEAR_SLOT_KNIFE": "0x2",
+					"GEAR_SLOT_GRENADES": "0x3",
+					"GEAR_SLOT_C4": "0x4",
+					"GEAR_SLOT_RESERVED_SLOT6": "0x5",
+					"GEAR_SLOT_RESERVED_SLOT7": "0x6",
+					"GEAR_SLOT_RESERVED_SLOT8": "0x7",
+					"GEAR_SLOT_RESERVED_SLOT9": "0x8",
+					"GEAR_SLOT_RESERVED_SLOT10": "0x9",
+					"GEAR_SLOT_RESERVED_SLOT11": "0xa",
+					"GEAR_SLOT_BOOSTS": "0xb",
+					"GEAR_SLOT_UTILITY": "0xc",
+					"GEAR_SLOT_COUNT": "0xd",
+					"GEAR_SLOT_FIRST": "0x0",
+					"GEAR_SLOT_LAST": "0xc"
+				}
+			},
+			"csplayerstate": {
+				"title": "CSPlayerState",
+				"template": "types-syntax",
+				"values": {
+					"STATE_ACTIVE": "0x0",
+					"STATE_WELCOME": "0x1",
+					"STATE_PICKINGTEAM": "0x2",
+					"STATE_PICKINGCLASS": "0x3",
+					"STATE_DEATH_ANIM": "0x4",
+					"STATE_DEATH_WAIT_FOR_KEY": "0x5",
+					"STATE_OBSERVER_MODE": "0x6",
+					"STATE_GUNGAME_RESPAWN": "0x7",
+					"STATE_DORMANT": "0x8",
+					"NUM_PLAYER_STATES": "0x9"
+				}
+			},
+			"scriptedconflictresponse_t": {
+				"title": "ScriptedConflictResponse_t",
+				"template": "types-syntax",
+				"values": {
+					"SS_CONFLICT_ENQUEUE": "0x0",
+					"SS_CONFLICT_INTERRUPT": "0x1"
+				}
+			},
+			"waterlevel_t": {
+				"title": "WaterLevel_t",
+				"template": "types-syntax",
+				"values": {
+					"WL_NotInWater": "0x0",
+					"WL_Feet": "0x1",
+					"WL_Knees": "0x2",
+					"WL_Waist": "0x3",
+					"WL_Chest": "0x4",
+					"WL_FullyUnderwater": "0x5",
+					"WL_Count": "0x6"
+				}
+			},
+			"worldtextpanelverticalalign_t": {
+				"title": "WorldTextPanelVerticalAlign_t",
+				"template": "types-syntax",
+				"values": {
+					"WORLDTEXT_VERTICAL_ALIGN_TOP": "0x0",
+					"WORLDTEXT_VERTICAL_ALIGN_CENTER": "0x1",
+					"WORLDTEXT_VERTICAL_ALIGN_BOTTOM": "0x2"
+				}
+			},
+			"ammoposition_t": {
+				"title": "AmmoPosition_t",
+				"template": "types-syntax",
+				"values": {
+					"AMMO_POSITION_INVALID": "0xffffffffffffffff",
+					"AMMO_POSITION_PRIMARY": "0x0",
+					"AMMO_POSITION_SECONDARY": "0x1",
+					"AMMO_POSITION_COUNT": "0x2"
+				}
+			},
+			"previeweomcelebration": {
+				"title": "PreviewEOMCelebration",
+				"template": "types-syntax",
+				"values": {
+					"WALKUP": "0x0",
+					"PUNCHING": "0x1",
+					"SWAGGER": "0x2",
+					"DROPDOWN": "0x3",
+					"STRETCH": "0x4",
+					"SWAT_FEMALE": "0x5",
+					"MASK_F": "0x6",
+					"GUERILLA": "0x7",
+					"GUERILLA02": "0x8",
+					"GENDARMERIE": "0x9",
+					"SCUBA_FEMALE": "0xa",
+					"SCUBA_MALE": "0xb",
+					"AVA_DEFEAT": "0xc",
+					"GENDARMERIE_DEFEAT": "0xd",
+					"MAE_DEFEAT": "0xe",
+					"RICKSAW_DEFEAT": "0xf",
+					"SCUBA_FEMALE_DEFEAT": "0x10",
+					"SCUBA_MALE_DEFEAT": "0x11",
+					"CRASSWATER_DEFEAT": "0x12",
+					"DARRYL_DEFEAT": "0x13",
+					"DOCTOR_DEFEAT": "0x14",
+					"MUHLIK_DEFEAT": "0x15",
+					"VYPA_DEFEAT": "0x16"
+				}
+			},
+			"entitydisolvetype_t": {
+				"title": "EntityDisolveType_t",
+				"template": "types-syntax",
+				"values": {
+					"ENTITY_DISSOLVE_INVALID": "0xffffffffffffffff",
+					"ENTITY_DISSOLVE_NORMAL": "0x0",
+					"ENTITY_DISSOLVE_ELECTRICAL": "0x1",
+					"ENTITY_DISSOLVE_ELECTRICAL_LIGHT": "0x2",
+					"ENTITY_DISSOLVE_CORE": "0x3"
+				}
+			},
+			"inputbitmask_t": {
+				"title": "InputBitMask_t",
+				"template": "types-syntax",
+				"values": {
+					"IN_NONE": "0x0",
+					"IN_ALL": "0xffffffffffffffff",
+					"IN_ATTACK": "0x1",
+					"IN_JUMP": "0x2",
+					"IN_DUCK": "0x4",
+					"IN_FORWARD": "0x8",
+					"IN_BACK": "0x10",
+					"IN_USE": "0x20",
+					"IN_TURNLEFT": "0x80",
+					"IN_TURNRIGHT": "0x100",
+					"IN_MOVELEFT": "0x200",
+					"IN_MOVERIGHT": "0x400",
+					"IN_ATTACK2": "0x800",
+					"IN_RELOAD": "0x2000",
+					"IN_SPEED": "0x10000",
+					"IN_JOYAUTOSPRINT": "0x20000",
+					"IN_FIRST_MOD_SPECIFIC_BIT": "0x100000000",
+					"IN_USEORRELOAD": "0x100000000",
+					"IN_SCORE": "0x200000000",
+					"IN_ZOOM": "0x400000000",
+					"IN_LOOK_AT_WEAPON": "0x800000000"
+				}
+			},
+			"hitgroup_t": {
+				"title": "HitGroup_t",
+				"template": "types-syntax",
+				"values": {
+					"HITGROUP_INVALID": "0xffffffffffffffff",
+					"HITGROUP_GENERIC": "0x0",
+					"HITGROUP_HEAD": "0x1",
+					"HITGROUP_CHEST": "0x2",
+					"HITGROUP_STOMACH": "0x3",
+					"HITGROUP_LEFTARM": "0x4",
+					"HITGROUP_RIGHTARM": "0x5",
+					"HITGROUP_LEFTLEG": "0x6",
+					"HITGROUP_RIGHTLEG": "0x7",
+					"HITGROUP_NECK": "0x8",
+					"HITGROUP_UNUSED": "0x9",
+					"HITGROUP_GEAR": "0xa",
+					"HITGROUP_SPECIAL": "0xb",
+					"HITGROUP_COUNT": "0xc"
+				}
+			},
+			"chickenactivity": {
+				"title": "ChickenActivity",
+				"template": "types-syntax",
+				"values": {
+					"IDLE": "0x0",
+					"WALK": "0x1",
+					"RUN": "0x2",
+					"HOP": "0x3",
+					"JUMP": "0x4",
+					"GLIDE": "0x5",
+					"LAND": "0x6"
+				}
+			},
+			"pointworldtextreorientmode_t": {
+				"title": "PointWorldTextReorientMode_t",
+				"template": "types-syntax",
+				"values": {
+					"POINT_WORLD_TEXT_REORIENT_NONE": "0x0",
+					"POINT_WORLD_TEXT_REORIENT_AROUND_UP": "0x1"
+				}
+			},
+			"debugoverlaybits_t": {
+				"title": "DebugOverlayBits_t",
+				"template": "types-syntax",
+				"values": {
+					"OVERLAY_TEXT_BIT": "0x1",
+					"OVERLAY_NAME_BIT": "0x2",
+					"OVERLAY_BBOX_BIT": "0x4",
+					"OVERLAY_PIVOT_BIT": "0x8",
+					"OVERLAY_MESSAGE_BIT": "0x10",
+					"OVERLAY_ABSBOX_BIT": "0x20",
+					"OVERLAY_RBOX_BIT": "0x40",
+					"OVERLAY_SHOW_BLOCKSLOS": "0x80",
+					"OVERLAY_ATTACHMENTS_BIT": "0x100",
+					"OVERLAY_INTERPOLATED_ATTACHMENTS_BIT": "0x200",
+					"OVERLAY_INTERPOLATED_PIVOT_BIT": "0x400",
+					"OVERLAY_SKELETON_BIT": "0x800",
+					"OVERLAY_INTERPOLATED_SKELETON_BIT": "0x1000",
+					"OVERLAY_TRIGGER_BOUNDS_BIT": "0x2000",
+					"OVERLAY_HITBOX_BIT": "0x4000",
+					"OVERLAY_INTERPOLATED_HITBOX_BIT": "0x8000",
+					"OVERLAY_AUTOAIM_BIT": "0x10000",
+					"OVERLAY_NPC_SELECTED_BIT": "0x20000",
+					"OVERLAY_JOINT_INFO_BIT": "0x40000",
+					"OVERLAY_NPC_ROUTE_BIT": "0x80000",
+					"OVERLAY_VISIBILITY_TRACES_BIT": "0x100000",
+					"OVERLAY_NPC_ENEMIES_BIT": "0x400000",
+					"OVERLAY_NPC_CONDITIONS_BIT": "0x800000",
+					"OVERLAY_NPC_COMBAT_BIT": "0x1000000",
+					"OVERLAY_NPC_TASK_BIT": "0x2000000",
+					"OVERLAY_NPC_BODYLOCATIONS": "0x4000000",
+					"OVERLAY_NPC_VIEWCONE_BIT": "0x8000000",
+					"OVERLAY_NPC_KILL_BIT": "0x10000000",
+					"OVERLAY_WC_CHANGE_ENTITY": "0x20000000",
+					"OVERLAY_BUDDHA_MODE": "0x40000000",
+					"OVERLAY_NPC_STEERING_REGULATIONS": "0x80000000",
+					"OVERLAY_NPC_TASK_TEXT_BIT": "0x100000000",
+					"OVERLAY_PROP_DEBUG": "0x200000000",
+					"OVERLAY_NPC_RELATION_BIT": "0x400000000",
+					"OVERLAY_VIEWOFFSET": "0x800000000",
+					"OVERLAY_VCOLLIDE_WIREFRAME_BIT": "0x1000000000",
+					"OVERLAY_ACTORNAME_BIT": "0x4000000000",
+					"OVERLAY_NPC_CONDITIONS_TEXT_BIT": "0x8000000000",
+					"OVERLAY_NPC_ABILITY_RANGE_DEBUG_BIT": "0x10000000000"
+				}
+			},
+			"ammoflags_t": {
+				"title": "AmmoFlags_t",
+				"template": "types-syntax",
+				"values": {
+					"AMMO_FORCE_DROP_IF_CARRIED": "0x1",
+					"AMMO_RESERVE_STAYS_WITH_WEAPON": "0x2",
+					"AMMO_FLAG_MAX": "0x2"
+				}
+			},
+			"hierarchytype_t": {
+				"title": "HierarchyType_t",
+				"template": "types-syntax",
+				"values": {
+					"HIERARCHY_NONE": "0x0",
+					"HIERARCHY_BONE_MERGE": "0x1",
+					"HIERARCHY_ATTACHMENT": "0x2",
+					"HIERARCHY_ABSORIGIN": "0x3",
+					"HIERARCHY_BONE": "0x4",
+					"HIERARCHY_TYPE_COUNT": "0x5"
+				}
+			},
+			"doorcheck_e": {
+				"title": "doorCheck_e",
+				"template": "types-syntax",
+				"values": {
+					"DOOR_CHECK_FORWARD": "0x0",
+					"DOOR_CHECK_BACKWARD": "0x1",
+					"DOOR_CHECK_FULL": "0x2"
+				}
+			},
+			"beamtype_t": {
+				"title": "BeamType_t",
+				"template": "types-syntax",
+				"values": {
+					"BEAM_INVALID": "0x0",
+					"BEAM_POINTS": "0x1",
+					"BEAM_ENTPOINT": "0x2",
+					"BEAM_ENTS": "0x3",
+					"BEAM_HOSE": "0x4",
+					"BEAM_SPLINE": "0x5",
+					"BEAM_LASER": "0x6"
+				}
+			},
+			"entitysubclassscope_t": {
+				"title": "EntitySubclassScope_t",
+				"template": "types-syntax",
+				"values": {
+					"SUBCLASS_SCOPE_NONE": "0xffffffffffffffff",
+					"SUBCLASS_SCOPE_PRECIPITATION": "0x0",
+					"SUBCLASS_SCOPE_PLAYER_WEAPONS": "0x1",
+					"SUBCLASS_SCOPE_COUNT": "0x2"
+				}
+			},
+			"pointtemplateclientonlyentitybehavior_t": {
+				"title": "PointTemplateClientOnlyEntityBehavior_t",
+				"template": "types-syntax",
+				"values": {
+					"CREATE_FOR_CURRENTLY_CONNECTED_CLIENTS_ONLY": "0x0",
+					"CREATE_FOR_CLIENTS_WHO_CONNECT_LATER": "0x1"
+				}
+			},
+			"shatterglassstresstype": {
+				"title": "ShatterGlassStressType",
+				"template": "types-syntax",
+				"values": {
+					"SHATTERGLASS_BLUNT": "0x0",
+					"SHATTERGLASS_BALLISTIC": "0x1",
+					"SHATTERGLASS_PULSE": "0x2",
+					"SHATTERDRYWALL_CHUNKS": "0x3",
+					"SHATTERGLASS_EXPLOSIVE": "0x4"
+				}
+			},
+			"trackorientationtype_t": {
+				"title": "TrackOrientationType_t",
+				"template": "types-syntax",
+				"values": {
+					"TrackOrientation_Fixed": "0x0",
+					"TrackOrientation_FacePath": "0x1",
+					"TrackOrientation_FacePathAngles": "0x2"
+				}
+			},
+			"weaponswitchreason_t": {
+				"title": "WeaponSwitchReason_t",
+				"template": "types-syntax",
+				"values": {
+					"eDrawn": "0x0",
+					"eEquipped": "0x1",
+					"eUserInitiatedSwitchToLast": "0x2",
+					"eUserInitiatedSwitchHands": "0x3"
+				}
+			},
+			"valueremapperratchettype_t": {
+				"title": "ValueRemapperRatchetType_t",
+				"template": "types-syntax",
+				"values": {
+					"RatchetType_Absolute": "0x0",
+					"RatchetType_EachEngage": "0x1"
+				}
+			},
+			"navdirtype": {
+				"title": "NavDirType",
+				"template": "types-syntax",
+				"values": {
+					"NORTH": "0x0",
+					"EAST": "0x1",
+					"SOUTH": "0x2",
+					"WEST": "0x3",
+					"NUM_NAV_DIR_TYPE_DIRECTIONS": "0x4"
+				}
+			},
+			"crr_response__responseenum_t": {
+				"title": "CRR_Response__ResponseEnum_t",
+				"template": "types-syntax",
+				"values": {
+					"MAX_RESPONSE_NAME": "0xc0",
+					"MAX_RULE_NAME": "0x80"
+				}
+			},
+			"movemountingamount_t": {
+				"title": "MoveMountingAmount_t",
+				"template": "types-syntax",
+				"values": {
+					"MOVE_MOUNT_NONE": "0x0",
+					"MOVE_MOUNT_LOW": "0x1",
+					"MOVE_MOUNT_HIGH": "0x2",
+					"MOVE_MOUNT_MAXCOUNT": "0x3"
+				}
+			},
+			"renderfx_t": {
+				"title": "RenderFx_t",
+				"template": "types-syntax",
+				"values": {
+					"kRenderFxNone": "0x0",
+					"kRenderFxPulseSlow": "0x1",
+					"kRenderFxPulseFast": "0x2",
+					"kRenderFxPulseSlowWide": "0x3",
+					"kRenderFxPulseFastWide": "0x4",
+					"kRenderFxFadeSlow": "0x5",
+					"kRenderFxFadeFast": "0x6",
+					"kRenderFxSolidSlow": "0x7",
+					"kRenderFxSolidFast": "0x8",
+					"kRenderFxStrobeSlow": "0x9",
+					"kRenderFxStrobeFast": "0xa",
+					"kRenderFxStrobeFaster": "0xb",
+					"kRenderFxFlickerSlow": "0xc",
+					"kRenderFxFlickerFast": "0xd",
+					"kRenderFxNoDissipation": "0xe",
+					"kRenderFxFadeOut": "0xf",
+					"kRenderFxFadeIn": "0x10",
+					"kRenderFxPulseFastWider": "0x11",
+					"kRenderFxGlowShell": "0x12",
+					"kRenderFxMax": "0x13"
+				}
+			},
+			"vote_create_failed_t": {
+				"title": "vote_create_failed_t",
+				"template": "types-syntax",
+				"values": {
+					"VOTE_FAILED_GENERIC": "0x0",
+					"VOTE_FAILED_TRANSITIONING_PLAYERS": "0x1",
+					"VOTE_FAILED_RATE_EXCEEDED": "0x2",
+					"VOTE_FAILED_YES_MUST_EXCEED_NO": "0x3",
+					"VOTE_FAILED_QUORUM_FAILURE": "0x4",
+					"VOTE_FAILED_ISSUE_DISABLED": "0x5",
+					"VOTE_FAILED_MAP_NOT_FOUND": "0x6",
+					"VOTE_FAILED_MAP_NAME_REQUIRED": "0x7",
+					"VOTE_FAILED_FAILED_RECENTLY": "0x8",
+					"VOTE_FAILED_TEAM_CANT_CALL": "0x9",
+					"VOTE_FAILED_WAITINGFORPLAYERS": "0xa",
+					"VOTE_FAILED_PLAYERNOTFOUND": "0xb",
+					"VOTE_FAILED_CANNOT_KICK_ADMIN": "0xc",
+					"VOTE_FAILED_SCRAMBLE_IN_PROGRESS": "0xd",
+					"VOTE_FAILED_SPECTATOR": "0xe",
+					"VOTE_FAILED_FAILED_RECENT_KICK": "0xf",
+					"VOTE_FAILED_FAILED_RECENT_CHANGEMAP": "0x10",
+					"VOTE_FAILED_FAILED_RECENT_SWAPTEAMS": "0x11",
+					"VOTE_FAILED_FAILED_RECENT_SCRAMBLETEAMS": "0x12",
+					"VOTE_FAILED_FAILED_RECENT_RESTART": "0x13",
+					"VOTE_FAILED_SWAP_IN_PROGRESS": "0x14",
+					"VOTE_FAILED_DISABLED": "0x15",
+					"VOTE_FAILED_NEXTLEVEL_SET": "0x16",
+					"VOTE_FAILED_TOO_EARLY_SURRENDER": "0x17",
+					"VOTE_FAILED_MATCH_PAUSED": "0x18",
+					"VOTE_FAILED_MATCH_NOT_PAUSED": "0x19",
+					"VOTE_FAILED_NOT_IN_WARMUP": "0x1a",
+					"VOTE_FAILED_NOT_10_PLAYERS": "0x1b",
+					"VOTE_FAILED_TIMEOUT_ACTIVE": "0x1c",
+					"VOTE_FAILED_TIMEOUT_INACTIVE": "0x1d",
+					"VOTE_FAILED_TIMEOUT_EXHAUSTED": "0x1e",
+					"VOTE_FAILED_CANT_ROUND_END": "0x1f",
+					"VOTE_FAILED_REMATCH": "0x20",
+					"VOTE_FAILED_CONTINUE": "0x21",
+					"VOTE_FAILED_MAX": "0x22"
+				}
+			},
+			"rumbleeffect_t": {
+				"title": "RumbleEffect_t",
+				"template": "types-syntax",
+				"values": {
+					"RUMBLE_INVALID": "0xffffffffffffffff",
+					"RUMBLE_STOP_ALL": "0x0",
+					"RUMBLE_PISTOL": "0x1",
+					"RUMBLE_357": "0x2",
+					"RUMBLE_SMG1": "0x3",
+					"RUMBLE_AR2": "0x4",
+					"RUMBLE_SHOTGUN_SINGLE": "0x5",
+					"RUMBLE_SHOTGUN_DOUBLE": "0x6",
+					"RUMBLE_AR2_ALT_FIRE": "0x7",
+					"RUMBLE_RPG_MISSILE": "0x8",
+					"RUMBLE_CROWBAR_SWING": "0x9",
+					"RUMBLE_AIRBOAT_GUN": "0xa",
+					"RUMBLE_JEEP_ENGINE_LOOP": "0xb",
+					"RUMBLE_FLAT_LEFT": "0xc",
+					"RUMBLE_FLAT_RIGHT": "0xd",
+					"RUMBLE_FLAT_BOTH": "0xe",
+					"RUMBLE_DMG_LOW": "0xf",
+					"RUMBLE_DMG_MED": "0x10",
+					"RUMBLE_DMG_HIGH": "0x11",
+					"RUMBLE_FALL_LONG": "0x12",
+					"RUMBLE_FALL_SHORT": "0x13",
+					"RUMBLE_PHYSCANNON_OPEN": "0x14",
+					"RUMBLE_PHYSCANNON_PUNT": "0x15",
+					"RUMBLE_PHYSCANNON_LOW": "0x16",
+					"RUMBLE_PHYSCANNON_MEDIUM": "0x17",
+					"RUMBLE_PHYSCANNON_HIGH": "0x18",
+					"NUM_RUMBLE_EFFECTS": "0x19"
+				}
+			},
+			"latchdirtypermission_t": {
+				"title": "LatchDirtyPermission_t",
+				"template": "types-syntax",
+				"values": {
+					"LATCH_DIRTY_DISALLOW": "0x0",
+					"LATCH_DIRTY_SERVER_CONTROLLED": "0x1",
+					"LATCH_DIRTY_CLIENT_SIMULATED": "0x2",
+					"LATCH_DIRTY_PREDICTION": "0x3",
+					"LATCH_DIRTY_FRAMESIMULATE": "0x4",
+					"LATCH_DIRTY_PARTICLE_SIMULATE": "0x5"
+				}
+			},
+			"doorstate_t": {
+				"title": "DoorState_t",
+				"template": "types-syntax",
+				"values": {
+					"DOOR_STATE_CLOSED": "0x0",
+					"DOOR_STATE_OPENING": "0x1",
+					"DOOR_STATE_OPEN": "0x2",
+					"DOOR_STATE_CLOSING": "0x3",
+					"DOOR_STATE_AJAR": "0x4"
+				}
+			},
+			"chatignoretype_t": {
+				"title": "ChatIgnoreType_t",
+				"template": "types-syntax",
+				"values": {
+					"CHAT_IGNORE_NONE": "0x0",
+					"CHAT_IGNORE_ALL": "0x1",
+					"CHAT_IGNORE_TEAM": "0x2"
+				}
+			},
+			"playerconnectedstate": {
+				"title": "PlayerConnectedState",
+				"template": "types-syntax",
+				"values": {
+					"PlayerNeverConnected": "0xffffffffffffffff",
+					"PlayerConnected": "0x0",
+					"PlayerConnecting": "0x1",
+					"PlayerReconnecting": "0x2",
+					"PlayerDisconnecting": "0x3",
+					"PlayerDisconnected": "0x4",
+					"PlayerReserved": "0x5"
+				}
+			},
+			"simpleconstraintsoundprofile__simpleconstraintssoundprofilekeypoints_t": {
+				"title": "SimpleConstraintSoundProfile__SimpleConstraintsSoundProfileKeypoints_t",
+				"template": "types-syntax",
+				"values": {
+					"kMIN_THRESHOLD": "0x0",
+					"kMIN_FULL": "0x1",
+					"kHIGHWATER": "0x2"
+				}
+			},
+			"navproperties_t": {
+				"title": "navproperties_t",
+				"template": "types-syntax",
+				"values": {
+					"NAV_IGNORE": "0x1"
+				}
+			},
+			"solidtype_t": {
+				"title": "SolidType_t",
+				"template": "types-syntax",
+				"values": {
+					"SOLID_NONE": "0x0",
+					"SOLID_BSP": "0x1",
+					"SOLID_BBOX": "0x2",
+					"SOLID_OBB": "0x3",
+					"SOLID_SPHERE": "0x4",
+					"SOLID_POINT": "0x5",
+					"SOLID_VPHYSICS": "0x6",
+					"SOLID_CAPSULE": "0x7",
+					"SOLID_LAST": "0x8"
+				}
+			},
+			"damagetypes_t": {
+				"title": "DamageTypes_t",
+				"template": "types-syntax",
+				"values": {
+					"DMG_GENERIC": "0x0",
+					"DMG_CRUSH": "0x1",
+					"DMG_BULLET": "0x2",
+					"DMG_SLASH": "0x4",
+					"DMG_BURN": "0x8",
+					"DMG_VEHICLE": "0x10",
+					"DMG_FALL": "0x20",
+					"DMG_BLAST": "0x40",
+					"DMG_CLUB": "0x80",
+					"DMG_SHOCK": "0x100",
+					"DMG_SONIC": "0x200",
+					"DMG_ENERGYBEAM": "0x400",
+					"DMG_DROWN": "0x4000",
+					"DMG_POISON": "0x8000",
+					"DMG_RADIATION": "0x10000",
+					"DMG_DROWNRECOVER": "0x20000",
+					"DMG_ACID": "0x40000",
+					"DMG_PHYSGUN": "0x100000",
+					"DMG_DISSOLVE": "0x200000",
+					"DMG_BLAST_SURFACE": "0x400000",
+					"DMG_BUCKSHOT": "0x1000000",
+					"DMG_LASTGENERICFLAG": "0x1000000",
+					"DMG_HEADSHOT": "0x2000000",
+					"DMG_DANGERZONE": "0x4000000"
+				}
+			},
+			"pointworldtextjustifyvertical_t": {
+				"title": "PointWorldTextJustifyVertical_t",
+				"template": "types-syntax",
+				"values": {
+					"POINT_WORLD_TEXT_JUSTIFY_VERTICAL_BOTTOM": "0x0",
+					"POINT_WORLD_TEXT_JUSTIFY_VERTICAL_CENTER": "0x1",
+					"POINT_WORLD_TEXT_JUSTIFY_VERTICAL_TOP": "0x2"
+				}
+			},
+			"attributeprovidertypes_t": {
+				"title": "attributeprovidertypes_t",
+				"template": "types-syntax",
+				"values": {
+					"PROVIDER_GENERIC": "0x0",
+					"PROVIDER_WEAPON": "0x1"
+				}
+			},
+			"movecollide_t": {
+				"title": "MoveCollide_t",
+				"template": "types-syntax",
+				"values": {
+					"MOVECOLLIDE_DEFAULT": "0x0",
+					"MOVECOLLIDE_FLY_BOUNCE": "0x1",
+					"MOVECOLLIDE_FLY_CUSTOM": "0x2",
+					"MOVECOLLIDE_FLY_SLIDE": "0x3",
+					"MOVECOLLIDE_COUNT": "0x4",
+					"MOVECOLLIDE_MAX_BITS": "0x3"
+				}
+			},
+			"ichoreoservices__choreostate_t": {
+				"title": "IChoreoServices__ChoreoState_t",
+				"template": "types-syntax",
+				"values": {
+					"STATE_PRE_SCRIPT": "0x0",
+					"STATE_WAIT_FOR_SCRIPT": "0x1",
+					"STATE_WALK_TO_MARK": "0x2",
+					"STATE_SYNCHRONIZE_SCRIPT": "0x3",
+					"STATE_PLAY_SCRIPT": "0x4",
+					"STATE_PLAY_SCRIPT_POST_IDLE": "0x5",
+					"STATE_PLAY_SCRIPT_POST_IDLE_DONE": "0x6"
+				}
+			},
+			"valueremapperoutputtype_t": {
+				"title": "ValueRemapperOutputType_t",
+				"template": "types-syntax",
+				"values": {
+					"OutputType_AnimationCycle": "0x0",
+					"OutputType_RotationX": "0x1",
+					"OutputType_RotationY": "0x2",
+					"OutputType_RotationZ": "0x3"
+				}
+			},
+			"pointtemplateownerspawngrouptype_t": {
+				"title": "PointTemplateOwnerSpawnGroupType_t",
+				"template": "types-syntax",
+				"values": {
+					"INSERT_INTO_POINT_TEMPLATE_SPAWN_GROUP": "0x0",
+					"INSERT_INTO_CURRENTLY_ACTIVE_SPAWN_GROUP": "0x1",
+					"INSERT_INTO_NEWLY_CREATED_SPAWN_GROUP": "0x2"
+				}
+			},
+			"pointworldtextjustifyhorizontal_t": {
+				"title": "PointWorldTextJustifyHorizontal_t",
+				"template": "types-syntax",
+				"values": {
+					"POINT_WORLD_TEXT_JUSTIFY_HORIZONTAL_LEFT": "0x0",
+					"POINT_WORLD_TEXT_JUSTIFY_HORIZONTAL_CENTER": "0x1",
+					"POINT_WORLD_TEXT_JUSTIFY_HORIZONTAL_RIGHT": "0x2"
+				}
+			},
+			"shakecommand_t": {
+				"title": "ShakeCommand_t",
+				"template": "types-syntax",
+				"values": {
+					"SHAKE_START": "0x0",
+					"SHAKE_STOP": "0x1",
+					"SHAKE_AMPLITUDE": "0x2",
+					"SHAKE_FREQUENCY": "0x3",
+					"SHAKE_START_RUMBLEONLY": "0x4",
+					"SHAKE_START_NORUMBLE": "0x5"
+				}
+			},
+			"train_code": {
+				"title": "TRAIN_CODE",
+				"template": "types-syntax",
+				"values": {
+					"TRAIN_SAFE": "0x0",
+					"TRAIN_BLOCKING": "0x1",
+					"TRAIN_FOLLOWING": "0x2"
+				}
+			},
+			"brushsolidities_e": {
+				"title": "BrushSolidities_e",
+				"template": "types-syntax",
+				"values": {
+					"BRUSHSOLID_TOGGLE": "0x0",
+					"BRUSHSOLID_NEVER": "0x1",
+					"BRUSHSOLID_ALWAYS": "0x2"
+				}
+			},
+			"questprogress__reason": {
+				"title": "QuestProgress__Reason",
+				"template": "types-syntax",
+				"values": {
+					"QUEST_NONINITIALIZED": "0x0",
+					"QUEST_OK": "0x1",
+					"QUEST_NOT_ENOUGH_PLAYERS": "0x2",
+					"QUEST_WARMUP": "0x3",
+					"QUEST_NOT_CONNECTED_TO_STEAM": "0x4",
+					"QUEST_NONOFFICIAL_SERVER": "0x5",
+					"QUEST_NO_ENTITLEMENT": "0x6",
+					"QUEST_NO_QUEST": "0x7",
+					"QUEST_PLAYER_IS_BOT": "0x8",
+					"QUEST_WRONG_MAP": "0x9",
+					"QUEST_WRONG_MODE": "0xa",
+					"QUEST_NOT_SYNCED_WITH_SERVER": "0xb",
+					"QUEST_REASON_MAX": "0xc"
+				}
+			},
+			"modifydamagereturn_t": {
+				"title": "ModifyDamageReturn_t",
+				"template": "types-syntax",
+				"values": {
+					"CONTINUE_TO_APPLY_DAMAGE": "0x0",
+					"ABORT_DO_NOT_APPLY_DAMAGE": "0x1"
+				}
+			},
+			"shadowtype_t": {
+				"title": "ShadowType_t",
+				"template": "types-syntax",
+				"values": {
+					"SHADOWS_NONE": "0x0",
+					"SHADOWS_SIMPLE": "0x1"
+				}
+			},
+			"grenadetype_t": {
+				"title": "GrenadeType_t",
+				"template": "types-syntax",
+				"values": {
+					"GRENADE_TYPE_EXPLOSIVE": "0x0",
+					"GRENADE_TYPE_FLASH": "0x1",
+					"GRENADE_TYPE_FIRE": "0x2",
+					"GRENADE_TYPE_DECOY": "0x3",
+					"GRENADE_TYPE_SMOKE": "0x4",
+					"GRENADE_TYPE_SENSOR": "0x5",
+					"GRENADE_TYPE_SNOWBALL": "0x6",
+					"GRENADE_TYPE_TOTAL": "0x7"
+				}
+			},
+			"valueremapperinputtype_t": {
+				"title": "ValueRemapperInputType_t",
+				"template": "types-syntax",
+				"values": {
+					"InputType_PlayerShootPosition": "0x0",
+					"InputType_PlayerShootPositionAroundAxis": "0x1"
+				}
+			},
+			"ekilltypes_t": {
+				"title": "EKillTypes_t",
+				"template": "types-syntax",
+				"values": {
+					"KILL_NONE": "0x0",
+					"KILL_DEFAULT": "0x1",
+					"KILL_HEADSHOT": "0x2",
+					"KILL_BLAST": "0x3",
+					"KILL_BURN": "0x4",
+					"KILL_SLASH": "0x5",
+					"KILL_SHOCK": "0x6",
+					"KILLTYPE_COUNT": "0x7"
+				}
+			},
+			"weaponsound_t": {
+				"title": "WeaponSound_t",
+				"template": "types-syntax",
+				"values": {
+					"WEAPON_SOUND_EMPTY": "0x0",
+					"WEAPON_SOUND_SECONDARY_EMPTY": "0x1",
+					"WEAPON_SOUND_SINGLE": "0x2",
+					"WEAPON_SOUND_SECONDARY_ATTACK": "0x3",
+					"WEAPON_SOUND_MELEE_MISS": "0x4",
+					"WEAPON_SOUND_MELEE_HIT": "0x5",
+					"WEAPON_SOUND_MELEE_HIT_WORLD": "0x6",
+					"WEAPON_SOUND_MELEE_HIT_PLAYER": "0x7",
+					"WEAPON_SOUND_MELEE_HIT_NPC": "0x8",
+					"WEAPON_SOUND_SPECIAL1": "0x9",
+					"WEAPON_SOUND_SPECIAL2": "0xa",
+					"WEAPON_SOUND_SPECIAL3": "0xb",
+					"WEAPON_SOUND_NEARLYEMPTY": "0xc",
+					"WEAPON_SOUND_IMPACT": "0xd",
+					"WEAPON_SOUND_REFLECT": "0xe",
+					"WEAPON_SOUND_SECONDARY_IMPACT": "0xf",
+					"WEAPON_SOUND_SECONDARY_REFLECT": "0x10",
+					"WEAPON_SOUND_RELOAD": "0x11",
+					"WEAPON_SOUND_SINGLE_ACCURATE": "0x12",
+					"WEAPON_SOUND_ZOOM_IN": "0x13",
+					"WEAPON_SOUND_ZOOM_OUT": "0x14",
+					"WEAPON_SOUND_MOUSE_PRESSED": "0x15",
+					"WEAPON_SOUND_DROP": "0x16",
+					"WEAPON_SOUND_RADIO_USE": "0x17",
+					"WEAPON_SOUND_NUM_TYPES": "0x18"
+				}
+			},
+			"takedamageflags_t": {
+				"title": "TakeDamageFlags_t",
+				"template": "types-syntax",
+				"values": {
+					"DFLAG_NONE": "0x0",
+					"DFLAG_SUPPRESS_HEALTH_CHANGES": "0x1",
+					"DFLAG_SUPPRESS_PHYSICS_FORCE": "0x2",
+					"DFLAG_SUPPRESS_EFFECTS": "0x4",
+					"DFLAG_PREVENT_DEATH": "0x8",
+					"DFLAG_FORCE_DEATH": "0x10",
+					"DFLAG_ALWAYS_GIB": "0x20",
+					"DFLAG_NEVER_GIB": "0x40",
+					"DFLAG_REMOVE_NO_RAGDOLL": "0x80",
+					"DFLAG_SUPPRESS_DAMAGE_MODIFICATION": "0x100",
+					"DFLAG_ALWAYS_FIRE_DAMAGE_EVENTS": "0x200",
+					"DFLAG_RADIUS_DMG": "0x400",
+					"DMG_LASTDFLAG": "0x400",
+					"DFLAG_IGNORE_ARMOR": "0x800",
+					"DFLAG_SUPPRESS_UTILREMOVE": "0x1000"
+				}
+			},
+			"valueremapperhapticstype_t": {
+				"title": "ValueRemapperHapticsType_t",
+				"template": "types-syntax",
+				"values": {
+					"HaticsType_Default": "0x0",
+					"HaticsType_None": "0x1"
+				}
+			},
+			"disposition_t": {
+				"title": "Disposition_t",
+				"template": "types-syntax",
+				"values": {
+					"D_ER": "0x0",
+					"D_HT": "0x1",
+					"D_FR": "0x2",
+					"D_LI": "0x3",
+					"D_NU": "0x4",
+					"D_ERROR": "0x0",
+					"D_HATE": "0x1",
+					"D_FEAR": "0x2",
+					"D_LIKE": "0x3",
+					"D_NEUTRAL": "0x4"
+				}
+			},
+			"canplaysequence_t": {
+				"title": "CanPlaySequence_t",
+				"template": "types-syntax",
+				"values": {
+					"CANNOT_PLAY": "0x0",
+					"CAN_PLAY_NOW": "0x1",
+					"CAN_PLAY_ENQUEUED": "0x2"
+				}
+			},
+			"medalrank_t": {
+				"title": "MedalRank_t",
+				"template": "types-syntax",
+				"values": {
+					"MEDAL_RANK_NONE": "0x0",
+					"MEDAL_RANK_BRONZE": "0x1",
+					"MEDAL_RANK_SILVER": "0x2",
+					"MEDAL_RANK_GOLD": "0x3",
+					"MEDAL_RANK_COUNT": "0x4"
+				}
+			},
+			"observermode_t": {
+				"title": "ObserverMode_t",
+				"template": "types-syntax",
+				"values": {
+					"OBS_MODE_NONE": "0x0",
+					"OBS_MODE_FIXED": "0x1",
+					"OBS_MODE_IN_EYE": "0x2",
+					"OBS_MODE_CHASE": "0x3",
+					"OBS_MODE_ROAMING": "0x4",
+					"OBS_MODE_DIRECTED": "0x5",
+					"NUM_OBSERVER_MODES": "0x6"
+				}
+			},
+			"funcdoorspawnpos_t": {
+				"title": "FuncDoorSpawnPos_t",
+				"template": "types-syntax",
+				"values": {
+					"FUNC_DOOR_SPAWN_CLOSED": "0x0",
+					"FUNC_DOOR_SPAWN_OPEN": "0x1"
+				}
+			},
+			"eoverrideblocklos_t": {
+				"title": "EOverrideBlockLOS_t",
+				"template": "types-syntax",
+				"values": {
+					"BLOCK_LOS_DEFAULT": "0x0",
+					"BLOCK_LOS_FORCE_FALSE": "0x1",
+					"BLOCK_LOS_FORCE_TRUE": "0x2"
+				}
+			},
+			"movetype_t": {
+				"title": "MoveType_t",
+				"template": "types-syntax",
+				"values": {
+					"MOVETYPE_NONE": "0x0",
+					"MOVETYPE_OBSOLETE": "0x1",
+					"MOVETYPE_WALK": "0x2",
+					"MOVETYPE_FLY": "0x3",
+					"MOVETYPE_FLYGRAVITY": "0x4",
+					"MOVETYPE_VPHYSICS": "0x5",
+					"MOVETYPE_PUSH": "0x6",
+					"MOVETYPE_NOCLIP": "0x7",
+					"MOVETYPE_OBSERVER": "0x8",
+					"MOVETYPE_LADDER": "0x9",
+					"MOVETYPE_CUSTOM": "0xa",
+					"MOVETYPE_LAST": "0xb",
+					"MOVETYPE_INVALID": "0xb",
+					"MOVETYPE_MAX_BITS": "0x5"
+				}
+			}
+		}
+	},
+	"utils": {
+		"title": "Utils",
+		"description": "A list of API functions for Swiftly Utils.",
+		"iscategory": true,
+		"language": "both",
+		"data": {}
 	}
 }

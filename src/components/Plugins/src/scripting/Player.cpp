@@ -1,4 +1,5 @@
 #include "../../../../common.h"
+#include "../../../../utils/memstr.h"
 #include "../../../../player/PlayerManager.h"
 #include "../../../../sdk/entity/CCSPlayerController.h"
 #include "../../../../sdk/entity/CCSPlayerPawnBase.h"
@@ -41,9 +42,8 @@ SMM_API const char *scripting_Player_GetSteamID2(uint32 playerId)
     static const uint64_t base = 76561197960265728;
     std::string data = string_format("STEAM_0:%d:%llu", (steamid - base) % 2, (steamid - base) / 2);
 
-    char *result = new char[data.size() + 1];
-    strcpy(result, data.c_str());
-    return result;
+    MemStr str(data);
+    return str.Get();
 }
 
 SMM_API void scripting_Player_Drop(uint32 playerId, int reason)
@@ -130,6 +130,32 @@ SMM_API int scripting_Player_GetHealth(uint32 playerId)
         return 0;
 
     return pawn->m_iHealth();
+}
+
+SMM_API uint32_t scripting_Player_GetFlags(uint32 playerId)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return 0;
+
+    CCSPlayerPawn *pawn = player->GetPlayerPawn();
+    if (!pawn)
+        return 0;
+
+    return pawn->m_fFlags();
+}
+
+SMM_API void scripting_Player_SetFlags(uint32 playerId, uint32_t flag)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return;
+
+    CCSPlayerPawn *pawn = player->GetPlayerPawn();
+    if (!pawn)
+        return;
+
+    pawn->m_fFlags = flag;
 }
 
 SMM_API void scripting_Player_SetHealth(uint32 playerId, int health)
@@ -327,9 +353,8 @@ SMM_API const char *scripting_Player_GetVar(uint32 playerId, const char *name)
 
     std::string data = SerializeData(value);
 
-    char *result = new char[data.size() + 1];
-    strcpy(result, data.c_str());
-    return result;
+    MemStr str(data);
+    return str.Get();
 }
 
 SMM_API uint32 scripting_Player_GetConnectedTime(uint32 playerId)
@@ -408,9 +433,9 @@ SMM_API const char *scripting_Player_GetCoords(uint32 playerId)
 
     std::string data = SerializeData(player->GetCoords());
 
-    char *result = new char[data.size() + 1];
-    strcpy(result, data.c_str());
-    return result;
+    MemStr str(data);
+    str.DeleteAfter(500);
+    return str.Get();
 }
 
 SMM_API void scripting_Player_SetCoords(uint32 playerId, float x, float y, float z)
@@ -434,9 +459,9 @@ SMM_API const char *scripting_Player_GetVelocity(uint32 playerId)
 
     std::string data = SerializeData(pawn->m_vecAbsVelocity());
 
-    char *result = new char[data.size() + 1];
-    strcpy(result, data.c_str());
-    return result;
+    MemStr str(data);
+    str.DeleteAfter(500);
+    return str.Get();
 }
 
 SMM_API void scripting_Player_SetVelocity(uint32 playerId, float x, float y, float z)
@@ -1229,7 +1254,7 @@ SMM_API int scripting_Player_GetLatency(uint32 playerId)
 
     INetChannelInfo *netinfo = engine->GetPlayerNetInfo(*player->GetSlot());
 
-    return netinfo->GetLatency(FLOW_INCOMING) + netinfo->GetLatency(FLOW_OUTGOING);
+    return netinfo->GetAvgLatency();
 }
 
 SMM_API void scripting_Player_SetGloves(uint32 playerId, uint16_t defindex, int paintkit, int seed, float wear)
@@ -1356,9 +1381,9 @@ SMM_API const char *scripting_Player_GetEyeAngles(uint32 playerId)
 {
     std::string data = SerializeData(scripting_Player_GetEyeAnglesRaw(playerId));
 
-    char *result = new char[data.size() + 1];
-    strcpy(result, data.c_str());
-    return result;
+    MemStr str(data);
+    str.DeleteAfter(500);
+    return str.Get();
 }
 
 SMM_API void scripting_Player_SetEyeAngles(uint32 playerId, float x, float y, float z)
@@ -1447,9 +1472,8 @@ SMM_API const char *scripting_Player_GetChatTag(uint32 playerId)
 
     std::string data = player->tag;
 
-    char *result = new char[data.size() + 1];
-    strcpy(result, data.c_str());
-    return result;
+    MemStr str(data);
+    return str.Get();
 }
 
 SMM_API void scripting_Player_SetChatTag(uint32 playerId, const char *tag)
@@ -1514,7 +1538,7 @@ SMM_API void scripting_Player_SetName(uint32 playerId, const char *name)
         return;
 
     auto namePtr = controller->m_iszPlayerName();
-    Plat_WriteMemory((void *)namePtr, reinterpret_cast<byte *>(const_cast<char *>(name)), strlen(name));
+    Plat_WriteMemory((void *)namePtr, reinterpret_cast<byte *>(const_cast<char *>(name)), 128);
 }
 
 SMM_API bool scripting_Player_IsFirstSpawn(uint32 playerId)
@@ -4329,6 +4353,57 @@ SMM_API float scripting_Player_GetBlindUntilTime(uint32 playerId)
         return 0.0f;
 
     return pPawnBase->m_blindUntilTime;
+}
+
+SMM_API bool scripting_Player_HasHelmet(uint32 playerId)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return false;
+
+    CCSPlayerPawn *pawn = player->GetPlayerPawn();
+    if (!pawn)
+        return false;
+
+    CCSPlayer_ItemServices *itemServices = pawn->m_pItemServices();
+    if (!itemServices)
+        return false;
+
+    return itemServices->m_bHasHelmet;
+}
+
+SMM_API void scripting_Player_GiveHelmet(uint32 playerId)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return;
+
+    CCSPlayerPawn *pawn = player->GetPlayerPawn();
+    if (!pawn)
+        return;
+
+    CCSPlayer_ItemServices *itemServices = pawn->m_pItemServices();
+    if (!itemServices)
+        return;
+
+    itemServices->m_bHasHelmet = true;
+}
+
+SMM_API void scripting_Player_RemoveHelmet(uint32 playerId)
+{
+    Player *player = g_playerManager->GetPlayer(playerId);
+    if (!player)
+        return;
+
+    CCSPlayerPawn *pawn = player->GetPlayerPawn();
+    if (!pawn)
+        return;
+
+    CCSPlayer_ItemServices *itemServices = pawn->m_pItemServices();
+    if (!itemServices)
+        return;
+
+    itemServices->m_bHasHelmet = false;
 }
 
 SMM_API void scripting_Player_SetBlindUntilTime(uint32 playerId, float val)

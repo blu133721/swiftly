@@ -138,6 +138,8 @@ target(PROJECT_NAME.."-Xmake")
             "backtrace",
             "stdc++"
         })
+        set_symbols("debug")
+        set_optimize("fastest")
     end
 
     add_cxxflags("gcc::-Wno-invalid-offsetof")

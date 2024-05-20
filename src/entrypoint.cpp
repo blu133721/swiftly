@@ -33,6 +33,7 @@
 #include "resourcemonitor/ResourceMonitor.h"
 #include "addons/addons.h"
 #include "addons/clients.h"
+#include "utils/memstr.h"
 
 #include <steam/steam_gameserver.h>
 
@@ -62,10 +63,6 @@ extern "C" FILE *__cdecl __iob_func(void)
 }
 #endif
 
-double g_flUniversalTime;
-float g_flLastTickedTime;
-bool g_bHasTicked;
-
 EventMap eventMap;
 SwiftlyPlugin g_Plugin;
 Configuration *g_Config;
@@ -74,7 +71,7 @@ IServerGameClients *gameclients = nullptr;
 IVEngineServer2 *engine = nullptr;
 IServerGameClients *g_clientsManager = nullptr;
 ICvar *icvar = nullptr;
-IGameResourceServiceServer *g_pGameResourceService = nullptr;
+IGameResourceService *g_pGameResourceService = nullptr;
 CSchemaSystem *g_pSchemaSystem2 = nullptr;
 CEntitySystem *g_pEntitySystem = nullptr;
 CGameEntitySystem *g_pGameEntitySystem = nullptr;
@@ -141,7 +138,7 @@ bool SwiftlyPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen,
     GET_V_IFACE_ANY(GetEngineFactory, g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
     GET_V_IFACE_ANY(GetEngineFactory, g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
     GET_V_IFACE_ANY(GetFileSystemFactory, g_pFullFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, g_pGameResourceService, IGameResourceServiceServer, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pGameResourceService, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetEngineFactory, g_pSchemaSystem2, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetEngineFactory, g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
 
@@ -219,7 +216,6 @@ bool SwiftlyPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen,
     g_Signatures->LoadSignatures();
     g_Offsets->LoadOffsets();
     g_Patches->LoadPatches();
-
     g_Patches->PerformPatches();
 
     if (!InitializeHooks())
@@ -485,11 +481,8 @@ void scripting_OnGameTick(bool simulating, bool firsttick, bool lasttick);
 
 void SwiftlyPlugin::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
 {
-    if (simulating && g_bHasTicked)
-        g_flUniversalTime += GetGameGlobals()->curtime - g_flLastTickedTime;
-
-    g_flLastTickedTime = GetGameGlobals()->curtime;
-    g_bHasTicked = true;
+    auto gameframeStart = std::chrono::high_resolution_clock::now();
+    MemStrCleanup();
 
     scripting_OnGameTick(simulating, bFirstTick, bLastTick);
 
@@ -522,6 +515,10 @@ void SwiftlyPlugin::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastT
     {
         m_nextFrame.front()();
         m_nextFrame.pop_front();
+    }
+    if (g_ResourceMonitor->IsEnabled()) {
+        auto gameframeEnd = std::chrono::high_resolution_clock::now() - gameframeStart;
+        g_ResourceMonitor->RecordTime("swiftly-core", "SwiftlyPlugin::Hook_GameFrame", std::chrono::duration_cast<std::chrono::microseconds>(gameframeEnd).count() / 1000);
     }
 }
 

@@ -1,4 +1,5 @@
 #include "../../../../common.h"
+#include "../../../../utils/memstr.h"
 #include "sdk/entity/CGameRules.h"
 
 SMM_API void scripting_Server_ExecuteCommand(const char *str)
@@ -21,9 +22,8 @@ SMM_API const char *scripting_Server_GetMapName()
 
     const char *mapname = engine->GetServerGlobals()->mapname.ToCStr();
 
-    char *res = new char[strlen(mapname) + 1];
-    strcpy(res, mapname);
-    return res;
+    MemStr str(mapname);
+    return str.Get();
 }
 
 SMM_API bool scripting_Server_IsPistolRound()
@@ -32,6 +32,22 @@ SMM_API bool scripting_Server_IsPistolRound()
         return false;
 
     return (g_pGameRules->m_totalRoundsPlayed() == 0 || g_pGameRules->m_nRoundsPlayedThisPhase() == 0 || (g_pGameRules->m_bSwitchingTeamsAtRoundReset() && g_pGameRules->m_nOvertimePlaying() == 0) || g_pGameRules->m_bGameRestart());
+}
+
+SMM_API bool scripting_Server_IsFreezeTime()
+{
+    if (g_pGameRules == nullptr)
+        return false;
+
+    return (g_pGameRules->m_bFreezePeriod());
+}
+
+SMM_API bool scripting_Server_IsWarmup()
+{
+    if (g_pGameRules == nullptr)
+        return false;
+
+    return (g_pGameRules->m_bWarmupPeriod());
 }
 
 SMM_API int scripting_server_GetTotalRounds()
