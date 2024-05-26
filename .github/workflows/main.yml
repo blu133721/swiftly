@@ -3,7 +3,7 @@ name: "Swiftly Compiler"
 on:
     push:
         branches:
-            - master
+            - '**'
     pull_request:
 
 jobs:
@@ -51,6 +51,14 @@ jobs:
                   path: swiftly
                   submodules: recursive
 
+            - name: Restore cached XMake Build
+              id: cache-xmake-build
+              uses: actions/cache/restore@v4
+              with:
+                path: |
+                  ${{ github.workspace }}/swiftly/build/.build_cache
+                key: ${{ runner.os }}-swiftly-build
+
             - name: Install XMake
               uses: xmake-io/github-action-setup-xmake@v1
               with:
@@ -71,7 +79,7 @@ jobs:
               shell: bash
               run: |
                   sudo apt update
-                  sudo apt install -y libreadline-dev libboost-all-dev fdupes unzip
+                  sudo apt install -y libreadline-dev libboost-all-dev fdupes unzip ccache
                   bash ./setup.sh
 
             - name: Build - Windows
@@ -113,3 +121,11 @@ jobs:
               with:
                   name: Swiftly Plugin Depot Linux
                   path: ${{ github.workspace }}/swiftly/build/package
+
+            - name: Save cached XMake Build
+              id: save-xmake-build
+              uses: actions/cache/save@v4
+              with:
+                path: |
+                  ${{ github.workspace }}/swiftly/build/.build_cache
+                key: ${{ steps.cache-xmake-build.outputs.cache-primary-key }}
