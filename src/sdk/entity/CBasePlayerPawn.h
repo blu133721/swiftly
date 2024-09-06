@@ -3,36 +3,33 @@
 #include "CBaseEntity.h"
 #include "CBaseModelEntity.h"
 #include "services.h"
-#include "../../sig/Offsets.h"
-#include "../../utils.h"
+#include "../../signatures/Offsets.h"
+
+#include "../../utils/utils.h"
+#include "../../common.h"
+#include "../../entrypoint.h"
 
 class CBasePlayerPawn : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS_BASE(CBasePlayerPawn, false)
 
-    SCHEMA_FIELD_OFFSET(CPlayer_MovementServices *, m_pMovementServices, 0)
-    SCHEMA_FIELD_OFFSET(CPlayer_WeaponServices *, m_pWeaponServices, 0)
-    SCHEMA_FIELD_OFFSET(CCSPlayer_ItemServices *, m_pItemServices, 0)
-    SCHEMA_FIELD_OFFSET(CHandle<CBasePlayerController>, m_hController, 0)
-
-    SCHEMA_FIELD_OFFSET(uint32_t, m_nHighestGeneratedServerViewAngleChangeIndex, 0)
-    SCHEMA_FIELD_OFFSET(uint32_t, m_iHideHUD, 0)
-    SCHEMA_FIELD_OFFSET(bool, m_fInitHUD, 0)
-    SCHEMA_FIELD_OFFSET(float, m_fHltvReplayDelay, 0)
-    SCHEMA_FIELD_OFFSET(float, m_fHltvReplayEnd, 0)
+    SCHEMA_FIELD_OFFSET(CPlayer_MovementServices*, m_pMovementServices, 0);
+    SCHEMA_FIELD_OFFSET(CPlayer_WeaponServices*, m_pWeaponServices, 0);
+    SCHEMA_FIELD_OFFSET(CCSPlayer_ItemServices*, m_pItemServices, 0);
+    SCHEMA_FIELD_OFFSET(CHandle<CBasePlayerController>, m_hController, 0);
 
     void TakeDamage(int damage)
     {
         if (this->m_iHealth() - damage <= 0)
             this->CommitSuicide(false, true);
         else
-            Z_CBaseEntity::TakeDamage(damage);
+            CBaseEntity::TakeDamage(damage);
     }
 
     void CommitSuicide(bool explode, bool forced)
     {
-        static int offset = g_Offsets->GetOffset("CommitSuicide");
+        static int offset = g_Offsets->GetOffset("CBasePlayerPawn_CommitSuicide");
         CALL_VIRTUAL(void, offset, this, explode, forced);
     }
 };

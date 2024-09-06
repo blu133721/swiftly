@@ -7,9 +7,14 @@
 #define _addons_h
 
 #include "../common.h"
+#include "../entrypoint.h"
 #include "../utils/progressbar.h"
+#include <networksystem/inetworkserializer.h>
+#include <networksystem/inetworkmessages.h>
 
 #include <vector>
+
+void *Hook_HostStateRequest(void *a1, void **pRequest);
 
 struct DownloadInfo
 {
@@ -69,6 +74,10 @@ public:
     bool OnClientConnect(uint64 xuid);
 
     void ReloadMap();
+
+    void Initialize();
+    void Destroy();
+    bool SendNetMessage(CNetMessage* msg, NetChannelBufType_t bufType);
 };
 
 extern Addons g_addons;

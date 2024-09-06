@@ -1,0 +1,187 @@
+name: "Swiftly Compiler"
+
+on:
+    push:
+        branches:
+            - '**'
+    pull_request:
+
+jobs:
+    versioning:
+        permissions:
+            contents: write
+        runs-on: Linux
+        container:
+            image: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
+        outputs:
+            version: ${{ steps.version.outputs.version }}
+        steps:
+            - name: Packages
+              shell: bash
+              run: |
+                  sudo apt update
+                  sudo apt install -y curl jq
+                                             
+            - name: Generate version
+              uses: reecetech/version-increment@2024.4.4
+              id: version
+              with:
+                release_branch: master
+                increment: patch
+                use_api: true
+
+    build:
+        name: Build
+        needs: versioning
+        runs-on: ${{ matrix.os }}
+        env:
+            MMSOURCE20: ${{ github.workspace }}/swiftly/alliedmodders/metamod
+            HL2SDKCS2: ${{ github.workspace }}/swiftly/alliedmodders/hl2sdk
+        container: ${{ matrix.container }}
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [Linux, windows-latest]
+                include:
+                    - os: Linux
+                      container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  path: swiftly
+                  submodules: recursive
+
+            - name: Checkout AMBuild
+              uses: actions/checkout@v4
+              with:
+                  repository: alliedmodders/ambuild
+                  path: ambuild
+
+            - name: Install AMBuild
+              run: |
+                  cd ambuild; python setup.py install; cd ..
+
+            - name: Setup Version
+              if: ${{ github.ref == 'refs/heads/master' }}
+              shell: bash
+              run: echo "SWIFTLY_VERSION=${{needs.versioning.outputs.version}}" >> $GITHUB_ENV
+
+            - name: Build - Linux
+              if: matrix.os == 'Linux'
+              working-directory: swiftly
+              shell: bash
+              run: |
+                  sudo apt update
+                  sudo apt install -y libreadline-dev libboost-all-dev fdupes unzip
+                  bash ./setup.sh
+
+                  echo "[Builder] Setting up default plugins"
+                  cp -r build/package build/package2
+                  cd build/package/addons/swiftly
+                  wget https://github.com/swiftly-solution/admins/releases/latest/download/Swiftly.Plugin.Admins.zip
+                  unzip Swiftly.Plugin.Admins.zip
+                  wget https://github.com/swiftly-solution/admins_basecomms/releases/latest/download/Swiftly.Plugin.Admins.BaseComms.zip
+                  unzip Swiftly.Plugin.Admins.BaseComms.zip
+                  wget https://github.com/swiftly-solution/admins_basebans/releases/latest/download/Swiftly.Plugin.Admins.BaseBans.zip
+                  unzip Swiftly.Plugin.Admins.BaseBans.zip
+                  wget https://github.com/swiftly-solution/admins_commands/releases/latest/download/Swiftly.Plugin.Admins.BaseCommands.zip
+                  unzip Swiftly.Plugin.Admins.BaseCommands.zip
+
+                  rm -rf Swiftly.Plugin.Admins.zip
+                  rm -rf Swiftly.Plugin.Admins.BaseComms.zip
+                  rm -rf Swiftly.Plugin.Admins.BaseBans.zip
+                  rm -rf Swiftly.Plugin.Admins.BaseCommands.zip
+
+                  cd ../../../..
+                  echo "[Builder] Finished setting up default plugins"
+
+            - name: Prepare Build - Windows
+              if: matrix.os == 'windows-latest'
+              working-directory: swiftly
+              run: |
+                  ./setup.ps1
+
+                  Set-Location build/package/addons/swiftly
+
+                  Invoke-WebRequest https://github.com/swiftly-solution/admins/releases/latest/download/Swiftly.Plugin.Admins.zip -OutFile Swiftly.Plugin.Admins.zip
+                  Expand-Archive Swiftly.Plugin.Admins.zip -DestinationPath .
+                  Invoke-WebRequest https://github.com/swiftly-solution/admins_basecomms/releases/latest/download/Swiftly.Plugin.Admins.BaseComms.zip -OutFile Swiftly.Plugin.Admins.BaseComms.zip
+                  Expand-Archive Swiftly.Plugin.Admins.BaseComms.zip -DestinationPath .
+                  Invoke-WebRequest https://github.com/swiftly-solution/admins_basebans/releases/latest/download/Swiftly.Plugin.Admins.BaseBans.zip -OutFile Swiftly.Plugin.Admins.BaseBans.zip
+                  Expand-Archive Swiftly.Plugin.Admins.BaseBans.zip -DestinationPath .
+                  Invoke-WebRequest https://github.com/swiftly-solution/admins_commands/releases/latest/download/Swiftly.Plugin.Admins.BaseCommands.zip -OutFile Swiftly.Plugin.Admins.BaseCommands.zip
+                  Expand-Archive Swiftly.Plugin.Admins.BaseCommands.zip -DestinationPath .
+
+                  Remove-Item -Force Swiftly.Plugin.Admins.zip
+                  Remove-Item -Force Swiftly.Plugin.Admins.BaseComms.zip
+                  Remove-Item -Force Swiftly.Plugin.Admins.BaseBans.zip
+                  Remove-Item -Force Swiftly.Plugin.Admins.BaseCommands.zip
+
+                  Set-Location ../../../..
+
+            - name: Upload Artifacts Linux
+              if: matrix.os == 'Linux'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: Swiftly.Plugin.Linux
+                  path: ${{ github.workspace }}/swiftly/build/package
+                  
+            - name: Upload Artifacts Windows
+              if: matrix.os == 'windows-latest'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: Swiftly.Plugin.Windows
+                  path: ${{ github.workspace }}/swiftly/build/package
+
+            - name: Creating Swiftly Depot - Linux
+              if: matrix.os == 'Linux'
+              working-directory: swiftly
+              run: |
+                  cd build
+                  curl https://api.github.com/repos/swiftly-solution/swiftly/releases/latest | grep "Swiftly.Plugin.Linux.zip" | cut -d : -f 2,3 | tr -d \" | tail -1 | wget -qi -
+                  unzip Swiftly.Plugin.Linux.zip
+                  mkdir release
+                  mv addons release
+                  fdupes -r --delete --noprompt package2 release
+                  find package2 -empty -type d -delete
+
+            - name: Upload Swiftly Depot - Linux
+              if: matrix.os == 'Linux'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: Swiftly.Plugin.Depot.Linux
+                  path: ${{ github.workspace }}/swiftly/build/package2
+
+    release:
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        permissions:
+            contents: write
+        needs: ["versioning", "build"]
+        runs-on: Linux
+        container:
+            image: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
+        steps:
+            - uses: actions/download-artifact@v4
+              id: download-artifacts
+              with:
+                  path: build
+
+            - name: Prepare ZIP Files
+              run: |
+                sudo apt install p7zip-full -y;
+                (cd build/Swiftly.Plugin.Linux; 7z a -tzip ../../../Swiftly.Plugin.Linux.zip *)
+                (cd build/Swiftly.Plugin.Windows; 7z a -tzip ../../../Swiftly.Plugin.Windows.zip *)
+                (cd build/Swiftly.Plugin.Depot.Linux; 7z a -tzip ../../../Swiftly.Plugin.Depot.Linux.zip *)
+                echo "PATH_ARTIFACTS=$(cd ..; pwd)" >> $GITHUB_ENV
+
+            - name: Release
+              id: release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: v${{ needs.versioning.outputs.version }}
+                  make_latest: "true"
+                  files: |
+                      ${{env.PATH_ARTIFACTS}}/Swiftly.Plugin.Linux.zip
+                      ${{env.PATH_ARTIFACTS}}/Swiftly.Plugin.Windows.zip
+                      ${{env.PATH_ARTIFACTS}}/Swiftly.Plugin.Depot.Linux.zip

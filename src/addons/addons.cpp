@@ -5,6 +5,8 @@
 
 #include "addons.h"
 #include "../files/Files.h"
+#include "../hooks/FuncHook.h"
+#include "../usermessages/usermessages.h"
 #include "clients.h"
 
 #include <rapidjson/document.h>
@@ -13,6 +15,9 @@
 #include <thread>
 #include <cmath>
 #include <algorithm>
+
+#include "../../vendor/dynlib/module.h"
+#include "networkbasetypes.pb.h"
 
 #define HAS_MEMBER(DOCUMENT, MEMBER_NAME, MEMBER_PATH) \
     if (!DOCUMENT.HasMember(MEMBER_NAME))              \
@@ -31,7 +36,12 @@
     if (!DOCUMENT[MEMBER_NAME].IsUint())            \
     return AddonsPrint(string_format("The field \"%s\" is not an unsigned integer.", MEMBER_PATH))
 
-size_t FormatArgs(char *buffer, size_t maxlength, const char *fmt, va_list params)
+SH_DECL_MANUALHOOK2(SendNetMessage, 0, 0, 0, bool, CNetMessage*, NetChannelBufType_t);
+int sendNetMessageHookID = -1;
+
+FuncHook<decltype(Hook_HostStateRequest)> THostStateRequest(Hook_HostStateRequest, "HostStateRequest");
+
+size_t FormatArgs(char* buffer, size_t maxlength, const char* fmt, va_list params)
 {
     size_t len = vsnprintf(buffer, maxlength, fmt, params);
 
@@ -44,7 +54,7 @@ size_t FormatArgs(char *buffer, size_t maxlength, const char *fmt, va_list param
     return len;
 }
 
-const char *format(const char *str, ...)
+const char* format(const char* str, ...)
 {
     va_list ap;
     char buffer[2048];
@@ -58,15 +68,87 @@ const char *format(const char *str, ...)
     return return_str.c_str();
 }
 
+void* Hook_HostStateRequest(void* a1, void** pRequest)
+{
+    if (g_addons.GetStatus() == false || g_addons.GetAddons().size() == 0)
+        return THostStateRequest(a1, pRequest);
+
+    CUtlString* psNextMap = (CUtlString*)(pRequest + 5);
+    CUtlString* psAddonString = (CUtlString*)(pRequest + 11);
+
+    std::string sExtraAddonString = implode(g_addons.GetAddons(), ",");
+
+    static std::string sCurrentMap = psNextMap->Get();
+
+    if (psNextMap->IsEqual_CaseSensitive(sCurrentMap.c_str()))
+    {
+        if (g_addons.currentWorkshopMap.empty())
+            psAddonString->Clear();
+        else
+            psAddonString->Set(g_addons.currentWorkshopMap.c_str());
+    }
+    else
+    {
+        sCurrentMap = psNextMap->Get();
+    }
+
+    if (!psAddonString->IsEmpty())
+    {
+        g_addons.currentWorkshopMap = psAddonString->Get();
+        psAddonString->Format("%s,%s", psAddonString->Get(), sExtraAddonString.c_str());
+    }
+    else
+    {
+        g_addons.currentWorkshopMap.clear();
+        psAddonString->Set(sExtraAddonString.c_str());
+    }
+
+    return THostStateRequest(a1, pRequest);
+}
+
 void AddonsPrint(std::string str)
 {
     if (!g_SMAPI)
         return;
 
-    PRINTF("Addons", "%s\n", str.c_str());
+    PLUGIN_PRINTF("Addons", "%s\n", str.c_str());
 }
 
-void Addons::BuildAddonPath(std::string pszAddon, std::string &buffer)
+void Addons::Initialize()
+{
+    SH_MANUALHOOK_RECONFIGURE(SendNetMessage, g_Offsets->GetOffset("SendNetMessage"), 0, 0);
+    DynLibUtils::CModule enginemodule = DetermineModuleByLibrary("engine2");
+    void* serverSideClientVTable = enginemodule.GetVirtualTableByName("CServerSideClient");
+    sendNetMessageHookID = SH_ADD_MANUALDVPHOOK(SendNetMessage, serverSideClientVTable, SH_MEMBER(this, &Addons::SendNetMessage), false);
+}
+
+void Addons::Destroy()
+{
+    SH_REMOVE_HOOK_ID(sendNetMessageHookID);
+}
+
+bool Addons::SendNetMessage(CNetMessage* pData, NetChannelBufType_t bufType)
+{
+    CServerSideClient* pClient = META_IFACEPTR(CServerSideClient);
+    NetMessageInfo_t* info = pData->GetNetMessage()->GetNetMessageInfo();
+
+    if (info->m_MessageId != 7 || g_addons.GetStatus() == false || g_addons.GetAddons().size() == 0)
+        RETURN_META_VALUE(MRES_IGNORED, true);
+
+    int idx;
+    ClientJoinInfo_t* pPendingClient = GetPendingClient(pClient->GetClientSteamID()->ConvertToUint64(), idx);
+    if (pPendingClient)
+    {
+        auto pMsg = pData->ToPB<CNETMsg_SignonState>();
+        pMsg->set_addons(g_addons.GetAddons()[pPendingClient->addon].c_str());
+        pMsg->set_signon_state(SIGNONSTATE_CHANGELEVEL);
+        pPendingClient->signon_timestamp = Plat_FloatTime();
+    }
+
+    RETURN_META_VALUE(MRES_HANDLED, true);
+}
+
+void Addons::BuildAddonPath(std::string pszAddon, std::string& buffer)
 {
     static CBufferStringGrowable<MAX_PATH> s_sWorkingDir;
     ExecuteOnce(g_pFullFileSystem->GetSearchPath("EXECUTABLE_PATH", GET_SEARCH_PATH_ALL, s_sWorkingDir, 1));
@@ -149,7 +231,7 @@ bool Addons::PrintDownload()
 
     if (this->downloadProgresses.find(iAddon) == this->downloadProgresses.end())
     {
-        ProgressBar *bar = new ProgressBar();
+        ProgressBar* bar = new ProgressBar();
         bar->SetBarPrefix(string_format("%lli: Downloading ", iAddon));
         bar->SetProgress(0);
 
@@ -161,7 +243,7 @@ bool Addons::PrintDownload()
             bar,
         };
 
-        this->downloadProgresses.insert({iAddon, info});
+        this->downloadProgresses.insert({ iAddon, info });
 
         AddonsPrint(bar->GetContent(format("[0s] [0.00MB/%.2fMB] 0.00%%", ((double)totalBytes / 1024.0f / 1024.0f))));
     }
@@ -247,7 +329,7 @@ void Addons::RefreshAddons(bool reloadMap)
 
     bool allMounted = true;
 
-    for (int i = 0; i < this->addonsList.size(); i++)
+    for (size_t i = 0; i < this->addonsList.size(); i++)
         if (!this->MountAddon(this->addonsList[i]))
             allMounted = false;
 
@@ -274,7 +356,7 @@ void Addons::ReloadMap()
     engine->ServerCommand(cmd.c_str());
 }
 
-void Addons::OnAddonDownloaded(DownloadItemResult_t *result)
+void Addons::OnAddonDownloaded(DownloadItemResult_t* result)
 {
     if (result->m_eResult == k_EResultOK)
         AddonsPrint(string_format("Addon %lli was succesfully downloaded.", result->m_nPublishedFileId));
@@ -284,19 +366,23 @@ void Addons::OnAddonDownloaded(DownloadItemResult_t *result)
     if (!this->ExistsInVector<PublishedFileId_t>(this->downloadQueue, result->m_nPublishedFileId))
         return;
 
-    DownloadInfo info = this->downloadProgresses.at(result->m_nPublishedFileId);
+    if (this->downloadProgresses.find(result->m_nPublishedFileId) != this->downloadProgresses.end())
+    {
+        DownloadInfo info = this->downloadProgresses.at(result->m_nPublishedFileId);
 
-    info.elapsedTime += (GetTime() - info.timestamp);
-    info.timestamp = GetTime();
+        info.elapsedTime += (GetTime() - info.timestamp);
+        info.timestamp = GetTime();
 
-    info.progressBar->SetBarPrefix(string_format("%lli: Downloaded ", result->m_nPublishedFileId));
-    info.progressBar->SetProgress(100);
+        info.progressBar->SetBarPrefix(string_format("%lli: Downloaded ", result->m_nPublishedFileId));
+        info.progressBar->SetProgress(100);
 
-    AddonsPrint(info.progressBar->GetContent(format("[%.0fs] [%.2fMB] %.2f%%", ((double)info.elapsedTime / 1000.0f), ((double)info.totalBytes / 1024.0f / 1024.0f), 100.0f)));
+        AddonsPrint(info.progressBar->GetContent(format("[%.0fs] [%.2fMB] %.2f%%", ((double)info.elapsedTime / 1000.0f), ((double)info.totalBytes / 1024.0f / 1024.0f), 100.0f)));
 
-    delete info.progressBar;
+        delete info.progressBar;
 
-    this->downloadProgresses.erase(result->m_nPublishedFileId);
+        this->downloadProgresses.erase(result->m_nPublishedFileId);
+    }
+
     this->downloadQueue.erase(std::find(this->downloadQueue.begin(), this->downloadQueue.end(), result->m_nPublishedFileId));
 
     std::vector<PublishedFileId_t>::iterator it = std::find(this->importantDownloads.begin(), this->importantDownloads.end(), result->m_nPublishedFileId);
@@ -306,7 +392,7 @@ void Addons::OnAddonDownloaded(DownloadItemResult_t *result)
 
     if (found && this->importantDownloads.size() == 0)
     {
-        AddonsPrint(string_format("All addons were succesfully downloaded, reloading map %s.", GetGameGlobals()->mapname.ToCStr()));
+        AddonsPrint(string_format("All addons were succesfully downloaded, reloading map %s.", engine->GetServerGlobals()->mapname.ToCStr()));
         this->ReloadMap();
     }
 }
@@ -380,7 +466,7 @@ bool Addons::OnClientConnect(uint64 xuid)
         return true;
 
     int idx;
-    ClientJoinInfo_t *pendingClient = GetPendingClient(xuid, idx);
+    ClientJoinInfo_t* pendingClient = GetPendingClient(xuid, idx);
 
     if (!pendingClient)
     {
@@ -390,7 +476,7 @@ bool Addons::OnClientConnect(uint64 xuid)
     else if ((Plat_FloatTime() - pendingClient->signon_timestamp) < static_cast<double>(this->GetTimeout()))
     {
         pendingClient->addon++;
-        if (pendingClient->addon >= this->addonsList.size())
+        if ((size_t)pendingClient->addon >= this->addonsList.size())
         {
             g_ClientsPendingAddon.FastRemove(idx);
             return true;
@@ -403,10 +489,10 @@ bool Addons::OnClientConnect(uint64 xuid)
 void Addons::SetupThread()
 {
     std::thread([&]() -> void
-                {
-        while(true) {
-            uint64_t sleeptime = this->PrintDownload() ? 100 : 1000;
-            std::this_thread::sleep_for(std::chrono::milliseconds(sleeptime));
-        } })
+        {
+            while (true) {
+                uint64_t sleeptime = this->PrintDownload() ? 100 : 1000;
+                std::this_thread::sleep_for(std::chrono::milliseconds(sleeptime));
+            } })
         .detach();
 }

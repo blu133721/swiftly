@@ -1,14 +1,44 @@
 {
     "logging": {
         "enabled": true,
-        "mode": "daily"
+        "mode": "daily",
+        "save_core_messages": false
     },
-    "commandPrefixes": ["!"],
-    "commandSilentPrefixes": ["/"],
+    "commandPrefixes": [
+        "!"
+    ],
+    "commandSilentPrefixes": [
+        "/"
+    ],
     "console_filtering": true,
     "language": "en",
+    "use_player_language": true,
     "patches_to_perform": [],
-
-    "CS2ServerGuidelines": "https://blog.counter-strike.net/index.php/server_guidelines/", 
-    "FollowCS2ServerGuidelines": true
+    "CS2ServerGuidelines": "https://blog.counter-strike.net/index.php/server_guidelines/",
+    "FollowCS2ServerGuidelines": true,
+    "menu": {
+        "navigation_prefix" : "➤",
+        "sound": {
+            "use": {
+                "name": "Vote.Cast.Yes",
+                "volume": 0.75
+            },
+            "scroll": {
+                "name": "UI.ContractType",
+                "volume": 0.75
+            },
+            "exit": {
+                "name": "Vote.Failed",
+                "volume": 0.75
+            }         
+        },
+        "buttons": {
+            "use": "e",
+            "scroll": "shift",
+            "exit": {
+                "option": false,
+                "button": "tab"
+            }
+        }
+    }
 }

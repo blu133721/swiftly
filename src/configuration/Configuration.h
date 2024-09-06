@@ -5,6 +5,12 @@
 #include <map>
 #include <any>
 
+#include <rapidjson/document.h>
+#include <rapidjson/error/en.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+
 class Configuration
 {
 private:
@@ -33,7 +39,7 @@ public:
     void LoadPluginConfig(std::string key);
 };
 
-extern Configuration *g_Config;
+extern Configuration* g_Config;
 
 template <typename T>
 T Configuration::FetchValue(std::string key)
@@ -43,5 +49,7 @@ T Configuration::FetchValue(std::string key)
 
     return std::any_cast<T>(this->config.at(key));
 }
+
+void WritePluginFile(std::string path, rapidjson::Value& val);
 
 #endif

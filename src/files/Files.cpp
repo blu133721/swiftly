@@ -2,37 +2,6 @@
 
 bool pathChanges = false;
 
-std::vector<std::string> explode(std::string s, std::string delimiter)
-{
-    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
-    std::string token;
-    std::vector<std::string> res;
-
-    while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
-    {
-        token = s.substr(pos_start, pos_end - pos_start);
-        pos_start = pos_end + delim_len;
-        res.push_back(token);
-    }
-
-    res.push_back(s.substr(pos_start));
-    return res;
-}
-
-std::string implode(std::vector<std::string> elements, std::string delimiter)
-{
-    std::string s;
-    for (std::vector<std::string>::iterator ii = elements.begin(); ii != elements.end(); ++ii)
-    {
-        s += (*ii);
-        if (ii + 1 != elements.end())
-        {
-            s += delimiter;
-        }
-    }
-    return s;
-}
-
 void ChangePath()
 {
     if (pathChanges)
@@ -55,10 +24,15 @@ std::string Files::Read(std::string path)
     if (!std::filesystem::exists(path))
         return "";
 
-    std::ifstream f(path);
-    std::stringstream strStream;
-    strStream << f.rdbuf();
-    return strStream.str();
+    auto fp = std::fopen(path.c_str(), "rb");
+    std::string s;
+    std::fseek(fp, 0u, SEEK_END);
+    auto size = std::ftell(fp);
+    std::fseek(fp, 0u, SEEK_SET);
+    s.resize(size);
+    std::fread(&s[0], 1u, size, fp);
+    std::fclose(fp);
+    return s;
 }
 
 std::string Files::getBase(std::string filePath)
@@ -83,7 +57,7 @@ void Files::Append(std::string path, std::string content, bool hasdate)
     ChangePath();
     std::filesystem::create_directories(Files::getBase(path));
     time_t now = time(0);
-    tm *ltm = localtime(&now);
+    tm* ltm = localtime(&now);
 
     char date[32];
 
@@ -106,7 +80,7 @@ void Files::Write(std::string path, std::string content, bool hasdate)
     ChangePath();
     std::filesystem::create_directories(Files::getBase(path));
     time_t now = time(0);
-    tm *ltm = localtime(&now);
+    tm* ltm = localtime(&now);
 
     char date[32];
 
@@ -148,7 +122,12 @@ std::vector<std::string> Files::FetchFileNames(std::string path)
     ChangePath();
 
     std::vector<std::string> files;
-    for (const auto &entry : std::filesystem::directory_iterator(path))
+    if (!ExistsPath(path))
+        return files;
+    if (!IsDirectory(path))
+        return files;
+
+    for (const auto& entry : std::filesystem::directory_iterator(path))
     {
         if (entry.is_directory())
         {
@@ -167,9 +146,76 @@ std::vector<std::string> Files::FetchDirectories(std::string path)
     ChangePath();
 
     std::vector<std::string> directories;
-    for (const auto &entry : std::filesystem::directory_iterator(path))
+    if (!ExistsPath(path))
+        return directories;
+    if (!IsDirectory(path))
+        return directories;
+
+    for (const auto& entry : std::filesystem::directory_iterator(path))
         if (entry.is_directory())
             directories.push_back(entry.path().string());
 
     return directories;
+}
+
+bool Files::Compress(std::string filePath, std::string outputPath)
+{
+    std::ifstream inFile(filePath, std::ios_base::binary);
+    std::ofstream outFile(outputPath, std::ios_base::binary);
+
+    if (!inFile || !outFile)
+    {
+        PRINT("Couldn't create read and write streams.\n");
+        return false;
+    }
+
+    std::vector<char> inBuffer((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
+    inFile.close();
+
+    unsigned int outSize = inBuffer.size() * 1.01 + 600;
+    std::vector<char> outBuffer(outSize);
+
+    int result = BZ2_bzBuffToBuffCompress(outBuffer.data(), &outSize, inBuffer.data(), inBuffer.size(), 9, 0, 30);
+
+    if (result != BZ_OK)
+    {
+        PRINTF("Compression failed. Error code: %d\n", result);
+        return false;
+    }
+
+    outFile.write(outBuffer.data(), outSize);
+    outFile.close();
+
+    return true;
+}
+
+bool Files::Decompress(std::string filePath, std::string outputPath)
+{
+    std::ifstream inFile(filePath, std::ios_base::binary);
+    std::ofstream outFile(outputPath, std::ios_base::binary);
+
+    if (!inFile || !outFile)
+    {
+        PRINT("Couldn't create read and write streams.\n");
+        return false;
+    }
+
+    std::vector<char> inBuffer((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
+    inFile.close();
+
+    unsigned int outSize = inBuffer.size() * 10;
+    std::vector<char> outBuffer(outSize);
+
+    int result = BZ2_bzBuffToBuffDecompress(outBuffer.data(), &outSize, inBuffer.data(), inBuffer.size(), 0, 0);
+
+    if (result != BZ_OK)
+    {
+        PRINTF("Decompression failed. Error code: %d\n", result);
+        return false;
+    }
+
+    outFile.write(outBuffer.data(), outSize);
+    outFile.close();
+
+    return true;
 }

@@ -1,22 +1,42 @@
-#ifndef _httpmanager_h
-#define _httpmanager_h
+#ifndef _http_manager_h
+#define _http_manager_h
 
-#include "HTTPRequest.h"
+#include <steam/steam_gameserver.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <functional>
+
+#define RequestCB std::function<void(HTTPRequestHandle, int, std::string, std::string, std::string, std::string)>
+
+class TrackedRequest
+{
+public:
+    TrackedRequest(const TrackedRequest& req) = delete;
+    TrackedRequest(HTTPRequestHandle hndl, SteamAPICall_t hCall, std::string requestID, RequestCB callback);
+    ~TrackedRequest();
+private:
+    void OnHTTPRequestCompleted(HTTPRequestCompleted_t* arg, bool bFailed);
+
+    HTTPRequestHandle m_hHTTPReq;
+    CCallResult<TrackedRequest, HTTPRequestCompleted_t> m_CallResult;
+    std::string m_requestID;
+
+    RequestCB m_callback;
+};
 
 class HTTPManager
 {
-private:
-    std::map<uint64_t, HTTPRequest *> requests;
-    uint64_t requestIndex = 0;
-
 public:
-    HTTPManager();
+    HTTPManager() = default;
+    ~HTTPManager() = default;
 
-    uint64_t CreateRequest(std::string url);
-    void DeleteRequest(uint64_t requestID);
-    HTTPRequest *FetchRequest(uint64_t requestID);
+    void ProcessPendingHTTPRequests();
+
+    std::vector<TrackedRequest*> m_PendingRequests;
+    std::map<std::string, std::map<std::string, std::string>> m_PendingHTTPRequests;
 };
 
-extern HTTPManager *g_httpManager;
+extern HTTPManager* g_httpManager;
 
 #endif
