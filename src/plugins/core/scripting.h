@@ -6,6 +6,7 @@
 #include "../../sdk/entity/CCSWeaponBase.h"
 #include "../../crashreporter/CallStack.h"
 #include "../../encoders/msgpack.h"
+#include "../../sdk/entity/CTakeDamageInfo.h"
 
 #include "cstrike15_usermessages.pb.h"
 #include <google/protobuf/message.h>
@@ -208,7 +209,7 @@ public:
     SDKBaseClass(void* ptr, std::string className);
     SDKBaseClass(std::string ptr, std::string className);
 
-    luabridge::LuaRef AccessSDKLua(std::string fieldName, lua_State* state);
+    luabridge::LuaRef AccessSDKLua(std::string fieldName, uint64_t path, lua_State* state);
     void UpdateSDKLua(std::string fieldName, luabridge::LuaRef value, lua_State* state);
 
     int CBasePlayerController_EntityIndex();
@@ -224,6 +225,9 @@ public:
     SDKBaseClass CBaseEntity_GetVData();
     void CBaseEntity_Teleport(Vector value, QAngle angle);
     void CBaseEntity_EmitSound(std::string sound_name, float pitch, float volume);
+    void CBaseEntity_CollisionRulesChanged();
+    SDKBaseClass CGameSceneNode_GetSkeletonInstance();
+    SDKBaseClass CPlayerPawnComponent_GetPawn();
 
     int GetProp(lua_State* state);
     int SetProp(lua_State* state);
@@ -238,16 +242,21 @@ public:
 /////////////////         User Message         //////////////
 ////////////////////////////////////////////////////////////
 
+class PluginUserMessage;
+
 class PluginUserMessage
 {
 private:
     int msgid = INVALID_MESSAGE_ID;
-    CNetMessagePB<google::protobuf::Message>* msgBuffer = nullptr;
     INetworkMessageInternal* internalMsg = nullptr;
+    uint64* clients = nullptr;
 
 public:
+    CNetMessagePB<google::protobuf::Message>* msgBuffer = nullptr;
+
     PluginUserMessage(std::string msgname);
-    PluginUserMessage(INetworkMessageInternal* msg, CNetMessage* data);
+    PluginUserMessage(INetworkMessageInternal* msg, CNetMessage* data, uint64* cls);
+    PluginUserMessage(google::protobuf::Message* msg);
     ~PluginUserMessage();
 
     bool IsValidMessage();
@@ -340,9 +349,18 @@ public:
     void SetRepeatedQAngle(std::string pszFieldName, int index, QAngle& vec);
     void AddQAngle(std::string pszFieldName, QAngle& vec);
 
-    void RemoveRepeatedFieldValue(std::string pszFieldName, int index);
+    PluginUserMessage GetUMessage(std::string pszFieldName);
+    PluginUserMessage GetRepeatedMessage(std::string pszFieldName, int index);
+    PluginUserMessage AddMessage(std::string pszFieldName);
 
+    void RemoveRepeatedFieldValue(std::string pszFieldName, int index);
     int GetRepeatedFieldCount(std::string pszFieldName);
+
+    void AddClient(int playerId);
+    void RemoveClient(int playerId);
+    void ClearClients();
+    void AddClients();
+    std::vector<int> GetClients();
 
     void SendToPlayer(int playerId);
     void SendToAllPlayers();
@@ -656,6 +674,19 @@ public:
 ////////////////////////////////////////////////////////////
 
 std::string scripting_FetchTranslation(Plugin* plugin, std::string key, int playerid);
+
+//////////////////////////////////////////////////////////////
+/////////////////             Misc             //////////////
+////////////////////////////////////////////////////////////
+
+class PluginMisc
+{
+public:
+    void Initialize();
+    void Destroy();
+
+    void CheckMovingGround(double frametime);
+};
 
 //////////////////////////////////////////////////////////////
 /////////////////            Memory            //////////////

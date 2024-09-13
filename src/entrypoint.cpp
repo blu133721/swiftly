@@ -8,6 +8,7 @@
 
 #include <steam/steam_gameserver.h>
 
+#include "sdk/entity/CRecipientFilters.h"
 #include "addons/addons.h"
 #include "encoders/msgpack.h"
 #include "addons/clients.h"
@@ -35,6 +36,7 @@
 #include "voicemanager/VoiceManager.h"
 #include "usermessages/usermessages.h"
 #include "sdk/sdkaccess.h"
+#include "utils/plat.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -100,6 +102,7 @@ CGameEntitySystem* GameEntitySystem()
 ////////////////////////////////////////////////////////////
 
 CUtlVector<FuncHookBase*> g_vecHooks;
+std::vector<Player*> g_Players;
 
 Addons g_addons;
 CommandsManager* g_commandsManager = nullptr;
@@ -122,6 +125,7 @@ HTTPManager* g_httpManager = nullptr;
 UserMessages* g_userMessages = nullptr;
 SDKAccess* g_sdk = nullptr;
 ConvarQuery* g_cvarQuery = nullptr;
+PluginMisc* g_misc = nullptr;
 VoiceManager g_voiceManager;
 
 //////////////////////////////////////////////////////////////
@@ -146,7 +150,6 @@ bool Swiftly::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool 
         }
     }
 #endif
-
 
     GET_V_IFACE_CURRENT(GetEngineFactory, engine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION);
@@ -198,6 +201,7 @@ bool Swiftly::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool 
     g_userMessages = new UserMessages();
     g_sdk = new SDKAccess();
     g_cvarQuery = new ConvarQuery();
+    g_misc = new PluginMisc();
 
     if (g_Config->LoadConfiguration())
         PRINT("The configurations has been succesfully loaded.\n");
@@ -220,13 +224,13 @@ bool Swiftly::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool 
     g_userMessages->Initialize();
     eventManager->Initialize();
     g_cvarQuery->Initialize();
+    g_misc->Initialize();
 
     if (!InitializeHooks())
         PRINTRET("Hooks failed to initialize.\n", false)
     else
         PRINT("Hooks initialized succesfully.\n");
 
-    g_playerManager->LoadPlayers();
     g_conFilter->LoadFilters();
     g_translations->LoadTranslations();
 
@@ -296,6 +300,7 @@ bool Swiftly::Unload(char* error, size_t maxlen)
     g_voiceManager.OnShutdown();
     g_userMessages->Destroy();
     g_cvarQuery->Destroy();
+    g_misc->Destroy();
 
     g_pluginManager->StopPlugins();
     g_pluginManager->UnloadPlugins();
@@ -335,6 +340,7 @@ bool Swiftly::Unload(char* error, size_t maxlen)
     delete g_userMessages;
     delete g_sdk;
     delete g_cvarQuery;
+    delete g_misc;
 
     ConVar_Unregister();
     return true;
@@ -389,6 +395,8 @@ void Swiftly::Hook_StartupServer(const GameSessionConfiguration_t& config, ISour
 
 void Swiftly::UpdatePlayers()
 {
+    PERF_RECORD("UpdatePlayers", "core")
+
     // Credits to: https://github.com/Source2ZE/ServerListPlayersFix (Source2ZE Team)
     if (!engine->GetServerGlobals())
         return;
@@ -456,28 +464,19 @@ void Swiftly::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
     //////////////////////////////////////////////////////////////
     /////////////////            Player            //////////////
     ////////////////////////////////////////////////////////////
-    for (uint16_t i = 0; i < g_playerManager->GetPlayerCap(); i++)
+    for(std::size_t i = 0; i < g_Players.size(); i++)
     {
-        Player* player = g_playerManager->GetPlayer(i);
-        if (!player)
-            continue;
-        if (player->IsFakeClient())
-            continue;
-
+        Player* player = g_Players[i];
         CBasePlayerPawn* pawn = player->GetPawn();
         if (!pawn)
             continue;
 
-        CPlayer_MovementServices* movementServices = pawn->m_pMovementServices();
-        if (!movementServices)
-            continue;
+        player->SetButtons(pawn->m_pMovementServices()->m_nButtons().m_pButtonStates()[0]);
 
-        player->SetButtons(movementServices->m_nButtons().m_pButtonStates()[0]);
-
-        if (player->HasCenterText())
-            player->RenderCenterText();
         if (player->HasMenuShown())
             player->RenderMenu();
+        else if (player->HasCenterText())
+            player->RenderCenterText();
     }
 
     //////////////////////////////////////////////////////////////
@@ -497,8 +496,11 @@ void Swiftly::Hook_ClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReaso
     g_pluginManager->ExecuteEvent("core", "OnClientDisconnect", encoders::msgpack::SerializeToString({ slot.Get() }), event);
 
     Player* player = g_playerManager->GetPlayer(slot);
-    if (player)
+    if (player) {
+        auto it = std::find(g_Players.begin(), g_Players.end(), player);
+        if(it != g_Players.end()) g_Players.erase(it);
         g_playerManager->UnregisterPlayer(slot);
+    }
 }
 
 void Swiftly::Hook_OnClientConnected(CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, const char* pszAddress, bool bFakePlayer)
@@ -521,8 +523,7 @@ bool Swiftly::Hook_ClientConnect(CPlayerSlot slot, const char* pszName, uint64 x
     std::string ip_address = explode(pszNetworkID, ":")[0];
     Player* player = new Player(false, slot.Get(), pszName, xuid, ip_address);
     g_playerManager->RegisterPlayer(player);
-
-    player->SetConnected(true);
+    g_Players.push_back(player);
 
     PluginEvent* event = new PluginEvent("core", nullptr, nullptr);
     g_pluginManager->ExecuteEvent("core", "OnClientConnect", encoders::msgpack::SerializeToString({ slot.Get() }), event);
@@ -618,6 +619,7 @@ void Swiftly::Hook_DispatchConCommand(ConCommandHandle cmd, const CCommandContex
                     pEvent->SetString("text", text.c_str());
 
                     g_gameEventManager->FireEvent(pEvent, true);
+                    g_gameEventManager->FreeEvent(pEvent);
                 }
             }
 
@@ -638,24 +640,28 @@ void Swiftly::Hook_DispatchConCommand(ConCommandHandle cmd, const CCommandContex
 
                 std::string formatted_msg = (" " + implode(msg, " "));
 
-                for (uint16_t i = 0; i < g_playerManager->GetPlayerCap(); i++)
-                {
-                    Player* p = g_playerManager->GetPlayer(i);
-                    if (p == nullptr)
-                        continue;
+                CRecipientFilter filter;
+                INetworkMessageInternal* pNetMsg = g_pNetworkMessages->FindNetworkMessagePartial("TextMsg");
+                auto data = pNetMsg->AllocateMessage()->ToPB<CUserMessageTextMsg>();
 
-                    CCSPlayerController* pcontroller = p->GetPlayerController();
-                    if (!pcontroller)
-                        continue;
+                data->set_dest(HUD_PRINTTALK);
+                data->add_param(formatted_msg);
 
-                    if (teamonly)
+                if(teamonly) {
+                    for (std::size_t i = 0; i < g_Players.size(); i++)
                     {
+                        Player* p = g_Players[i];
+                        CCSPlayerController* pcontroller = p->GetPlayerController();
+                        if (!pcontroller)
+                            continue;
+
                         if (pcontroller->m_iTeamNum() == controller->m_iTeamNum())
-                            pcontroller->SendMsg(HUD_PRINTTALK, formatted_msg.c_str());
+                            filter.AddRecipient(p->GetSlot());
                     }
-                    else
-                        pcontroller->SendMsg(HUD_PRINTTALK, formatted_msg.c_str());
-                }
+                } else filter.AddAllPlayers();
+
+                g_pGameEventSystem->PostEventAbstract(-1, false, &filter, pNetMsg, data, 0);
+                delete data;
             }
             RETURN_META(MRES_SUPERCEDE);
         }
@@ -678,8 +684,15 @@ void CEntityListener::OnEntityParentChanged(CEntityInstance* pEntity, CEntityIns
 {
 }
 
-void CEntityListener::OnEntityCreated(CEntityInstance* pEntity)
+void EntityAllowHammerID(CEntityInstance* pEntity)
 {
+    Plat_WriteMemory((*(void ***)pEntity)[g_Offsets->GetOffset("GetHammerUniqueID")], (uint8_t*)"\xB0\x01", 2);
+}
+
+void CEntityListener::OnEntityCreated(CEntityInstance* pEntity)
+{   
+    ExecuteOnce(EntityAllowHammerID(pEntity));
+
     PluginEvent* event = new PluginEvent("core", nullptr, nullptr);
     g_pluginManager->ExecuteEvent("core", "OnEntityCreated", encoders::msgpack::SerializeToString({ string_format("%p", (void*)pEntity) }), event);
     delete event;

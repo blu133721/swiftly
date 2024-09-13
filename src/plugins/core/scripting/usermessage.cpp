@@ -85,7 +85,7 @@ PluginUserMessage::PluginUserMessage(std::string msgname)
     this->internalMsg = msg;
 }
 
-PluginUserMessage::PluginUserMessage(INetworkMessageInternal* msg, CNetMessage* data)
+PluginUserMessage::PluginUserMessage(INetworkMessageInternal* msg, CNetMessage* data, uint64* cls)
 {
     this->msgid = INVALID_MESSAGE_ID;
 
@@ -98,6 +98,12 @@ PluginUserMessage::PluginUserMessage(INetworkMessageInternal* msg, CNetMessage* 
     this->msgid = msginfo->m_MessageId;
     this->msgBuffer = data->ToPB<google::protobuf::Message>();
     this->internalMsg = msg;
+    this->clients = cls;
+}
+
+PluginUserMessage::PluginUserMessage(google::protobuf::Message* msg)
+{
+    this->msgBuffer = (CNetMessagePB<google::protobuf::Message> *)msg;
 }
 
 PluginUserMessage::~PluginUserMessage()
@@ -809,6 +815,36 @@ void PluginUserMessage::AddQAngle(std::string pszFieldName, QAngle& vec)
     msgAng->set_y(vec.y);
     msgAng->set_z(vec.z);
 }
+
+PluginUserMessage PluginUserMessage::GetUMessage(std::string pszFieldName)
+{
+    GETCHECK_FIELD(PluginUserMessage(""));
+    CHECK_FIELD_TYPE(MESSAGE, PluginUserMessage(""));
+    CHECK_FIELD_NOT_REPEATED(PluginUserMessage(""));
+
+    auto msg = this->msgBuffer->GetReflection()->MutableMessage(this->msgBuffer, field);
+    return PluginUserMessage(msg);
+}
+
+PluginUserMessage PluginUserMessage::GetRepeatedMessage(std::string pszFieldName, int index)
+{
+    GETCHECK_FIELD(PluginUserMessage(""));
+    CHECK_FIELD_TYPE(MESSAGE, PluginUserMessage(""));
+    CHECK_FIELD_REPEATED(PluginUserMessage(""));
+    CHECK_REPEATED_ELEMENT(index, PluginUserMessage(""));
+
+    return PluginUserMessage(this->msgBuffer->GetReflection()->MutableRepeatedMessage(this->msgBuffer, field, index));
+}
+
+PluginUserMessage PluginUserMessage::AddMessage(std::string pszFieldName)
+{
+    GETCHECK_FIELD(PluginUserMessage(""));
+    CHECK_FIELD_TYPE(MESSAGE, PluginUserMessage(""));
+    CHECK_FIELD_REPEATED(PluginUserMessage(""));
+
+    return PluginUserMessage(this->msgBuffer->GetReflection()->AddMessage(this->msgBuffer, field));
+}
+
 void PluginUserMessage::RemoveRepeatedFieldValue(std::string pszFieldName, int index)
 {
     GETCHECK_FIELD();
@@ -834,6 +870,64 @@ int PluginUserMessage::GetRepeatedFieldCount(std::string pszFieldName)
     return this->msgBuffer->GetReflection()->FieldSize(*this->msgBuffer, field);
 }
 
+void PluginUserMessage::AddClient(int playerId)
+{
+    if(!this->clients) return;
+
+    uint64 newcls = *this->clients;
+    if(newcls & ((uint64)1 << playerId))
+        newcls |= ((uint64)1 << playerId);
+
+    memcpy(this->clients, &newcls, sizeof(newcls));
+}
+
+void PluginUserMessage::RemoveClient(int playerId)
+{
+    if(!this->clients) return;
+
+    uint64 newcls = 0;
+    uint64 oldcls = *this->clients;
+    for(int i = 0; i < 64; i++) {
+        if(i == playerId) continue;
+        if(oldcls & ((uint64)1 << i))
+            newcls |= ((uint64)1 << i);
+    }
+
+    memcpy(this->clients, &newcls, sizeof(newcls));
+}
+
+void PluginUserMessage::ClearClients()
+{
+    if(!this->clients) return;
+
+    uint64 newcls = 0;
+    memcpy(this->clients, &newcls, sizeof(newcls));
+}
+
+void PluginUserMessage::AddClients()
+{
+    if(!this->clients) return;
+    
+    uint64 newcls = 0;
+    for(int i = 0; i < 64; i++)
+        newcls |= ((uint64)1 << i);
+
+    memcpy(this->clients, &newcls, sizeof(newcls));
+}
+
+std::vector<int> PluginUserMessage::GetClients()
+{
+    std::vector<int> clns;
+    if(!this->clients) return clns;
+
+    uint64 cls = *this->clients;
+    for(int i = 0; i < 64; i++)
+        if(cls & ((uint64)1 << i))
+            clns.push_back(i);
+
+    return clns;
+}
+
 void PluginUserMessage::SendToPlayer(int playerId)
 {
     if (!this->internalMsg)
@@ -845,6 +939,7 @@ void PluginUserMessage::SendToPlayer(int playerId)
     CSingleRecipientFilter filter(playerId);
     g_pGameEventSystem->PostEventAbstract(-1, false, &filter, this->internalMsg, this->msgBuffer, 0);
 }
+
 void PluginUserMessage::SendToAllPlayers()
 {
     if (!this->internalMsg)

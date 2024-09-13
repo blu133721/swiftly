@@ -67,7 +67,6 @@ Player::Player(bool m_isFakeClient, int m_slot, const char* m_name, uint64 m_xui
 Player::~Player()
 {
     this->isFakeClient = true;
-    this->isAuthenticated = false;
 }
 
 CBasePlayerController* Player::GetController()
@@ -123,6 +122,8 @@ void Player::SendMsg(int dest, const char* msg, ...)
 {
     CBasePlayerController* controller = this->GetController();
     if (!controller)
+        return;
+    if(this->IsFakeClient())
         return;
 
     if (dest == HUD_PRINTTALK || dest == HUD_PRINTNOTIFY)
@@ -200,11 +201,6 @@ const char* Player::GetName()
     return reinterpret_cast<char*>(controller->m_iszPlayerName());
 }
 
-void Player::Authenticate()
-{
-    this->isAuthenticated = true;
-}
-
 Vector Player::GetCoords()
 {
     CCSPlayerPawn* pawn = this->GetPlayerPawn();
@@ -277,13 +273,9 @@ bool Player::IsFirstSpawn() { return this->firstSpawn; }
 void Player::SetFirstSpawn(bool value) { this->firstSpawn = value; }
 
 bool Player::IsFakeClient() { return this->isFakeClient; }
-bool Player::IsAuthenticated() { return this->isAuthenticated; }
 CPlayerSlot Player::GetSlot() { return CPlayerSlot(this->slot); }
 uint32 Player::GetConnectedTime() { return (std::time(0) - this->connectTime); }
 std::string Player::GetIPAddress() { return this->ip_address; }
-
-void Player::SetConnected(bool connected) { this->isConnected = connected; }
-bool Player::IsConnected() { return this->isConnected; }
 
 const std::vector<std::string> key_buttons = {
     "mouse1",
@@ -367,15 +359,17 @@ void Player::SetButtons(uint64_t new_buttons)
     PRINTF("Buttons: %s | %llu\n", std::bitset<64>(new_buttons).to_string().c_str(), new_buttons);
     */
 
-    for (uint16_t i = 0; i < key_buttons.size(); i++)
-    {
-        if (this->IsButtonPressed((1ULL << i)) && (new_buttons & (1ULL << i)) == 0)
-            OnClientKeyStateChange(this->GetSlot().Get(), key_buttons[i], false);
-        else if (!this->IsButtonPressed((1ULL << i)) && (new_buttons & (1ULL << i)) != 0)
-            OnClientKeyStateChange(this->GetSlot().Get(), key_buttons[i], true);
-    }
+    if(this->buttons != new_buttons) {
+        for (uint16_t i = 0; i < key_buttons.size(); i++)
+        {
+            if (this->IsButtonPressed((1ULL << i)) && (new_buttons & (1ULL << i)) == 0)
+                OnClientKeyStateChange(this->GetSlot().Get(), key_buttons[i], false);
+            else if (!this->IsButtonPressed((1ULL << i)) && (new_buttons & (1ULL << i)) != 0)
+                OnClientKeyStateChange(this->GetSlot().Get(), key_buttons[i], true);
+        }
 
-    this->buttons = new_buttons;
+        this->buttons = new_buttons;
+    }
 }
 
 uint64_t Player::GetButtons()
@@ -580,7 +574,7 @@ std::any Player::GetInternalVar(std::string name)
     if (this->internalVars.find(name) == this->internalVars.end())
         return nullptr;
 
-    return this->internalVars.at(name);
+    return this->internalVars[name];
 }
 
 void Player::SetInternalVar(std::string name, std::any value)

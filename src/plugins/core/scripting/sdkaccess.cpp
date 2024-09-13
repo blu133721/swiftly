@@ -6,7 +6,44 @@
 #include "../../../sdk/entity/CCSWeaponBase.h"
 #include "../../../player/PlayerManager.h"
 
+#include <set>
+
 std::string FetchPluginName(lua_State* state);
+
+std::set<std::string> BlockedCS2GuidelinesFields = {
+    "m_bIsValveDS",
+    "m_bIsQuestEligible",
+    "m_iEntityLevel",
+    "m_iItemIDHigh",
+    "m_iItemIDLow",
+    "m_iAccountID",
+    "m_iEntityQuality",
+    "m_bInitialized",
+    "m_szCustomName",
+    "m_iAttributeDefinitionIndex",
+    "m_iRawValue32",
+    "m_iRawInitialValue32",
+    "m_flValue",
+    "m_flInitialValue",
+    "m_bSetBonus",
+    "m_nRefundableCurrency",
+    "m_OriginalOwnerXuidLow",
+    "m_OriginalOwnerXuidHigh",
+    "m_nFallbackPaintKit",
+    "m_nFallbackSeed",
+    "m_flFallbackWear",
+    "m_nFallbackStatTrak",
+    "m_iCompetitiveWins",
+    "m_iCompetitiveRanking",
+    "m_iCompetitiveRankType",
+    "m_iCompetitiveRankingPredicted_Win",
+    "m_iCompetitiveRankingPredicted_Loss",
+    "m_iCompetitiveRankingPredicted_Tie",
+    "m_nActiveCoinRank",
+    "m_nMusicID",
+};
+
+bool followCS2Guidelines = true;
 
 int SDKBaseClass::CBasePlayerController_EntityIndex() {
     return ((CBasePlayerController*)this->GetPtr())->GetEntityIndex().Get();
@@ -31,6 +68,15 @@ void SDKBaseClass::CBaseModelEntity_SetBodygroup(std::string str, int64_t val)
     ((CBaseModelEntity*)this->GetPtr())->SetBodygroup(str.c_str(), (uint64_t)val);
 }
 
+SDKBaseClass SDKBaseClass::CPlayerPawnComponent_GetPawn()
+{
+    return SDKBaseClass(((CPlayerPawnComponent*)this->GetPtr())->m_pPawn, "CBasePlayerPawn");
+}
+
+SDKBaseClass SDKBaseClass::CGameSceneNode_GetSkeletonInstance() {
+    return SDKBaseClass(((CGameSceneNode*)this->GetPtr())->GetSkeletonInstance(), "CSkeletonInstance");
+}
+
 SDKBaseClass SDKBaseClass::CBaseEntity_EHandle() {
     return SDKBaseClass(((CBaseEntity*)this->GetPtr())->m_pEntity->m_EHandle.Get(), "CBaseEntity");
 }
@@ -53,6 +99,11 @@ std::string SDKBaseClass::CBaseEntity_GetClassname() {
 
 SDKBaseClass SDKBaseClass::CBaseEntity_GetVData() {
     return SDKBaseClass(((CBaseEntity*)this->GetPtr())->GetVData(), "CEntitySubclassVDataBase");
+}
+
+void SDKBaseClass::CBaseEntity_CollisionRulesChanged()
+{
+    ((CBaseEntity*)this->GetPtr())->CollisionRulesChanged();
 }
 
 void SDKBaseClass::CBaseEntity_Teleport(Vector value, QAngle angle) {
@@ -118,10 +169,17 @@ bool SDKBaseClass::IsValid()
     return (this->m_ptr != nullptr);
 }
 
-luabridge::LuaRef SDKBaseClass::AccessSDKLua(std::string fieldName, lua_State* state)
+luabridge::LuaRef SDKBaseClass::AccessSDKLua(std::string fieldName, uint64_t path, lua_State* state)
 {
-    REGISTER_CALLSTACK(FetchPluginName(state), string_format("SDK Get: %s::%s(ptr=%p)", this->m_className.c_str(), fieldName.c_str(), m_ptr));
-    std::string path = this->m_className + "." + fieldName;
+    if (followCS2Guidelines && BlockedCS2GuidelinesFields.find(fieldName) != BlockedCS2GuidelinesFields.end())
+    {
+        PRINTF("Getting or setting %s::%s is not permitted due to CS2 Server Guidelines violation.\nTo get or set this value, switch to false the \"core.FollowCS2ServerGuidelines\" field.\nNote: Using non-compliant field values can result in a GSLT ban.\nNote: We are not providing any kind of support for people which are using these fields.\n", this->m_className.c_str(), fieldName.c_str());
+        return luabridge::LuaRef(state);
+    }
+
+    if(!m_ptr) {
+        REGISTER_CALLSTACK(FetchPluginName(state), string_format("SDK Get: %s::%s(ptr=%p)", this->m_className.c_str(), fieldName.c_str(), m_ptr));
+    }
     if (!g_sdk->ExistsField(path)) return luabridge::LuaRef(state);
 
     std::string field = g_sdk->GetFieldName(path);
@@ -521,8 +579,16 @@ luabridge::LuaRef SDKBaseClass::AccessSDKLua(std::string fieldName, lua_State* s
 
 void SDKBaseClass::UpdateSDKLua(std::string fieldName, luabridge::LuaRef value, lua_State* state)
 {
-    REGISTER_CALLSTACK(FetchPluginName(state), string_format("SDK Set: %s::%s(ptr=%p)", this->m_className.c_str(), fieldName.c_str(), m_ptr));
-    std::string path = this->m_className + "." + fieldName;
+    if (followCS2Guidelines && BlockedCS2GuidelinesFields.find(fieldName) != BlockedCS2GuidelinesFields.end())
+    {
+        PRINTF("Getting or setting %s::%s is not permitted due to CS2 Server Guidelines violation.\nTo get or set this value, switch to false the \"core.FollowCS2ServerGuidelines\" field.\nNote: Using non-compliant field values can result in a GSLT ban.\nNote: We are not providing any kind of support for people which are using these fields.\n", this->m_className.c_str(), fieldName.c_str());
+        return;
+    }
+
+    if(!m_ptr) {
+        REGISTER_CALLSTACK(FetchPluginName(state), string_format("SDK Set: %s::%s(ptr=%p)", this->m_className.c_str(), fieldName.c_str(), m_ptr));
+    }
+    uint64 path = ((uint64) hash_32_fnv1a_const(this->m_className.c_str()) << 32 | hash_32_fnv1a_const(fieldName.c_str()));
     if (!g_sdk->ExistsField(path)) return;
 
     std::string field = g_sdk->GetFieldName(path);

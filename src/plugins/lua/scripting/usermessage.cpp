@@ -1,6 +1,6 @@
 #include "core.h"
 
-void SetupLuaUserMessages(LuaPlugin *plugin, lua_State *state)
+void SetupLuaUserMessages(LuaPlugin* plugin, lua_State* state)
 {
     luabridge::getGlobalNamespace(state)
         .beginClass<PluginUserMessage>("UserMessage")
@@ -79,8 +79,16 @@ void SetupLuaUserMessages(LuaPlugin *plugin, lua_State *state)
         .addFunction("GetRepeatedQAngle", &PluginUserMessage::GetRepeatedQAngle)
         .addFunction("SetRepeatedQAngle", &PluginUserMessage::SetRepeatedQAngle)
         .addFunction("AddQAngle", &PluginUserMessage::AddQAngle)
+        .addFunction("GetMessage", &PluginUserMessage::GetUMessage)
+        .addFunction("GetRepeatedMessage", &PluginUserMessage::GetRepeatedMessage)
+        .addFunction("AddMessage", &PluginUserMessage::AddMessage)
         .addFunction("RemoveRepeatedFieldValue", &PluginUserMessage::RemoveRepeatedFieldValue)
         .addFunction("GetRepeatedFieldCount", &PluginUserMessage::GetRepeatedFieldCount)
+        .addFunction("AddClient", &PluginUserMessage::AddClient)
+        .addFunction("RemoveClient", &PluginUserMessage::RemoveClient)
+        .addFunction("ClearClients", &PluginUserMessage::ClearClients)
+        .addFunction("AddClients", &PluginUserMessage::AddClients)
+        .addFunction("GetClients", &PluginUserMessage::GetClients)
         .addFunction("SendToPlayer", &PluginUserMessage::SendToPlayer)
         .addFunction("SendToAllPlayers", &PluginUserMessage::SendToAllPlayers)
         .endClass();
