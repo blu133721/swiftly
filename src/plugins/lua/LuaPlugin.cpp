@@ -31,6 +31,7 @@ static const luaL_Reg lualibs[] = {
 };
 
 void SetupLuaEnvironment(LuaPlugin* plugin, lua_State* state);
+std::string FetchPluginName(lua_State* state);
 
 static int LuaPanicFunction(lua_State* state)
 {
@@ -42,7 +43,7 @@ static int LuaPanicFunction(lua_State* state)
     }
 
     PLUGIN_PRINT("Runtime", "A Lua runtime panic has been triggered.\n");
-    PLUGIN_PRINTF("Runtime", "Plugin: %s\n", luabridge::getGlobal(state, "plugin_name").tostring().c_str());
+    PLUGIN_PRINTF("Runtime", "Plugin: %s\n", FetchPluginName(state).c_str());
     PLUGIN_PRINTF("Runtime", "Error: %s\n", m_what.c_str());
     return 0;
 }
@@ -228,7 +229,13 @@ void LuaPlugin::RegisterEventHandler(void* functionPtr)
 
 void LuaPlugin::RegisterEventHandling(std::string eventName)
 {
-    if(this->eventHandlers.find(eventName) == this->eventHandlers.end()) this->eventHandlers.insert(eventName);
+    if (this->eventHandlers.find(eventName) == this->eventHandlers.end()) this->eventHandlers.insert(eventName);
+}
+
+void LuaPlugin::UnregisterEventHandling(std::string eventName)
+{
+    auto it = this->eventHandlers.find(eventName);
+    if(it != this->eventHandlers.end()) this->eventHandlers.erase(it);
 }
 
 EventResult LuaPlugin::PluginTriggerEvent(std::string invokedBy, std::string eventName, std::string eventPayload, PluginEvent* event)
@@ -279,10 +286,12 @@ luabridge::LuaRef LuaSerializeData(std::any data, lua_State* state)
     {
         if (value.type() == typeid(const char*))
             return luabridge::LuaRef(state, std::string(std::any_cast<const char*>(value)));
+        else if (value.type() == typeid(char*))
+            return luabridge::LuaRef(state, std::string(std::any_cast<char*>(value)));
         else if (value.type() == typeid(std::string)) {
             std::string val = std::any_cast<std::string>(value);
-            if (starts_with(val, "JSON<") && ends_with(val, ">")) {
-                std::string json = explode(explode(val, "<")[1], ">")[0];
+            if (starts_with(val, "JSON⇚") && ends_with(val, "⇛")) {
+                std::string json = explode(explode(val, "⇚")[1], "⇛")[0];
 
                 luabridge::LuaRef rapidJsonTable = luabridge::getGlobal(state, "json");
                 if (!rapidJsonTable["decode"].isFunction())
@@ -381,6 +390,30 @@ luabridge::LuaRef LuaSerializeData(std::any data, lua_State* state)
     }
 }
 
+std::any LuaDeserializeData(luabridge::LuaRef ref, lua_State* state)
+{
+    if (ref.isBool())
+        return ref.cast<bool>();
+    else if (ref.isNil())
+        return nullptr;
+    else if (ref.isNumber())
+        return ref.cast<int64_t>();
+    else if (ref.isString())
+        return ref.cast<std::string>();
+    else if (ref.isTable())
+    {
+        luabridge::LuaRef serpentDump = luabridge::getGlobal(state, "serpent")["dump"];
+        luabridge::LuaRef serpentDumpReturnValue = serpentDump(ref);
+
+        std::vector<std::string> tmptbl;
+        tmptbl.push_back(serpentDumpReturnValue.cast<std::string>());
+
+        return tmptbl;
+    }
+    else
+        return nullptr;
+}
+
 std::string LuaPlugin::GetAuthor()
 {
     if (this->GetPluginState() == PluginState_t::Stopped)
@@ -415,4 +448,10 @@ std::string LuaPlugin::GetPlName()
 
     auto func = luabridge::getGlobal(this->GetState(), "GetPluginName");
     return func().cast<std::string>();
+}
+
+int64_t LuaPlugin::GetMemoryUsage()
+{
+    if (this->GetPluginState() == PluginState_t::Stopped) return 0;
+    return (int64_t(lua_gc(this->GetState(), LUA_GCCOUNT, 0)) * 1024) + int64_t(lua_gc(this->GetState(), LUA_GCCOUNTB, 0));
 }

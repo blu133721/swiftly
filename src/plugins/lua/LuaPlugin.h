@@ -22,6 +22,44 @@ extern "C"
 #include <any>
 #include <set>
 
+luabridge::LuaRef LuaSerializeData(std::any data, lua_State* state);
+std::any LuaDeserializeData(luabridge::LuaRef ref, lua_State* state);
+
+namespace luabridge {
+
+    /// Lua stack traits for C++ types.
+    ///
+    /// @tparam T A C++ type.
+    ///
+    template<class T>
+    struct Stack;
+
+    template<>
+    struct Stack<std::any>
+    {
+        static void push(lua_State* L, std::any v) { LuaSerializeData(v, L).push(L); }
+
+        static std::any get(lua_State* L, int index) { return LuaDeserializeData(LuaRef::fromStack(L, index), L); }
+    };
+
+    template<>
+    struct Stack<int8_t>
+    {
+        static void push(lua_State* L, int8_t value)
+        {
+            lua_pushinteger(L, static_cast<lua_Integer>(value));
+        }
+
+        static int8_t get(lua_State* L, int index)
+        {
+            return static_cast<int8_t>(luaL_checkinteger(L, index));
+        }
+
+        static bool isInstance(lua_State* L, int index) { return Stack<int>::isInstance(L, index); }
+    };
+}
+
+
 class PluginEvent;
 
 class LuaPlugin : public Plugin
@@ -43,7 +81,10 @@ public:
 
     void RegisterEventHandler(void* functionPtr);
     void RegisterEventHandling(std::string eventName);
+    void UnregisterEventHandling(std::string eventName);
     EventResult PluginTriggerEvent(std::string invokedBy, std::string eventName, std::string eventPayload, PluginEvent* event);
+
+    int64_t GetMemoryUsage();
 
     std::string GetAuthor();
     std::string GetWebsite();

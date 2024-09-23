@@ -1,7 +1,8 @@
 #ifndef _core_scripting_h
 #define _core_scripting_h
 
-#include "scripting_includes.h"
+#include "scripting_schema.h"
+#include "public/iservernetworkable.h"
 #include "../../resourcemonitor/ResourceMonitor.h"
 #include "../../sdk/entity/CCSWeaponBase.h"
 #include "../../crashreporter/CallStack.h"
@@ -126,6 +127,23 @@ public:
 };
 
 //////////////////////////////////////////////////////////////
+/////////////////        Check Transmit        //////////////
+///////////////// May God rest our CPU usage  //////////////
+///////////////////////////////////////////////////////////
+
+class PluginCCheckTransmitInfo
+{
+private:
+    CCheckTransmitInfo* m_ptr;
+public:
+    PluginCCheckTransmitInfo(std::string ptr);
+
+    std::map<int, int> GetPlayers();
+    std::vector<int> GetEntities();
+    void SetEntities(std::vector<int> tbl);
+};
+
+//////////////////////////////////////////////////////////////
 /////////////////         Event System         //////////////
 ////////////////////////////////////////////////////////////
 
@@ -137,9 +155,11 @@ private:
     dyno::Hook* hookPtr;
 
     std::any returnValue;
+    bool shouldFree = false;
 
 public:
     PluginEvent(std::string m_plugin_name, IGameEvent* m_gameEvent, dyno::Hook* m_hookPtr);
+    PluginEvent(std::string gameEventName, lua_State* state);
     ~PluginEvent();
 
     std::string GetInvokingPlugin();
@@ -163,7 +183,6 @@ public:
     void FireEventToClient(int slot);
 
     void SetReturn(std::any value);
-    void SetReturnLua(luabridge::LuaRef value);
     std::any GetReturnValue();
 
     // Hooks section
@@ -190,8 +209,53 @@ public:
     void SetHookInt64(int index, int64_t value);
 
     void SetHookReturn(std::any value);
-    void SetHookReturnLua(luabridge::LuaRef value);
     std::any GetHookReturn();
+};
+
+//////////////////////////////////////////////////////////////
+/////////////////          Key Values          //////////////
+////////////////////////////////////////////////////////////
+
+class PluginCEntityKeyValues
+{
+private:
+    CEntityKeyValues* keyVals = nullptr;
+
+public:
+    PluginCEntityKeyValues();
+
+    CEntityKeyValues* GetKeyVals();
+    bool			GetBool( std::string key);
+	int				GetInt( std::string key);
+	uint			GetUint( std::string key);
+	int64			GetInt64( std::string key);
+	uint64			GetUint64( std::string key);
+	float			GetFloat( std::string key);
+	double			GetDouble( std::string key);
+	std::string		GetString( std::string key);
+	std::string		GetPtr( std::string key);
+	unsigned int 	GetStringToken( std::string key);
+	Color			GetColor( std::string key);
+	Vector			GetVector( std::string key);
+	Vector2D		GetVector2D( std::string key);
+	Vector4D		GetVector4D( std::string key);
+	QAngle			GetQAngle( std::string key);
+
+    void            SetBool( std::string key, bool value );
+	void            SetInt( std::string key, int value );
+	void            SetUint( std::string key, uint value );
+	void            SetInt64( std::string key, int64 value );
+	void            SetUint64( std::string key, uint64 value );
+	void            SetFloat( std::string key, float value );
+	void            SetDouble( std::string key, double value );
+	void            SetString( std::string key, std::string value );
+	void            SetPtr( std::string key, std::string value );
+	void            SetStringToken( std::string key, unsigned int value );
+	void            SetColor( std::string key, Color value );
+	void            SetVector( std::string key, Vector value );
+	void            SetVector2D( std::string key, Vector2D value );
+	void            SetVector4D( std::string key, Vector4D value );
+	void            SetQAngle( std::string key, QAngle value );
 };
 
 //////////////////////////////////////////////////////////////
@@ -203,6 +267,7 @@ class SDKBaseClass
 private:
     void* m_ptr;
     std::string m_className;
+    uint64_t classOffset;
 
 public:
     SDKBaseClass(std::string ptr, lua_State* state);
@@ -218,7 +283,8 @@ public:
     void CBaseModelEntity_SetSolidType(int64_t solidType);
     void CBaseModelEntity_SetBodygroup(std::string str, int64_t val);
     SDKBaseClass CBaseEntity_EHandle();
-    void CBaseEntity_Spawn();
+    void CBaseEntity_Spawn(PluginCEntityKeyValues* kv);
+    void CBaseEntity_SpawnLua(lua_State* state);
     void CBaseEntity_Despawn();
     void CBaseEntity_AcceptInput(std::string input, SDKBaseClass activator, SDKBaseClass caller, std::string value, int outputID);
     std::string CBaseEntity_GetClassname();
@@ -445,8 +511,6 @@ public:
     uint64_t FetchArraySize(std::string key);
     std::any Fetch(std::string key);
 
-    luabridge::LuaRef FetchLua(std::string key, lua_State* L);
-
     void CreateLua(std::string configurationKey, luabridge::LuaRef table, lua_State* L);
 };
 
@@ -467,10 +531,17 @@ public:
     void DeleteFake(std::string cvarname);
 
     std::any GetConvarValue(std::string cvarname);
-    luabridge::LuaRef GetConvarValueLua(std::string cvarname, lua_State* L);
 
     int16_t GetConvarType(std::string cvarname);
     void SetConvar(std::string cvarname, std::string value);
+
+    bool Exists(std::string cvarname);
+    bool ExistsFake(std::string cvarname);
+
+    void AddFlags(std::string cvarname, int64_t flags);
+    void RemoveFlags(std::string cvarname, int64_t flags);
+    int64_t GetFlags(std::string cvarname);
+    bool HasFlags(std::string cvarname, int64_t flags);
 };
 
 //////////////////////////////////////////////////////////////
@@ -599,6 +670,29 @@ public:
 };
 
 //////////////////////////////////////////////////////////////
+/////////////////            IP API            //////////////
+////////////////////////////////////////////////////////////
+
+class PluginIPAPI
+{
+private:
+    std::string plugin_name;
+    
+public:
+    PluginIPAPI(std::string m_plugin_name);
+
+    std::string GetIsoCode(std::string ip);
+    std::string GetContinent(std::string ip);
+    std::string GetCountry(std::string ip);
+    std::string GetRegion(std::string ip);
+    std::string GetCity(std::string ip);
+    std::string GetTimezone(std::string ip);
+    double GetLatitude(std::string ip);
+    double GetLongitude(std::string ip);
+    std::string GetASN(std::string ip);
+};
+
+//////////////////////////////////////////////////////////////
 /////////////////            Player            //////////////
 ////////////////////////////////////////////////////////////
 
@@ -652,10 +746,7 @@ public:
     void ShowMenu(std::string menuid);
 
     std::any GetVarValue(std::string key);
-    luabridge::LuaRef GetVarValueLua(std::string key, lua_State* L);
-
     void SetVarValue(std::string key, std::any value);
-    void SetVarValueLua(std::string key, luabridge::LuaRef value);
 
     void SetListening(int playerid, int listenOverride);
     int GetListening(int playerid);
@@ -665,6 +756,9 @@ public:
 
     void SetBunnyhop(bool state);
     bool GetBunnyhop();
+
+    void QueryConvar(std::string cvar_name);
+    bool IsListeningToGameEvent(std::string game_event);
 
     bool IsValid();
 };
@@ -798,7 +892,7 @@ public:
     std::string AddHook(PluginMemory mem, std::string args_list, std::string ret_type);
     std::string AddEntityOutputHook(std::string classname, std::string output);
 
-    luabridge::LuaRef CallHookLua(std::string hookId, std::string hookPayload, lua_State* L);
+    std::any CallHook(std::string hookId, std::string hookPayload);
 };
 
 //////////////////////////////////////////////////////////////
@@ -819,5 +913,7 @@ SDKBaseClass scripting_GetCCSGameRules();
 std::string scripting_GetPluginPath(std::string plugin_name);
 void scripting_StateUpdate(std::string ptr, std::string classname, std::string field, bool isStruct);
 PluginUserMessage scripting_GetUserMessage(std::string uuid);
+std::string scripting_CreateTextTable(std::vector<std::vector<std::string>> data);
+int scripting_GetPluginState(std::string plugin_name);
 
 #endif

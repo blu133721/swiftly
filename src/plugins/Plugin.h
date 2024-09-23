@@ -40,6 +40,10 @@ public:
 
     virtual void RegisterEventHandler(void* functionPtr) = 0;
     virtual void RegisterEventHandling(std::string eventName) = 0;
+    virtual void UnregisterEventHandling(std::string eventName) = 0;
+
+    // Returns the memory usage of the plugin in bytes
+    virtual int64_t GetMemoryUsage() = 0;
 
     virtual std::string GetAuthor() = 0;
     virtual std::string GetWebsite() = 0;
