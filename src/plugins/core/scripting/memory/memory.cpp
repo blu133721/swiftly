@@ -69,6 +69,14 @@ void PluginMemory::AccessVTableFromOffset(std::string offsetName)
     accessedVTable = true;
 }
 
+void PluginMemory::AccessIndex(int64_t idx)
+{
+    if(idx < 0) return;
+
+    void* pt = m_ptr;
+    m_ptr = reinterpret_cast<void**>(pt)[idx];
+}
+
 void PluginMemory::AccessVTable(int64_t offset)
 {
     void* pt = m_ptr;
@@ -114,6 +122,26 @@ void PluginMemory::SetDouble(double value)
 {
     *((double*)(m_ptr)) = value;
 }
+void PluginMemory::SetVector(Vector value)
+{
+    *((Vector*)(m_ptr)) = value;
+}
+void PluginMemory::SetVector2D(Vector2D value)
+{
+    *((Vector2D*)(m_ptr)) = value;
+}
+void PluginMemory::SetVector4D(Vector4D value)
+{
+    *((Vector4D*)(m_ptr)) = value;
+}
+void PluginMemory::SetColor(Color value)
+{
+    *((Color*)(m_ptr)) = value;
+}
+void PluginMemory::SetQAngle(QAngle value)
+{
+    *((QAngle*)(m_ptr)) = value;
+}
 
 bool PluginMemory::GetBool()
 {
@@ -142,6 +170,26 @@ float PluginMemory::GetFloat()
 double PluginMemory::GetDouble()
 {
     return *((double*)(m_ptr));
+}
+Vector PluginMemory::GetVector()
+{
+    return *((Vector*)(m_ptr));
+}
+Vector2D PluginMemory::GetVector2D()
+{
+    return *((Vector2D*)(m_ptr));
+}
+Vector4D PluginMemory::GetVector4D()
+{
+    return *((Vector4D*)(m_ptr));
+}
+Color PluginMemory::GetColor()
+{
+    return *((Color*)(m_ptr));
+}
+QAngle PluginMemory::GetQAngle()
+{
+    return *((QAngle*)(m_ptr));
 }
 
 std::string PluginMemory::GetPtr()

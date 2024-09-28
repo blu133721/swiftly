@@ -1,5 +1,5 @@
 #include "../../scripting.h"
-#include "../../../../commands/CommandsManager.h"
+#include "../../../../server/commands/CommandsManager.h"
 
 PluginCommands::PluginCommands(std::string m_plugin_name)
 {
@@ -60,4 +60,27 @@ void PluginCommands::RegisterCommandLua(std::string commandName, luabridge::LuaR
         return;
 
     RegisterCommand(commandName, new luabridge::LuaRef(callback));
+}
+
+/*
+    std::map<std::string, Command *> GetCommands()
+    {
+        return this->commands;
+    };
+*/
+
+std::vector<std::string> PluginCommands::GetAllCommands()
+{
+    std::vector<std::string> cmdsList;
+
+    auto cmds = g_commandsManager->GetCommands();
+    for(auto it = cmds.begin(); it != cmds.end(); ++it)
+        cmdsList.push_back(it->first);
+
+    return cmdsList;
+}
+
+std::vector<std::string> PluginCommands::GetCommands()
+{
+    return g_commandsManager->FetchCommandsByPlugin(this->plugin_name);
 }

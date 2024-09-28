@@ -3,10 +3,10 @@
 
 #include "scripting_schema.h"
 #include "public/iservernetworkable.h"
-#include "../../resourcemonitor/ResourceMonitor.h"
+#include "../../tools/resourcemonitor/ResourceMonitor.h"
 #include "../../sdk/entity/CCSWeaponBase.h"
-#include "../../crashreporter/CallStack.h"
-#include "../../encoders/msgpack.h"
+#include "../../tools/crashreporter/CallStack.h"
+#include "../../memory/encoders/msgpack.h"
 #include "../../sdk/entity/CTakeDamageInfo.h"
 
 #include "cstrike15_usermessages.pb.h"
@@ -452,6 +452,9 @@ public:
     void UnregisterAlias(std::string aliasName);
 
     void RegisterCommandLua(std::string commandName, luabridge::LuaRef callback);
+
+    std::vector<std::string> GetAllCommands();
+    std::vector<std::string> GetCommands();
 };
 
 //////////////////////////////////////////////////////////////
@@ -806,6 +809,8 @@ public:
     void AddOffset(int64_t offset);
     void RemoveOffset(int64_t offset);
 
+    void AccessIndex(int64_t idx);
+
     void AccessVTableFromOffset(std::string offsetName);
     void AccessVTable(int64_t offset);
     bool AccessedVTable();
@@ -819,6 +824,11 @@ public:
     void SetUint64(uint64_t value);
     void SetFloat(float value);
     void SetDouble(double value);
+    void SetVector(Vector value);
+    void SetVector2D(Vector2D value);
+    void SetVector4D(Vector4D value);
+    void SetColor(Color value);
+    void SetQAngle(QAngle value);
 
     bool GetBool();
     int GetInt();
@@ -827,6 +837,11 @@ public:
     uint64_t GetUint64();
     float GetFloat();
     double GetDouble();
+    Vector GetVector();
+    Vector2D GetVector2D();
+    Vector4D GetVector4D();
+    Color GetColor();
+    QAngle GetQAngle();
 
     void* GetRawPtr();
     std::string GetPtr();
